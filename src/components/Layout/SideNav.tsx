@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import logoFull from "../../assets/logo-full.svg";
+import logoFull from "../../assets/invarch/invarch-logo.svg";
 import Footer from "./Footer";
 import LoginButton from "../LoginButton";
 import { useEffect } from "react";
@@ -41,7 +41,7 @@ const SideNav = (props: SideNavProps) => {
       <div className="mt-7 flex-grow flex flex-col items-center w-full">
         <NavLink to="/overview" className="flex items-center justify-center w-full relative right-1 invisible md:visible">
           <img
-            className="h-6 w-auto block"
+            className="h-5 w-auto block"
             src={logoFull}
             alt="Tinkernet Logo"
           />

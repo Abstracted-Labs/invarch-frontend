@@ -45,3 +45,7 @@ coverage/
 !.yarn/plugins
 !.yarn/sdks
 !.yarn/versions
+.cargo
+.bash_history
+.bash_profile
+.DS_Store

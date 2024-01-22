@@ -16,7 +16,7 @@ const Layout = () => {
       className="bg-neutral-900 h-screen overflow-y-hidden flex flex-col justify-start"
       aria-hidden="true"
       style={{
-        backgroundImage: `url(${ pattern })`,
+        // backgroundImage: `url(${ pattern })`,
         backgroundRepeat: 'repeat',
         backgroundSize: 'stretch',
         backgroundPosition: 'center',

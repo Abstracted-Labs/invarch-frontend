@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logoFull from "../../assets/logo-full.svg";
+import logoFull from "../../assets/invarch/invarch-logo.svg";
 import LoginButton from "../LoginButton";
 import Button from "../Button";
 import MenuIcon from "../../assets/menu-icon.svg";
@@ -29,7 +29,7 @@ const Header = (props: SideNavProps) => {
               <img
                 className="h-3 md:h-6 w-auto lock"
                 src={logoFull}
-                alt="Tinkernet Logo"
+                alt="InvArch Logo"
               />
             </Link>
           </div>
