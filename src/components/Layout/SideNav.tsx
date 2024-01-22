@@ -4,7 +4,7 @@ import Footer from "./Footer";
 import LoginButton from "../LoginButton";
 import { useEffect } from "react";
 import ClaimNavIcon from "../../assets/claim-nav-icon.svg";
-import TransferNavIcon from "../../assets/transfer-nav-icon.svg";
+// import TransferNavIcon from "../../assets/transfer-nav-icon.svg";
 import StakingNavIcon from "../../assets/staking-nav-icon.svg";
 import OverviewNavIcon from "../../assets/overview-nav-icon.svg";
 
@@ -17,7 +17,7 @@ const navLinks = [
   { path: "/overview", name: "Account Overview", icon: OverviewNavIcon },
   { path: "/staking", name: "DAO Staking", icon: StakingNavIcon },
   { path: "/claim", name: "Claim Vesting", icon: ClaimNavIcon },
-  { path: "/transfer", name: "Asset Transfers", icon: TransferNavIcon },
+  // { path: "/transfer", name: "Asset Transfers", icon: TransferNavIcon },
 ];
 
 const SideNav = (props: SideNavProps) => {

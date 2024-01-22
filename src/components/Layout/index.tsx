@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
-import pattern from "../../assets/pattern.svg";
+// import pattern from "../../assets/pattern.svg";
 import SideNav from "./SideNav";
 import { useState } from "react";
 

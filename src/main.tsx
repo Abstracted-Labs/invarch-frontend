@@ -10,7 +10,7 @@ import {
 } from "urql";
 import { createClient as createWSClient } from "graphql-ws";
 import Claim from "./routes/claim";
-import Transfer from "./routes/xtransfer";
+// import Transfer from "./routes/xtransfer";
 import Staking from "./routes/staking";
 import NotFound from "./routes/not-found";
 import "./index.css";
@@ -62,7 +62,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 
               <Route path="claim" element={<Claim />} />
 
-              <Route path="transfer" element={<Transfer />} />
+              {/* <Route path="transfer" element={<Transfer />} /> */}
 
               <Route path="staking" element={<Staking />} />
 
