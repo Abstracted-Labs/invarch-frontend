@@ -22,7 +22,9 @@ export const fetchSystemData = async (selectedAccount: InjectedAccountWithMeta, 
   ]);
 };
 
-export const calculateVestingSchedule = async (vestingSchedules: VestingSchedule[], api: ApiPromise, currentDate: Date = new Date(), averageBlockTimeInSeconds: number = 12): Promise<VestingScheduleLineItem[]> => {
+const AVERAGE_BLOCKTIME = 6;
+
+export const calculateVestingSchedule = async (vestingSchedules: VestingSchedule[], api: ApiPromise, currentDate: Date = new Date(), averageBlockTimeInSeconds: number = AVERAGE_BLOCKTIME): Promise<VestingScheduleLineItem[]> => {
   // Fetch the current block number from the blockchain.
   const currentBlock = new BigNumber((await api.query.system.number()).toString());
 
