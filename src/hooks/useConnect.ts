@@ -3,6 +3,9 @@ import useAccount from "../stores/account";
 import useModal, { modalName } from "../stores/modals";
 import { useCallback, useEffect, useRef } from "react";
 
+export const INVARCH_WEB3_ENABLE = "InvArch";
+export const INVARCH_SS58 = 117;
+
 const useConnect = () => {
   const setOpenModal = useModal((state) => state.setOpenModal);
   const initialRender = useRef(true);
@@ -16,7 +19,7 @@ const useConnect = () => {
   );
 
   const handleConnect = useCallback(async () => {
-    const extensions = await web3Enable("Tinkernet");
+    const extensions = await web3Enable(INVARCH_WEB3_ENABLE);
 
     if (extensions.length === 0) {
       setOpenModal({ name: modalName.USE_NOVA });
@@ -26,7 +29,7 @@ const useConnect = () => {
     // Filter the exts based on the extensions that are enabled
     const filteredExts = exts.filter(ext => extensions.some(enabledExt => enabledExt.name === ext));
 
-    const accounts = await web3Accounts({ ss58Format: 117, extensions: filteredExts });
+    const accounts = await web3Accounts({ ss58Format: INVARCH_SS58, extensions: filteredExts });
 
     setAccounts(accounts);
 

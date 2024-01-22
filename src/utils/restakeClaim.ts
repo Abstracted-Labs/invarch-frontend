@@ -7,6 +7,7 @@ import { Vec } from "@polkadot/types";
 import { Balance, Call } from "@polkadot/types/interfaces";
 import toast from "react-hot-toast";
 import { web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
+import { INVARCH_WEB3_ENABLE } from "../hooks/useConnect";
 
 export interface RestakeClaimProps {
   selectedAccount: InjectedAccountWithMeta;
@@ -42,7 +43,7 @@ export const restakeClaim = async ({
       throw new Error("Can only claim when unclaimed TNKR is greater than the existential deposit");
     }
 
-    await web3Enable("Tinkernet");
+    await web3Enable(INVARCH_WEB3_ENABLE);
 
     const injector = await web3FromAddress(selectedAccount.address);
     const uniqueCores = [...new Map(unclaimedEras.cores.map((x) => [x['coreId'], x])).values()];

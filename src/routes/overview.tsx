@@ -14,6 +14,7 @@ import { loadProjectCores } from '../utils/stakingServices';
 import { StakingCore, CoreEraStakeInfoType, UserStakedInfoType, BalanceType, LockedType, TotalRewardsClaimedQuery, TotalRewardsCoreClaimedQuery, UnclaimedErasType } from "./staking";
 import { calculateVestingData, fetchSystemData } from "../utils/vestingServices";
 import DaoList from "../components/DaoList";
+import { INVARCH_SS58 } from "../hooks/useConnect";
 
 export type StakedDaoType = StakingCore & { members?: AnyJson; };
 
@@ -38,7 +39,7 @@ const Overview = () => {
     query: TotalRewardsClaimedQuery,
     variables: {
       accountId: selectedAccount
-        ? encodeAddress(selectedAccount.address, 117)
+        ? encodeAddress(selectedAccount.address, INVARCH_SS58)
         : null,
     },
 

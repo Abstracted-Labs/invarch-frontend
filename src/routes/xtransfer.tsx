@@ -21,6 +21,7 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import { ChainLogo, getChainInfo } from "../utils/getChainInfo";
 import Dropdown from "../components/Dropdown";
+import { INVARCH_WEB3_ENABLE } from "../hooks/useConnect";
 
 const RPC_PROVIDER_BASILISK = "wss://basilisk-rpc.dwellir.com";
 
@@ -275,7 +276,7 @@ const Transfer = () => {
         return;
       }
 
-      await web3Enable("Tinkernet");
+      await web3Enable(INVARCH_WEB3_ENABLE);
 
       const injector = await web3FromAddress(selectedAccount.address);
 
@@ -361,7 +362,7 @@ const Transfer = () => {
         return;
       }
 
-      await web3Enable("Tinkernet");
+      await web3Enable(INVARCH_WEB3_ENABLE);
 
       const injector = await web3FromAddress(selectedAccount.address);
 

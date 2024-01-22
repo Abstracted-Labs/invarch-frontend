@@ -18,6 +18,7 @@ import OnOffSwitch from "../components/Switch";
 import { autoRestake } from "../utils/autoRestake";
 import { restakeClaim } from "../utils/restakeClaim";
 import { Balance } from "@polkadot/types/interfaces";
+import { INVARCH_SS58 } from "../hooks/useConnect";
 
 export type UnsubFunction = () => Promise<void>;
 
@@ -184,7 +185,7 @@ const Staking = () => {
     query: TotalRewardsClaimedQuery,
     variables: {
       accountId: selectedAccount
-        ? encodeAddress(selectedAccount.address, 117)
+        ? encodeAddress(selectedAccount.address, INVARCH_SS58)
         : null,
     },
 

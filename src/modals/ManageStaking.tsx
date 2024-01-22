@@ -19,6 +19,7 @@ import Button from "../components/Button";
 import { StakingCore, TotalUserStakedData } from "../routes/staking";
 import Dropdown from "../components/Dropdown";
 import { BG_GRADIENT } from "../utils/consts";
+import { INVARCH_WEB3_ENABLE } from "../hooks/useConnect";
 
 export interface SelectedCoreInfo extends Metadata {
   id: number;
@@ -137,7 +138,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
 
     toast.loading("Staking...");
 
-    await web3Enable("Tinkernet");
+    await web3Enable(INVARCH_WEB3_ENABLE);
 
     const injector = await web3FromAddress(selectedAccount.address);
 
@@ -228,7 +229,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
 
     toast.loading("Unstaking...");
 
-    await web3Enable("Tinkernet");
+    await web3Enable(INVARCH_WEB3_ENABLE);
 
     const injector = await web3FromAddress(selectedAccount.address);
 

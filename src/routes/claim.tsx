@@ -15,6 +15,7 @@ import { calculateVestingSchedule, calculateVestingData, fetchSystemData } from 
 import { loadProjectCores } from "../utils/stakingServices";
 import { getSignAndSendCallbackWithPromise } from "../utils/getSignAndSendCallback";
 import { CoreEraType } from "./staking";
+import { INVARCH_WEB3_ENABLE } from "../hooks/useConnect";
 
 export type SystemAccount = Struct & {
   data: {
@@ -182,7 +183,7 @@ const Claim = () => {
 
   const handleClaim = async (selectedAccount: InjectedAccountWithMeta) => {
     try {
-      web3Enable("Tinkernet");
+      web3Enable(INVARCH_WEB3_ENABLE);
 
       const injector = await web3FromAddress(selectedAccount.address);
 

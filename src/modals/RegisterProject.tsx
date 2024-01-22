@@ -13,6 +13,7 @@ import useModal from "../stores/modals";
 import Button from "../components/Button";
 import { BG_GRADIENT } from "../utils/consts";
 import { getSignAndSendCallbackWithPromise } from "../utils/getSignAndSendCallback";
+import { INVARCH_WEB3_ENABLE } from "../hooks/useConnect";
 
 const schema = z
   .object({
@@ -83,7 +84,7 @@ const RegisterProject = ({ isOpen }: { isOpen: boolean; }) => {
 
       toast.loading("Registering...");
 
-      await web3Enable("Tinkernet");
+      await web3Enable(INVARCH_WEB3_ENABLE);
 
       const injector = await web3FromAddress(selectedAccount.address);
 
