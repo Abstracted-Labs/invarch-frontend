@@ -43,7 +43,7 @@ const SideNav = (props: SideNavProps) => {
           <img
             className="h-5 w-auto block"
             src={logoFull}
-            alt="Tinkernet Logo"
+            alt="InvArch Logo"
           />
         </NavLink>
         <div className="flex flex-col items-center w-full text-xs lg:text-md my-10 px-0">
