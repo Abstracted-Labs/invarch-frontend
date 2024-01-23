@@ -16,6 +16,7 @@ import { loadProjectCores } from "../utils/stakingServices";
 import { getSignAndSendCallbackWithPromise } from "../utils/getSignAndSendCallback";
 import { CoreEraType } from "./staking";
 import { INVARCH_WEB3_ENABLE } from "../hooks/useConnect";
+import { BG_GRADIENT } from "../utils/consts";
 
 export type SystemAccount = Struct & {
   data: {
@@ -241,24 +242,24 @@ const Claim = () => {
 
         {!selectedAccount ? (
           <div className="text-center">
-            <h5 className="text-sm font-bold text-white">
+            <h5 className="text-sm font-bold text-invarchOffBlack">
               Wallet not connected
             </h5>
-            <p className="mt-2 text-xs text-white">
+            <p className="mt-2 text-xs text-invarchOffBlack">
               Connect your wallet to claim any vested tokens.
             </p>
           </div>
         ) : null}
 
         {!isBalanceLoading && selectedAccount && vestingSummary ? (
-          <div className="overflow-hidden rounded-md border border-gray-50 backdrop-blur-sm shadow">
+          <div className={`overflow-hidden rounded-md border-2 border-invarchOffBlack backdrop-blur-sm ${ BG_GRADIENT }`}>
             <div className="p-4 sm:grid sm:w-full sm:grid-cols-2 sm:px-6">
               <div className="flex flex-col-reverse sm:flex-col justify-between p-6 gap-4">
                 <div className="flex flex-col">
-                  <span className="text-lg font-normal text-white">
+                  <span className="text-lg font-normal text-invarchOffBlack">
                     Ready to Claim
                   </span>
-                  <span className="text-2xl font-bold text-white">
+                  <span className="text-2xl font-bold text-invarchOffBlack">
                     {vestingSummary.vestedClaimable}
                   </span>
                 </div>
@@ -275,42 +276,42 @@ const Claim = () => {
               </div>
 
               <div className="flex flex-col p-6">
-                <span className="text-lg font-normal text-white">
+                <span className="text-lg font-normal text-invarchOffBlack">
                   Remaining Vesting
                 </span>
-                <span className="text-2xl font-bold text-white">
+                <span className="text-2xl font-bold text-invarchOffBlack">
                   {vestingSummary.vestedRemaining}
                 </span>
-                <span className="mt-8 text-sm text-white">
+                <span className="mt-8 text-sm text-invarchOffBlack">
                   Total Vesting:
                 </span>
-                <span className="text-sm text-white">
+                <span className="text-sm text-invarchOffBlack">
                   {totalInitialVestment.current}
                 </span>
-                <span className="mt-8 text-sm text-white">
+                <span className="mt-8 text-sm text-invarchOffBlack">
                   Vesting Completion Date:
                 </span>
-                <span className="text-sm text-white">
+                <span className="text-sm text-invarchOffBlack">
                   {vestingCompletionDate}
                 </span>
               </div>
             </div>
 
-            <div className="border-t border-gray-50 px-4 py-5 sm:grid sm:w-full sm:grid-cols-2 sm:px-6">
+            <div className="border-t border-invarchOffBlack px-4 py-5 sm:grid sm:w-full sm:grid-cols-2 sm:px-6">
               <div className="px-6 py-2">
-                <span className="text-sm font-bold leading-6 text-white">
+                <span className="text-sm font-bold leading-6 text-invarchOffBlack">
                   Available:
                 </span>{" "}
-                <span className="text-lg font-bold leading-6 text-white">
+                <span className="text-lg font-bold leading-6 text-invarchOffBlack">
                   {vestingSummary.available}
                 </span>
               </div>
 
               <div className="px-6 py-2">
-                <span className="text-sm font-bold leading-6 text-white">
+                <span className="text-sm font-bold leading-6 text-invarchOffBlack">
                   Staked:
                 </span>{" "}
-                <span className="text-lg font-bold leading-6 text-white">
+                <span className="text-lg font-bold leading-6 text-invarchOffBlack">
                   {totalStakedTNKR}
                 </span>
               </div>

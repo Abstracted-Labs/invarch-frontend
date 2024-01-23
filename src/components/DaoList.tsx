@@ -492,17 +492,17 @@ const DaoList = (props: DaoListProps) => {
   return (
     <div>
       <div className='flex flex-col md:flex-row gap-2 md:gap-10 items-stretch md:items-center justify-between mb-4 mt-14 md:mt-0'>
-        <h4 className="text-white text-md">{isOverview ? 'My Staked DAOs' : 'All Registered DAOs'} ({stakedCoresCount || '0'})</h4>
-        <div className="bg-neutral-950 bg-opacity-50 rounded-lg flex flex-row gap-2 p-4">
+        <h4 className="text-invarchOffBlack text-md">{isOverview ? 'My Staked DAOs' : 'All Registered DAOs'} ({stakedCoresCount || '0'})</h4>
+        <div className="bg-invarchDarkCream bg-opacity-30 rounded-lg flex flex-row gap-2 p-4">
           <div className='relative w-full'>
             <Input type="text" id="filterDaos" placeholder='Search' onChange={handleSearch} value={searchTerm} className='pr-12' />
-            {searchTerm && <button type='button' className='absolute -translate-x-10 pt-[4px] translate-y-1/2 hover:underline-offset-2 hover:underline text-tinkerYellow text-xxs' onClick={() => setSearchTerm('')}>clear</button>}
+            {searchTerm && <button type='button' className='absolute -translate-x-10 pt-[4px] translate-y-1/2 hover:underline-offset-2 hover:underline text-invarchRose text-xxs' onClick={() => setSearchTerm('')}>clear</button>}
           </div>
           <div className='relative'>
-            <button type='button' className='rounded-lg bg-tinkerGrey hover:bg-tinkerDarkYellow p-3' onClick={handleFilters}>
+            <button type='button' className='rounded-lg bg-invarchSoftPink bg-opacity-60 hover:bg-opacity-100 p-3' onClick={handleFilters}>
               <img src={FilterIcon} alt="Filter" className='h-5 w-5' />
             </button>
-            {activeFilterCount > 0 && <span className='absolute -right-[8px] -top-[6px] rounded-full px-[6px] bg-tinkerYellow text-center text-black font-bold text-xxs'>{activeFilterCount}</span>}
+            {activeFilterCount > 0 && <span className='absolute -right-[8px] -top-[6px] rounded-full px-[6px] bg-invarchPink text-center text-black font-bold text-xxs'>{activeFilterCount}</span>}
           </div>
         </div>
       </div>

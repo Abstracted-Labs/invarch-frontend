@@ -79,23 +79,23 @@ const AccountSelector = (props: { isOpen: boolean; }) => {
   return isOpen ? (
     <Dialog open={true} onClose={closeModal}>
       <Dialog.Title className="sr-only">Select your Wallet</Dialog.Title>
-      <div className="fixed inset-0 z-[49] h-screen w-full bg-black/10 backdrop-blur-md" />
-      <button className="pointer fixed top-0 right-0 z-50 flex cursor-pointer flex-col items-center justify-center bg-neutral-900 bg-transparent bg-opacity-50 p-6 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-30">
+      <div className="fixed inset-0 z-[49] h-screen w-full bg-invarchCream/10 backdrop-blur-md" />
+      <button className="pointer fixed top-0 right-0 z-50 flex cursor-pointer flex-col items-center justify-center bg-neutral-200 bg-transparent bg-opacity-50 p-6 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-30">
         <XMarkIcon className="h-5 w-5" />
         <span className="block">Close</span>
       </button>
       <Dialog.Panel>
         <>
-          <div className={`fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col justify-between w-[350px] md:w-[530px] rounded-xl space-y-4 px-8 p-8 gap-2 border border-[2px] border-tinkerLightGrey ${ BG_GRADIENT }`}>
+          <div className={`fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col justify-between w-[350px] md:w-[530px] rounded-xl space-y-4 px-8 p-8 gap-2 border border-[2px] border-invarchOffBlack text-invarchLightCream ${ BG_GRADIENT }`}>
             <div>
-              <h2 className="text-md font-bold text-white w-[310px] md:w-[490px] bg-tinkerDarkGrey">
+              <h2 className="text-md font-bold text-invarchOffBlack w-[310px] md:w-[490px] backdrop-blur-sm">
                 <span>Select your Wallet</span>
               </h2>
               <div className="flex-shrink flex flex-row justify-center gap-3 mt-3">
                 {Object.values(WalletNameEnum).map((walletName) => {
                   const walletIcon = getWalletIcon(walletName);
                   return (
-                    <button key={walletName} onClick={() => handleExtensionClick(walletName)} className={`rounded-lg p-3 border-1 bg-tinkerYellow bg-opacity-10 hover:border-tinkerYellow hover:border-opacity-80 hover:bg-opacity-20 ${ extensions.includes(walletName) ? 'bg-tinkerYellow bg-opacity-20 border border-tinkerYellow border-opacity-60' : 'border border-tinkerYellow border-opacity-20 hover:bg-opacity-10' }`}>
+                    <button key={walletName} onClick={() => handleExtensionClick(walletName)} className={`rounded-lg p-3 border border-invarchOffBlack bg-invarchPink bg-opacity-10 hover:text-invarchPink hover:border-opacity-80 hover:bg-opacity-20 ${ extensions.includes(walletName) ? 'bg-invarchPink bg-opacity-20 border text-invarchPink border-opacity-60' : 'border text-invarchPink border-opacity-20 hover:bg-opacity-10' }`}>
 
                       <div className="flex flex-col items-center justify-center">
                         <img src={walletIcon} alt={walletName} className={`h-5 w-5 ${ extensions.includes(walletName) ? '' : 'opacity-30' }`} />
@@ -105,14 +105,14 @@ const AccountSelector = (props: { isOpen: boolean; }) => {
                 })}
               </div>
             </div>
-            <ul className="w-full h-96 tinker-scrollbar scrollbar scrollbar-thumb-amber-300 overflow-y-scroll pr-4">
+            <ul className="w-full h-96 tinker-scrollbar scrollbar scrollbar-thumb-invarchPink overflow-y-scroll pr-4">
               {accounts.filter(account => getWalletIcon(account.meta?.source) !== undefined).map((account, index) => {
                 return (
                   <li
                     role="menuitem"
                     tabIndex={0}
                     key={`${ account.address }-${ index }}`}
-                    className={`flex flex-row items-center gap-4 cursor-pointer p-6 transition-colors hover:text-tinkerYellow ${ account.address === selectedAccount?.address ? 'rounded-xl bg-tinkerGrey text-white hover:bg-tinkerLightGrey' : 'text-white' }`}
+                    className={`flex flex-row items-center gap-4 cursor-pointer p-6 transition-colors hover:text-invarchPink ${ account.address === selectedAccount?.address ? 'rounded-xl bg-invarchCream text-invarchOffBlack hover:bg-invarchLightCream' : 'text-invarchOffBlack' }`}
                     onClick={() => {
                       handleAccountSelection(account);
                     }}
@@ -122,7 +122,7 @@ const AccountSelector = (props: { isOpen: boolean; }) => {
                       }
                     }}
                   >
-                    <div className={`rounded-full p-1 flex items-center ${ account.address !== selectedAccount?.address ? 'bg-tinkerLightGrey' : 'bg-tinkerGrey' }`}>
+                    <div className={`rounded-full p-1 flex items-center ${ account.address !== selectedAccount?.address ? 'bg-invarchLightCream' : 'bg-invarchCream' }`}>
                       <Identicon value={account.address} size={47} theme="substrate" />
                     </div>
                     <div className="flex flex-col gap-0 truncate">

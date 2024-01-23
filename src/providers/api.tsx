@@ -21,19 +21,20 @@ const ApiProvider = ({ children }: { children: ReactNode; }) => {
         api.disconnect();
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createApi, host]);
 
   if (error)
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-neutral-900">
+      <div className="flex h-screen w-screen items-center justify-center bg-neutral-200">
         <p className="text-center">
-          <span className="text-white">
+          <span className="text-invarchOffBlack">
             Oops! Looks like there is an RPC issue.
           </span>
 
           <br />
 
-          <span className="text-white">
+          <span className="text-invarchOffBlack">
             Head to the{" "}
             <a
               target="_blank"
@@ -51,7 +52,7 @@ const ApiProvider = ({ children }: { children: ReactNode; }) => {
 
   if (!api)
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-neutral-900">
+      <div className="flex h-screen w-screen items-center justify-center bg-neutral-200">
         <LoadingSpinner />
       </div>
     );

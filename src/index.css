@@ -4,7 +4,7 @@
 
 html {
   font-feature-settings: "salt", "zero", "calt", "ccmp", "kern";
-  background-color: black;
+  background-color: #fffaf0;
 }
 
 @layer utilities {
@@ -19,12 +19,12 @@ html {
   }
 
   .tinker-scrollbar::-webkit-scrollbar-track, .tinker-scrollbar::-webkit-scrollbar-track:hover {
-    background: #141414;
+    background: #fffaf0;
   }
 
   .tinker-scrollbar::-webkit-scrollbar-thumb {
     border-radius: 100vh;
-    @apply bg-tinkerYellow rounded;
+    @apply bg-invarchSoftPink rounded;
   }
 
   /* Description gradient */
@@ -37,7 +37,7 @@ html {
     right: 0;
     height: 100%; /* Adjust this value to control the height of the gradient */
     border-radius: 0.5rem;
-    background: linear-gradient(to top, #141414 0%, transparent 100%);
+    background: linear-gradient(to top, #f7f4e9 0%, transparent 100%);
   }
 
   /* ProjectCard stats section */

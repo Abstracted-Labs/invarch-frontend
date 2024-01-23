@@ -13,7 +13,7 @@ const Layout = () => {
 
   return (
     <div
-      className="bg-neutral-900 h-screen overflow-y-hidden flex flex-col justify-start"
+      className="bg-invarchCream h-screen overflow-y-hidden flex flex-col justify-start"
       aria-hidden="true"
       style={{
         // backgroundImage: `url(${ pattern })`,
@@ -35,7 +35,7 @@ const Layout = () => {
         <div className="hidden md:block">
           <SideNav />
         </div>
-        <main className="w-full relative text-white tinker-scrollbar scrollbar scrollbar-thumb-amber-300 overflow-y-auto overflow-x-hidden">
+        <main className="w-full relative text-invarchOffBlack tinker-scrollbar scrollbar scrollbar-thumb-invarchPink overflow-y-auto overflow-x-hidden">
           <Outlet />
         </main>
       </div>

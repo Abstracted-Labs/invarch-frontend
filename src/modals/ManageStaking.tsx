@@ -383,19 +383,19 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
   return isOpen ? (
     <Dialog open={true} onClose={closeCurrentModal}>
       <Dialog.Title className="sr-only">Manage Staking</Dialog.Title>
-      <div className="fixed inset-0 z-[49] h-screen w-full bg-black/10 backdrop-blur-md" />
-      <button className="pointer fixed top-0 right-0 z-50 flex cursor-pointer flex-col items-center justify-center bg-neutral-900 bg-transparent bg-opacity-50 p-6 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-30">
+      <div className="fixed inset-0 z-[49] h-screen w-full bg-invarchCream/10 backdrop-blur-md" />
+      <button className="pointer fixed top-0 right-0 z-50 flex cursor-pointer flex-col items-center justify-center bg-neutral-200 bg-transparent bg-opacity-50 p-6 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-30">
         <XMarkIcon className="h-5 w-5" />
         <span className="block">Close</span>
       </button>
       <Dialog.Panel>
         <>
-          <div className={`fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col w-[350px] md:w-[530px] rounded-xl space-y-4 p-8 border border-2 border-neutral-700 ${ BG_GRADIENT }`}>
-            <h2 className="text-md font-bold text-white bg-tinkerDarkGrey w-[calc(100%-2rem)] max-w-lg truncate">Manage Staking for {(initialSelectedCore.current?.metadata as { name: string; })?.name}</h2>
+          <div className={`fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col w-[350px] md:w-[530px] rounded-xl space-y-4 p-8 border border-2 border-invarchOffBlack ${ BG_GRADIENT }`}>
+            <h2 className="text-md font-bold text-invarchOffBlack w-[calc(100%-2rem)] max-w-lg truncate">Manage Staking for {(initialSelectedCore.current?.metadata as { name: string; })?.name}</h2>
 
             <div className="flex flex-col justify-between gap-4">
               <div className="flex flex-row justify-around gap-4 sm:flex-auto mb-4">
-                <div className="text-sm text-white text-center">
+                <div className="text-sm text-invarchOffBlack text-center">
                   <div className="font-bold">
                     {formatBalance(
                       metadata?.availableBalance
@@ -414,7 +414,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
 
                 {metadata?.totalUserStaked &&
                   metadata?.totalUserStaked.toString() !== "0" ? (
-                  <div className="text-sm text-white text-center">
+                  <div className="text-sm text-invarchOffBlack text-center">
                     <div className="font-bold">
                       {formatBalance(metadata?.totalUserStaked?.toString(), {
                         decimals: 12,
@@ -431,15 +431,15 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                 <Tab.Group onChange={handleTabChange}>
                   {metadata?.totalUserStaked &&
                     metadata?.totalUserStaked.toString() !== "0" ? (
-                    <Tab.List className="flex gap-3 space-x-1 rounded-md bg-neutral-900">
+                    <Tab.List className="flex gap-3 space-x-1 rounded-md">
                       <Tab
                         key={mode.STAKE}
                         className={({ selected }) =>
                           classNames(
                             "w-full rounded-md py-2.5 text-sm font-medium leading-5 text-neutral-700 focus:outline-none",
                             selected
-                              ? "bg-white shadow border-2 border-tinkerYellow"
-                              : "border-2 border-white/[0.12] bg-neutral-900 text-neutral-100 transition-colors hover:bg-white/[0.12] hover:text-white"
+                              ? "bg-white shadow border-2 border-invarchOffBlack hover:border-invarchRose"
+                              : "border-2 border-invarchRose bg-invarchRose/30 text-neutral-100 transition-colors hover:border-invarchOffBlack hover:bg-invarchRose hover:text-invarchOffBlack"
                           )
                         }
                       >
@@ -451,8 +451,8 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                           classNames(
                             "w-full rounded-md py-2.5 text-sm font-medium leading-5 text-neutral-700 focus:outline-none",
                             selected
-                              ? "bg-white shadow border-2 border-tinkerYellow"
-                              : "border-2 border-white/[0.12] bg-neutral-900 text-neutral-100 transition-colors hover:bg-white/[0.12] hover:text-white"
+                              ? "bg-white shadow border-2 border-invarchOffBlack hover:border-invarchRose"
+                              : "border-2 border-invarchRose bg-invarchRose/30 text-neutral-100 transition-colors hover:border-invarchOffBlack hover:bg-invarchRose hover:text-invarchOffBlack"
                           )
                         }
                       >
@@ -475,13 +475,13 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                       >
                         <div className="flex flex-col md:flex-row gap-4 items-between justify-center">
                           <div className="flex-grow">
-                            <div className="block text-xxs font-medium text-white mb-1">Transfer Funds From</div>
+                            <div className="block text-xxs font-medium text-invarchOffBlack mb-1">Transfer Funds From</div>
                             <RestakingDropdown />
                           </div>
                           <div className="flex-grow">
                             <label
                               htmlFor="stakeAmount"
-                              className="block text-xxs font-medium text-white mb-1"
+                              className="block text-xxs font-medium text-invarchOffBlack mb-1"
                             >
                               <span>Stake Amount</span>
                               {altBalance ?
@@ -496,7 +496,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                               />
                               <div className="absolute inset-y-0 right-0 flex flex-row items-center gap-4 transform -translate-x-1/2">
                                 <span
-                                  className="block cursor-pointer text-white hover:text-tinkerYellow text-xs focus:outline-none"
+                                  className="block cursor-pointer text-invarchOffBlack hover:text-invarchRose text-xs focus:outline-none"
                                   onClick={handleStakeMax}
                                   tabIndex={0}
                                 >
@@ -530,7 +530,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         <div>
                           <label
                             htmlFor="stakeAmount"
-                            className="block text-xxs font-medium text-white mb-1"
+                            className="block text-xxs font-medium text-invarchOffBlack mb-1"
                           >Unstake Amount</label>
                           <div className="relative flex flex-row items-center">
                             <Input {...unstakeForm.register("amount", {
@@ -539,7 +539,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                             />
                             <div className="absolute inset-y-0 right-0 flex flex-row items-center gap-4 transform -translate-x-1/2">
                               <span
-                                className="block cursor-pointer text-white hover:text-tinkerYellow text-xs focus:outline-none"
+                                className="block cursor-pointer text-invarchOffBlack hover:text-invarchRose text-xs focus:outline-none"
                                 onClick={handleUnstakeMax}
                                 tabIndex={0}
                               >
@@ -556,7 +556,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         <Button mini variant="primary" type="submit" disabled={!unstakeForm.formState.isValid}>
                           Unstake {watchedUnstakeAmount} TNKR
                         </Button>
-                        <p className="text-xxs text-center text-tinkerYellow text-opacity-60">NOTE: Unstaking TNKR will have an unbonding period of 7 days.</p>
+                        <p className="text-xxs text-center text-invarchOffBlack">NOTE: Unstaking TNKR will have an unbonding period of 7 days.</p>
                       </form>
                     </Tab.Panel>
                   </Tab.Panels>

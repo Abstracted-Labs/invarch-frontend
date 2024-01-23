@@ -25,7 +25,7 @@ import { INVARCH_WEB3_ENABLE } from "../hooks/useConnect";
 
 const RPC_PROVIDER_BASILISK = "wss://basilisk-rpc.dwellir.com";
 
-const MINI_BUTTON_STYLE = "cursor-pointer bg-white hover:bg-tinkerYellow text-black py-1 px-2 sm:py-2 sm:px-3 rounded-lg text-xs font-medium";
+const MINI_BUTTON_STYLE = "cursor-pointer bg-white hover:bg-invarchPink text-black py-1 px-2 sm:py-2 sm:px-3 rounded-lg text-xs font-medium";
 
 type SystemAccount = Struct & {
   data: {
@@ -483,10 +483,10 @@ const Transfer = () => {
 
         {!selectedAccount ? (
           <div className="text-center">
-            <h5 className="text-sm font-bold text-white">
+            <h5 className="text-sm font-bold text-invarchOffBlack">
               Wallet not connected
             </h5>
-            <p className="mt-2 text-xs text-white">
+            <p className="mt-2 text-xs text-invarchOffBlack">
               Connect your wallet to transfer assets.
             </p>
           </div>
@@ -497,27 +497,27 @@ const Transfer = () => {
             <div className="border-b border-neutral-50 p-4">
               <div className="flex flex-row items-center justify-around gap-4">
                 <div className="flex flex-col items-center">
-                  <span className="text-lg font-bold text-white leading-none">
+                  <span className="text-lg font-bold text-invarchOffBlack leading-none">
                     {formatBalance(balanceInTinkernet.toString(), {
                       decimals: 12,
                       withUnit: "TNKR",
                       forceUnit: "-",
                     })}
                   </span>
-                  <span className="text-xxs font-normal text-white">
+                  <span className="text-xxs font-normal text-invarchOffBlack">
                     Free balance on Tinkernet
                   </span>
                 </div>
 
                 <div className="flex flex-col items-center">
-                  <span className="text-lg font-bold text-white leading-none">
+                  <span className="text-lg font-bold text-invarchOffBlack leading-none">
                     {formatBalance(balanceInBasilisk.toString(), {
                       decimals: 12,
                       withUnit: "TNKR",
                       forceUnit: "-",
                     })}
                   </span>
-                  <span className="text-xxs font-normal text-white">
+                  <span className="text-xxs font-normal text-invarchOffBlack">
                     Free balance on Basilisk
                   </span>
                 </div>
@@ -528,7 +528,7 @@ const Transfer = () => {
                 <div className="flex-grow">
                   <label
                     htmlFor="amount"
-                    className="block text-xxs font-medium text-white mb-2"
+                    className="block text-xxs font-medium text-invarchOffBlack mb-2"
                   >
                     Source Chain
                   </label>
@@ -557,7 +557,7 @@ const Transfer = () => {
 
                 <div className="mx-3 relative top-3">
                   <ArrowRightIcon
-                    className="h-5 w-5 cursor-pointer text-white"
+                    className="h-5 w-5 cursor-pointer text-invarchOffBlack"
                     onClick={handlePairSwap}
                   />
                 </div>
@@ -565,7 +565,7 @@ const Transfer = () => {
                 <div className="flex-grow">
                   <label
                     htmlFor="amount"
-                    className="block text-xxs font-medium text-white mb-2"
+                    className="block text-xxs font-medium text-invarchOffBlack mb-2"
                   >
                     Destination Chain
                   </label>
@@ -600,7 +600,7 @@ const Transfer = () => {
                     <div>
                       <label
                         htmlFor="amount"
-                        className="block text-xxs font-medium text-white mb-1"
+                        className="block text-xxs font-medium text-invarchOffBlack mb-1"
                       >
                         TNKR Amount
                       </label>
@@ -623,7 +623,7 @@ const Transfer = () => {
                     <div className="flex-grow">
                       <label
                         htmlFor="destination"
-                        className="block text-xxs font-medium text-white mb-1 flex flex-row items-end justify-between"
+                        className="block text-xxs font-medium text-invarchOffBlack mb-1 flex flex-row items-end justify-between"
                       >
                         <span>Destination</span>
                       </label>
@@ -673,7 +673,7 @@ const Transfer = () => {
                     <div>
                       <label
                         htmlFor="amount"
-                        className="block text-xxs font-medium text-white mb-2"
+                        className="block text-xxs font-medium text-invarchOffBlack mb-2"
                       >
                         TNKR Amount
                       </label>
@@ -696,7 +696,7 @@ const Transfer = () => {
                     <div className="flex-grow">
                       <label
                         htmlFor="destination"
-                        className="block text-xxs font-medium text-white mb-2 flex flex-row items-end justify-between"
+                        className="block text-xxs font-medium text-invarchOffBlack mb-2 flex flex-row items-end justify-between"
                       >
                         <span>Destination</span>
                       </label>

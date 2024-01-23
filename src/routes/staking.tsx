@@ -535,11 +535,11 @@ const Staking = () => {
               variant="primary">
               Claim TNKR Rewards
             </Button>
-            <div className="flex flex-col items-center justify-around relative border border-tinkerYellow border-opacity-50 bg-tinkerGrey rounded-lg scale-70 lg:scale-90">
+            <div className="flex flex-col items-center justify-around relative border border-invarchOffBlack text-invarchOffBlack border-opacity-50 bg-invarchCream rounded-lg scale-70 lg:scale-90">
               <div className="flex-grow">
                 <OnOffSwitch defaultEnabled={enableAutoRestake} onChange={(bool) => handleAutoRestakeSwitch(bool)} />
               </div>
-              <span className="text-[.5rem] text-gray-300 relative bottom-1">Auto-Restake</span>
+              <span className="text-[.5rem] relative bottom-1">Auto-Restake</span>
             </div>
           </div>
         </div>}
@@ -568,10 +568,10 @@ const Staking = () => {
           <DaoList mini={false} isOverview={false} />
         </div>
       ) : <div className="text-center">
-        <h5 className="text-sm font-bold text-white">
+        <h5 className="text-sm font-bold text-invarchOffBlack">
           Wallet not connected
         </h5>
-        <p className="mt-2 text-xs text-white">
+        <p className="mt-2 text-xs text-invarchOffBlack">
           Connect your wallet to view your staking information.
         </p>
       </div>}

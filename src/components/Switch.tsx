@@ -23,7 +23,7 @@ const OnOffSwitch = (props: OnOffSwitchProps) => {
   return <Switch
     checked={enabled}
     onChange={handleEnabledChange}
-    className={`${ enabled ? 'bg-tinkerYellow' : 'bg-tinkerLightGrey' }
+    className={`${ enabled ? 'bg-invarchPink' : 'bg-invarchLightCream' }
     relative inline-flex h-[34px] w-[70px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 scale-50`}
   >
     <span className="sr-only">{label}</span>

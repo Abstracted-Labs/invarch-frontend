@@ -7,12 +7,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        tinkerYellow: '#f8ce46', // Main yellow
-        tinkerDarkYellow: 'rgba(248, 206, 70, .20)', // Filter button
-        tinkerGrey: '#202125', // Project card bg
-        tinkerLightGrey: '#2D2E34', // Selected active account bg
-        tinkerDarkGrey: '#16171b', // Project desc bg
-        tinkerTextGrey: '#7b7d84', // Card text
+        invarchPink: '#ff8da1', // A vibrant pink for highlights and active elements
+        invarchSoftPink: '#ffd1dc', // A soft pink for background accents and less prominent buttons
+        invarchCream: '#fffaf0', // A warm off-white for card backgrounds and main content areas
+        invarchLightCream: '#f7f4e9', // A light cream for delineating areas without high contrast
+        invarchDarkCream: '#e2dcd5', // A darker cream shade for contrast against lighter cream colors
+        invarchRose: '#f2c6cf', // A muted rose for descriptions and secondary text
+        invarchTextPink: '#d17a8d', // A subdued pink for primary text to ensure readability
+        invarchOffBlack: '#212121' // A soft, off-black color suitable for text and backgrounds
       },
       scrollbar: [ 'dark' ],
       fontFamily: {

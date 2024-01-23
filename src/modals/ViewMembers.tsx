@@ -138,25 +138,25 @@ const ViewMembers = (props: ViewMembersProps) => {
   return isOpen ? (
     <Dialog open={true} onClose={closeModal}>
       <Dialog.Title className="sr-only">View Members</Dialog.Title>
-      <div className="fixed inset-0 z-[49] h-screen w-full bg-black/10 backdrop-blur-md" />
-      <button className="pointer fixed top-0 right-0 z-[50] flex cursor-pointer flex-col items-center justify-center bg-neutral-900 bg-transparent bg-opacity-50 p-6 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-30">
+      <div className="fixed inset-0 z-[49] h-screen w-full bg-invarchCream/10 backdrop-blur-md" />
+      <button className="pointer fixed top-0 right-0 z-[50] flex cursor-pointer flex-col items-center justify-center bg-neutral-200 bg-transparent bg-opacity-50 p-6 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-30">
         <XMarkIcon className="h-5 w-5" />
         <span className="block">Close</span>
       </button>
       <Dialog.Panel>
         <>
-          <div className={`fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col justify-between w-[350px] sm:w-auto h-[472px] rounded-xl space-y-4 p-8 border border-[2px] border-neutral-700 ${ BG_GRADIENT }`}>
+          <div className={`fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col justify-between w-[350px] sm:w-auto h-[472px] rounded-xl space-y-4 p-8 border border-[2px] border-invarchOffBlack ${ BG_GRADIENT }`}>
             <div className="flex items-center space-x-4">
               <Avatar src={image} alt="Project Image" />
               <div className="flex flex-col items-start gap-1 justify-start">
-                <div className="font-bold text-white text-[18px] text-center tracking-[0] leading-none">
+                <div className="font-bold text-invarchOffBlack text-[18px] text-center tracking-[0] leading-none">
                   {name}
                 </div>
-                <span className="text-xs text-tinkerTextGrey">Members: {members ? members.length : 0}</span>
+                <span className="text-xs text-invarchOffBlack">Members: {members ? members.length : 0}</span>
               </div>
             </div>
-            <div className="overflow-y-auto h-3/5 tinker-scrollbar scrollbar scrollbar-thin scrollbar-thumb-amber-300 pr-5">
-              <div className="text-white text-[14px] tracking-[0] leading-[18px] flex flex-col gap-2">
+            <div className="overflow-y-auto h-3/5 tinker-scrollbar scrollbar scrollbar-thin scrollbar-thumb-invarchPink pr-5">
+              <div className="text-invarchOffBlack text-[14px] tracking-[0] leading-[18px] flex flex-col gap-2">
                 {!loading ? members.map((member) => {
                   const rawMemberIdentity = member ? membersIdentity[member.toString()] : null;
                   const memberIdentity = rawMemberIdentity ? Object.fromEntries(
@@ -164,7 +164,7 @@ const ViewMembers = (props: ViewMembersProps) => {
                     Object.entries(rawMemberIdentity).filter(([_, value]) => typeof value !== 'object')
                   ) : null;
                   return (
-                    <div className="rounded-lg bg-tinkerGrey hover:bg-tinkerLightGrey transition-colors hover:text-tinkerYellow px-4 py-3" key={member?.toString()}>
+                    <div className="rounded-lg bg-invarchCream hover:bg-invarchLightCream transition-colors hover:text-invarchPink px-4 py-3" key={member?.toString()}>
                       <div className="flex flex-row gap-2 items-center">
                         <Avatar src={memberIdentity && typeof memberIdentity.image === 'string' ? memberIdentity.image : undefined} alt="Member Image" mini />
 
@@ -172,7 +172,7 @@ const ViewMembers = (props: ViewMembersProps) => {
                           {memberIdentity && (
                             <div className="flex flex-row justify-between mb-[2px]">
                               <div className="flex flex-row items-center">
-                                {typeof memberIdentity.judgements === 'string' && memberIdentity.judgements === 'KnownGood' ? <img src={CheckIcon} alt="KnownGood" className="h-3 w-3 bg-red mr-1" /> : null}
+                                {typeof memberIdentity.judgements === 'string' && memberIdentity.judgements === 'KnownGood' ? <img src={CheckIcon} alt="KnownGood" className="h-3 w-3  mr-1" /> : null}
                                 <div className="font-bold text-md">{typeof memberIdentity.display === 'string' ? memberIdentity.display : null}</div>
                               </div>
                               <div className="flex flex-row gap-2 items-center">
@@ -191,7 +191,7 @@ const ViewMembers = (props: ViewMembersProps) => {
                             </div>
                           )}
 
-                          <div onClick={() => handleCopy(member?.toString())} className="text-xs hover:cursor-copy truncate text-tinkerTextGrey hover:underline underline-offset-2">
+                          <div onClick={() => handleCopy(member?.toString())} className="text-xs hover:cursor-copy truncate text-invarchOffBlack hover:underline underline-offset-2">
                             {member?.toString()}
                           </div>
                         </div>

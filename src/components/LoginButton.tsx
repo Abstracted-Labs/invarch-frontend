@@ -1,7 +1,7 @@
 import Button from "./Button";
 import DisconnectIcon from "../assets/disconnect-icon.svg";
-import TinkerYellowIcon from "../assets/tinker-yellow-icon.svg";
-import TinkerBlackIcon from "../assets/tinker-black-icon.svg";
+import InvarchPinkIcon from "../assets/invarch/invarch-black.svg";
+import InvarchBlackIcon from "../assets/invarch/invarch-white.svg";
 import { useCallback, useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
 import { shallow } from "zustand/shallow";
@@ -95,10 +95,10 @@ const LoginButton = () => {
             {selectedAccount.meta.name || selectedAccount.address}
           </span>
           <span className={`relative -top-[8px] md:-top-[10px] flex flex-row items-center gap-1 transition-transform transform ${ showFirstSpan ? 'translate-y-20' : 'translate-y-0' }`}>
-            {isHovered ? <img className="lg:w-3 lg:h-3" src={TinkerBlackIcon} alt="tnkr icon" /> :
-              <img className="lg:w-3 lg:h-3" src={TinkerYellowIcon} alt="tnkr icon" />}
+            {isHovered ? <img className="w-3 h-3" src={InvarchBlackIcon} alt="tnkr icon" /> :
+              <img className="w-3 h-3" src={InvarchPinkIcon} alt="tnkr icon" />}
             <span className="truncate">
-              {formattedBalance} TNKR
+              {formattedBalance} VARCH
             </span>
           </span>
         </div>
