@@ -339,7 +339,7 @@ const ProjectCard = (props: ProjectCardProps) => {
             <h4 className="font-bold text-invarchOffBlack text-[18px] text-left tracking-[0] leading-none truncate">
               {core.metadata.name}
             </h4>
-            {!mini ? <span onClick={handleViewMembers} className="text-xs text-invarchOffBlack hover:text-invarchRose cursor-pointer">Members: {members ? members.length : 0}</span> : null}
+            {!mini ? <span onClick={handleViewMembers} className="text-xs text-invarchOffBlack hover:text-invarchPink cursor-pointer">Members: {members ? members.length : 0}</span> : null}
           </div>
         </div>
 
