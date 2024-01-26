@@ -84,7 +84,7 @@ const AccountSelector = (props: { isOpen: boolean; }) => {
       </button>
       <Dialog.Panel>
         <>
-          <div className={MODAL_STYLE}>
+          <div className={`${ MODAL_STYLE } h-[550px]`}>
             <div>
               <h2 className="text-md font-bold text-invarchCream w-[310px] md:w-[490px] backdrop-blur-sm">
                 <span>Select your Wallet</span>

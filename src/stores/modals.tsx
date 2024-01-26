@@ -1,6 +1,6 @@
 import { createWithEqualityFn } from "zustand/traditional";
 
-export const MODAL_STYLE = 'fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col justify-between w-[350px] md:w-[530px] rounded-xl space-y-4 px-8 p-8 gap-2 border border-invarchCream border-opacity-20 bg-invarchOffBlack bg-opacity-70 text-invarchLightCream';
+export const MODAL_STYLE = 'fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col justify-between w-[350px] md:w-[530px] h-auto rounded-xl space-y-4 px-8 p-8 gap-2 border border-invarchCream border-opacity-20 bg-invarchOffBlack bg-opacity-70 text-invarchLightCream';
 
 const modalName = {
   SELECT_ACCOUNT: "SELECT_ACCOUNT",
