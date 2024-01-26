@@ -7,9 +7,8 @@ import toast from "react-hot-toast";
 import { shallow } from "zustand/shallow";
 import useApi from "../hooks/useApi";
 import useAccount from "../stores/account";
-import useModal from "../stores/modals";
+import useModal, { MODAL_STYLE } from "../stores/modals";
 import Button from "../components/Button";
-import { BG_GRADIENT } from "../utils/consts";
 import { getSignAndSendCallbackWithPromise } from "../utils/getSignAndSendCallback";
 import { INVARCH_WEB3_ENABLE } from "../hooks/useConnect";
 
@@ -123,27 +122,26 @@ const UnbondTokens = ({ isOpen }: { isOpen: boolean; }) => {
   return isOpen ? (
     <Dialog open={true} onClose={closeCurrentModal}>
       <Dialog.Title className="sr-only">Claim Unbonded TNKR</Dialog.Title>
-      <div className="fixed inset-0 z-[49] h-screen w-full bg-invarchCream/10 backdrop-blur-md" />
-      <button className="pointer fixed top-0 right-0 z-50 flex cursor-pointer flex-col items-center justify-center bg-neutral-200 bg-transparent bg-opacity-50 p-6 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-30">
+      <div className="fixed inset-0 z-[49] h-screen w-full bg-invarchOffBlack/10 backdrop-blur-md" />
+      <button className="pointer fixed top-0 right-0 z-50 flex cursor-pointer flex-col items-center justify-center p-3 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-50">
         <XMarkIcon className="h-5 w-5" />
-        <span className="block">Close</span>
       </button>
       <Dialog.Panel>
-        <div className={`fixed left-1/2 top-1/2 z-50 mx-auto block w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 transform flex-col overflow-auto rounded-md border border-2 border-invarchOffBlack p-4 sm:w-full ${ BG_GRADIENT }`}>
-          <h2 className="text-md font-bold text-invarchOffBlack w-[calc(100%-2rem)] max-w-lg truncate">Claim Unbonded TNKR</h2>
+        <div className={MODAL_STYLE}>
+          <h2 className="text-md font-bold text-invarchCream w-[calc(100%-2rem)] max-w-lg truncate">Claim Unbonded TNKR</h2>
 
           <div className="mt-4 flex flex-col justify-between gap-4">
             {unbondingInfo.map(({ amount, unlockIn }) => {
               if (unlockIn <= 0) {
                 return (
-                  <div className="text-invarchOffBlack" key={`${ amount }-${ unlockIn }`}>
+                  <div className="text-invarchCream" key={`${ amount }-${ unlockIn }`}>
                     <span className="font-bold">{amount}</span> was unlocked
                   </div>
                 );
               }
 
               return (
-                <div className="text-invarchOffBlack" key={`${ amount }-${ unlockIn }`}>
+                <div className="text-invarchCream" key={`${ amount }-${ unlockIn }`}>
                   <span className="font-bold">{amount}</span> will unlock in{" "}
                   {unlockIn} eras
                 </div>

@@ -2,15 +2,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { shallow } from "zustand/shallow";
-import useModal, { Metadata, modalName } from "../stores/modals";
+import useModal, { MODAL_STYLE, Metadata, modalName } from "../stores/modals";
 import Button from "../components/Button";
-import { BG_GRADIENT } from "../utils/consts";
 import TriStateCheckbox from "../components/TriStateCheckbox";
 import MinMaxRange from "../components/MinMaxRange";
 import Dropdown from "../components/Dropdown";
 import { loadFiltersFromLocalStorage, saveFiltersToLocalStorage } from "../utils/filterStorage";
 
-export const HR_BREAK = <hr className="border-t-1 border-invarchRose my-4" />;
+export const HR_BREAK = <hr className="border-t-1 border-invarchCream border-opacity-20 my-4" />;
 
 export interface CheckboxFilterState {
   isChecked: boolean;
@@ -214,20 +213,19 @@ const DaoListFilters = (props: DaoListFiltersProps) => {
     <Dialog open={true} onClose={closeCurrentModal}>
       <>
         <Dialog.Title className="sr-only">Notice</Dialog.Title>
-        <div className="fixed inset-0 z-[49] h-screen w-full bg-invarchCream/10 backdrop-blur-md" />
-        <button className="pointer fixed top-0 right-0 z-50 flex cursor-pointer flex-col items-center justify-center bg-neutral-200 bg-transparent bg-opacity-50 p-6 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-30">
+        <div className="fixed inset-0 z-[49] h-screen w-full bg-invarchOffBlack/10 backdrop-blur-md" />
+        <button className="pointer fixed top-0 right-0 z-50 flex cursor-pointer flex-col items-center justify-center p-3 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-50">
           <XMarkIcon className="h-5 w-5" />
-          <span className="block">Close</span>
         </button>
         <Dialog.Panel>
           <>
-            <div className={`fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col justify-between w-[350px] h-auto rounded-xl space-y-4 p-8 border border-2 border-invarchOffBlack ${ BG_GRADIENT }`}>
+            <div className={MODAL_STYLE}>
               <div>
-                <h2 className="text-md font-bold text-invarchOffBlack mb-5 flex flex-row items-center gap-2">
+                <h2 className="text-md font-bold text-invarchCream mb-5 flex flex-row items-center gap-2">
                   <span>Refine Search Results</span>
-                  {activeFilterCount > 0 && <span className="bg-invarchPink text-black px-[9px] py-[4px] rounded-full text-xs text-center">{activeFilterCount}</span>}
+                  {activeFilterCount > 0 && <span className="bg-invarchGradientYellow text-invarchOffBlack px-[9px] py-[4px] rounded-full text-xs text-center">{activeFilterCount}</span>}
                 </h2>
-                <div className="text-invarchOffBlack text-sm">
+                <div className="text-invarchCream text-sm">
                   <div className="mb-1">Order By</div>
                   <Dropdown
                     onReset={onReset}
@@ -239,7 +237,7 @@ const DaoListFilters = (props: DaoListFiltersProps) => {
                   />
                   {HR_BREAK}
                   <div>
-                    <div className="text-sm text-invarchOffBlack">Include/Don't Include</div>
+                    <div className="text-sm text-invarchCream">Include/Don't Include</div>
                     <div className="flex flex-row justify-between">
                       <TriStateCheckbox
                         key={`MinSupportMet-${ filters.isMinSupportMet.isChecked }-${ filters.isMinSupportMet.isIndeterminate }`}
@@ -287,7 +285,7 @@ const DaoListFilters = (props: DaoListFiltersProps) => {
                   {HR_BREAK}
                 </div>
               </div>
-              <div onClick={resetFilters} className="text-center text-xs text-invarchOffBlack hover:text-invarchPink hover:text-opacity-80 hover:underline hover:cursor-pointer hover:underline-offset-4">Reset Default Filters</div>
+              <div onClick={resetFilters} className="text-center text-xs text-invarchCream/60 hover:text-invarchGradientYellow hover:text-opacity-80 hover:underline hover:cursor-pointer hover:underline-offset-4">Reset Default Filters</div>
               <div>
                 <Button variant="primary" mini onClick={applyFilters}>Apply Filters</Button>
               </div>

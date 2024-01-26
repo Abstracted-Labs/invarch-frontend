@@ -52,7 +52,7 @@ const MinMaxRange = (props: MinMaxRangeProps) => {
 
   return (
     <div className='flex flex-col justify-start gap-3'>
-      <span className="text-invarchOffBlack text-sm">{label}</span>
+      <span className="text-invarchCream text-sm">{label}</span>
       <div className="flex justify-center flex-wrap">
         <Range
           values={values}
@@ -73,7 +73,7 @@ const MinMaxRange = (props: MinMaxRangeProps) => {
                 style={{
                   background: getTrackBackground({
                     values: values,
-                    colors: ['#e5e5e5', 'rgba(255, 141, 161, 0.5)', '#e5e5e5'],
+                    colors: ['rgba(255, 255, 255, .1)', '#785EA0', 'rgba(255, 255, 255, .1)'],
                     min: min,
                     max: max
                   })
@@ -86,13 +86,13 @@ const MinMaxRange = (props: MinMaxRangeProps) => {
           renderThumb={({ index, props, isDragged }) => (
             <div
               {...props}
-              className="relative h-4 w-4 rounded-lg bg-invarchPink flex flex-row items-center justify-center shadow-md"
+              className="relative h-4 w-4 rounded-lg bg-invarchGradientYellow flex flex-row items-center justify-center shadow-md"
               style={props.style}
             >
-              <div className="absolute bottom-4 text-invarchOffBlack text-xxs px-3 rounded-lg">
+              <div className="absolute bottom-4 text-invarchCream text-xxs px-3 rounded-lg">
                 {values[index] === max && values[1 - index] <= 0 ? 'Max' : values[index]}
               </div>
-              <div className={`h-2 w-2 p-1 rounded-lg ${ isDragged ? 'bg-white' : 'bg-invarchCream' }`} />
+              <div className={`h-2 w-2 p-1 rounded-lg ${ isDragged ? 'bg-invarchPink' : 'bg-invarchOffBlack/70' }`} />
             </div>
           )}
         />

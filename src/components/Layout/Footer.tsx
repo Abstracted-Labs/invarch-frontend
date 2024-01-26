@@ -56,7 +56,7 @@ const Footer = () => {
           ))}
         </div>
         <div className="my-2">
-          <p className="text-center text-xxs leading-none text-neutral-400">
+          <p className="text-center text-[8px] leading-none text-neutral-400 whitespace-nowrap">
             &copy; {new Date().getFullYear()} - {new Date().getFullYear() + 1} The InvArch Association. All rights reserved.
           </p>
         </div>

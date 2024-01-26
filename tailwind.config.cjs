@@ -7,16 +7,23 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        invarchPink: '#ff8da1', // A vibrant pink for highlights and active elements
-        invarchSoftPink: '#ffd1dc', // A soft pink for background accents and less prominent buttons
-        invarchCream: '#fffaf0', // A warm off-white for card backgrounds and main content areas
-        invarchLightCream: '#f7f4e9', // A light cream for delineating areas without high contrast
-        invarchDarkCream: '#e2dcd5', // A darker cream shade for contrast against lighter cream colors
-        invarchRose: '#f2c6cf', // A muted rose for descriptions and secondary text
-        invarchTextPink: '#d17a8d', // A subdued pink for primary text to ensure readability
-        invarchOffBlack: '#212121' // A soft, off-black color suitable for text and backgrounds
+        invarchPink: '#785EA0',
+        invarchSoftPink: '#ffd1dc',
+        invarchCream: '#fffaf0',
+        invarchLightCream: '#f7f4e9',
+        invarchDarkCream: '#e2dcd5',
+        invarchRose: '#f2c6cf',
+        invarchTextPink: '#d17a8d',
+        invarchOffBlack: '#050505',
+        // Gradient colors
+        invarchGradientLightPurple: '#785EA0',
+        invarchGradientPurple: '#241C3B',
+        invarchGradientPink: '#E34885',
+        invarchGradientYellow: '#F7CE66',
+        defaultHeading: '#fffaf0', // Same as invarchCream
       },
       scrollbar: [ 'dark' ],
+      backgroundImage: [ 'hover' ],
       fontFamily: {
         sans: [ "InterVariable", ...defaultTheme.fontFamily.sans ],
       },
@@ -57,5 +64,14 @@ module.exports = {
       },
     },
   },
-  plugins: [ require("@tailwindcss/forms"), require('tailwind-scrollbar') ],
+  plugins: [ require("@tailwindcss/forms"), require('tailwind-scrollbar'), function ({ addUtilities, theme }) {
+    const newUtilities = {
+      '.hover\\:gradient-text:hover': {
+        background: `linear-gradient(45deg, ${ theme('colors.invarchGradientPurple') }, ${ theme('colors.invarchGradientPink') }, ${ theme('colors.invarchGradientYellow') }`,
+        '-webkit-background-clip': 'text',
+        '-webkit-text-fill-color': 'transparent',
+      },
+    };
+    addUtilities(newUtilities, [ 'responsive', 'hover' ]);
+  } ],
 };

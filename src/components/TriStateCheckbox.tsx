@@ -77,9 +77,9 @@ const TriStateCheckbox = (props: TriStateCheckboxProps) => {
         ref={checkboxRef}
         checked={checkboxState === CheckboxState.Checked}
         onChange={handleClick}
-        className={`form-checkbox h-4 w-4 bg-invarchCream rounded-sm text-invarchRose focus:outline-none focus:ring-0 focus:ring-offset-0 focus:text-invarchPink ${ checkboxState === CheckboxState.Indeterminate ? 'indeterminate-checkbox' : '' }`}
+        className={`form-checkbox h-4 w-4 bg-invarchOffBlack rounded-sm text-invarchPink focus:outline-none focus:ring-0 focus:ring-offset-0 focus:text-invarchPink ${ checkboxState === CheckboxState.Indeterminate ? 'indeterminate-checkbox' : '' }`}
       />
-      <span className='text-invarchOffBlack text-xs'>{label}</span>
+      <span className='text-invarchCream text-xs'>{label}</span>
     </div>
   );
 };

@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import logoFull from "../../assets/invarch/invarch-logo.svg";
+import logoFull from "../../assets/invarch/invarch-logo-white.svg";
 import LoginButton from "../LoginButton";
 import Button from "../Button";
-import MenuIcon from "../../assets/invarch/menu-icon-pink.svg";
-import CloseIcon from "../../assets/invarch/close-icon-pink.svg";
+import MenuIcon from "../../assets/menu-icon.svg";
+import CloseIcon from "../../assets/close-icon.svg";
 import { useEffect, useState } from "react";
 import { SideNavProps } from "./SideNav";
 
@@ -21,7 +21,7 @@ const Header = (props: SideNavProps) => {
   }, [isNavOpen]);
 
   return (
-    <nav className="fixed flex flex-row w-full z-[49] justify-between bg-invarchDarkCream bg-opacity-40 backdrop-blur-sm">
+    <nav className="fixed flex flex-row w-full z-[49] justify-between bg-black bg-opacity-40 backdrop-blur-sm">
       <div className="w-full flex flex-row justify-between gap-8 p-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-4">
           <div className="flex-shrink-0">

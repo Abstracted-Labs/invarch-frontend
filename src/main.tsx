@@ -10,7 +10,7 @@ import {
 } from "urql";
 import { createClient as createWSClient } from "graphql-ws";
 import Claim from "./routes/claim";
-// import Transfer from "./routes/xtransfer";
+import Transfer from "./routes/xtransfer";
 import Staking from "./routes/staking";
 import NotFound from "./routes/not-found";
 import "./index.css";
@@ -48,7 +48,7 @@ const client = new Client({
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   // <React.StrictMode>
   <>
-    <Toaster position="bottom-right" />
+    <Toaster position="bottom-right" toastOptions={{ className: 'bg-invarchOffBlack bg-opacity-70 text-invarchCream border border-invarchCream border-opacity-20 shadow-sm' }} />
     <BrowserRouter>
       <ApiProvider>
         <URQLProvider value={client}>
@@ -62,7 +62,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 
               <Route path="claim" element={<Claim />} />
 
-              {/* <Route path="transfer" element={<Transfer />} /> */}
+              <Route path="transfer" element={<Transfer />} />
 
               <Route path="staking" element={<Staking />} />
 

@@ -1,7 +1,6 @@
 import Button from "./Button";
 import DisconnectIcon from "../assets/disconnect-icon.svg";
-import InvarchPinkIcon from "../assets/invarch/invarch-black.svg";
-import InvarchBlackIcon from "../assets/invarch/invarch-white.svg";
+import InvarchLogoIcon from "../assets/invarch/invarch-gradient.svg";
 import { useCallback, useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
 import { shallow } from "zustand/shallow";
@@ -13,7 +12,7 @@ import { formatBalanceToTwoDecimals } from "../utils/formatNumber";
 
 const LoginButton = () => {
   const [balance, setBalance] = useState<BigNumber>();
-  const [isHovered, setIsHovered] = useState(false);
+  // const [isHovered, setIsHovered] = useState(false);
   const [showFirstSpan, setShowFirstSpan] = useState(true);
   const { handleConnect } = useConnect();
   const api = useApi();
@@ -46,22 +45,22 @@ const LoginButton = () => {
     });
   }, [selectedAccount, api]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsHovered(false);
-    };
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     setIsHovered(false);
+  //   };
 
-    // Set the initial state based on the current window size
-    handleResize();
+  //   // Set the initial state based on the current window size
+  //   handleResize();
 
-    // Add event listener
-    window.addEventListener('resize', handleResize);
+  //   // Add event listener
+  //   window.addEventListener('resize', handleResize);
 
-    // Remove event listener on cleanup
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  //   // Remove event listener on cleanup
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, []);
 
   useEffect(() => {
     loadBalance();
@@ -85,8 +84,8 @@ const LoginButton = () => {
     groupLabel={selectedAccount ? <div className="lg:w-10 lg:h-10 w-8 h-8 p-3 flex flex-row items-center justify-center"><img src={DisconnectIcon} alt="Disconnect" /></div> : null}
     groupCallback={onDisconnect}
     onClick={handleConnect}
-    onMouseEnter={() => setIsHovered(true)}
-    onMouseLeave={() => setIsHovered(false)}
+  // onMouseEnter={() => setIsHovered(true)}
+  // onMouseLeave={() => setIsHovered(false)}
   >
     <div className="flex-grow">
       {selectedAccount ? (
@@ -94,9 +93,8 @@ const LoginButton = () => {
           <span className={`relative -top-[2px] flex font-bold transition-transform transform truncate ${ showFirstSpan ? 'translate-y-3' : 'translate-y-12' }`}>
             {selectedAccount.meta.name || selectedAccount.address}
           </span>
-          <span className={`relative -top-[8px] md:-top-[10px] flex flex-row items-center gap-1 transition-transform transform ${ showFirstSpan ? 'translate-y-20' : 'translate-y-0' }`}>
-            {isHovered ? <img className="w-3 h-3" src={InvarchBlackIcon} alt="tnkr icon" /> :
-              <img className="w-3 h-3" src={InvarchPinkIcon} alt="tnkr icon" />}
+          <span className={`relative -top-[8px] md:-top-[10px] flex flex-row items-center gap-2 transition-transform transform ${ showFirstSpan ? 'translate-y-10' : 'translate-y-0' }`}>
+            <img className="w-3 h-3" src={InvarchLogoIcon} alt="tnkr icon" />
             <span className="truncate">
               {formattedBalance} VARCH
             </span>

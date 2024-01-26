@@ -1,12 +1,11 @@
 import { Dialog } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { shallow } from "zustand/shallow";
-import useModal, { Metadata, ModalState, modalName } from "../stores/modals";
+import useModal, { MODAL_STYLE, Metadata, ModalState, modalName } from "../stores/modals";
 import { useEffect, useState } from "react";
 import Avatar from "../components/Avatar";
 import { AnyJson } from "@polkadot/types/types";
 import Button from "../components/Button";
-import { BG_GRADIENT } from "../utils/consts";
 import useApi from "../hooks/useApi";
 import toast from "react-hot-toast";
 import SocialXIcon from "../assets/social-x-icon.svg";
@@ -138,25 +137,24 @@ const ViewMembers = (props: ViewMembersProps) => {
   return isOpen ? (
     <Dialog open={true} onClose={closeModal}>
       <Dialog.Title className="sr-only">View Members</Dialog.Title>
-      <div className="fixed inset-0 z-[49] h-screen w-full bg-invarchCream/10 backdrop-blur-md" />
-      <button className="pointer fixed top-0 right-0 z-[50] flex cursor-pointer flex-col items-center justify-center bg-neutral-200 bg-transparent bg-opacity-50 p-6 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-30">
+      <div className="fixed inset-0 z-[49] h-screen w-full bg-invarchOffBlack/10 backdrop-blur-md" />
+      <button className="pointer fixed top-0 right-0 z-50 flex cursor-pointer flex-col items-center justify-center p-3 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-50">
         <XMarkIcon className="h-5 w-5" />
-        <span className="block">Close</span>
       </button>
       <Dialog.Panel>
         <>
-          <div className={`fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col justify-between w-[350px] sm:w-auto h-[472px] rounded-xl space-y-4 p-8 border border-[2px] border-invarchOffBlack ${ BG_GRADIENT }`}>
+          <div className={MODAL_STYLE}>
             <div className="flex items-center space-x-4">
               <Avatar src={image} alt="Project Image" />
               <div className="flex flex-col items-start gap-1 justify-start">
-                <div className="font-bold text-invarchOffBlack text-[18px] text-center tracking-[0] leading-none">
+                <div className="font-bold text-invarchCream text-[18px] text-center tracking-[0] leading-none">
                   {name}
                 </div>
-                <span className="text-xs text-invarchOffBlack">Members: {members ? members.length : 0}</span>
+                <span className="text-xs text-invarchCream/50">Members: {members ? members.length : 0}</span>
               </div>
             </div>
             <div className="overflow-y-auto h-3/5 tinker-scrollbar scrollbar scrollbar-thin scrollbar-thumb-invarchPink pr-5">
-              <div className="text-invarchOffBlack text-[14px] tracking-[0] leading-[18px] flex flex-col gap-2">
+              <div className="text-invarchCream text-[14px] tracking-[0] leading-[18px] flex flex-col gap-2">
                 {!loading ? members.map((member) => {
                   const rawMemberIdentity = member ? membersIdentity[member.toString()] : null;
                   const memberIdentity = rawMemberIdentity ? Object.fromEntries(
@@ -164,7 +162,7 @@ const ViewMembers = (props: ViewMembersProps) => {
                     Object.entries(rawMemberIdentity).filter(([_, value]) => typeof value !== 'object')
                   ) : null;
                   return (
-                    <div className="rounded-lg bg-invarchCream hover:bg-invarchLightCream transition-colors hover:text-invarchPink px-4 py-3" key={member?.toString()}>
+                    <div className="rounded-lg bg-invarchPink/10 hover:bg-invarchPink/30 transition-colors hover:text-invarchPink px-4 py-3" key={member?.toString()}>
                       <div className="flex flex-row gap-2 items-center">
                         <Avatar src={memberIdentity && typeof memberIdentity.image === 'string' ? memberIdentity.image : undefined} alt="Member Image" mini />
 
@@ -191,7 +189,7 @@ const ViewMembers = (props: ViewMembersProps) => {
                             </div>
                           )}
 
-                          <div onClick={() => handleCopy(member?.toString())} className="text-xs hover:cursor-copy truncate text-invarchOffBlack hover:underline underline-offset-2">
+                          <div onClick={() => handleCopy(member?.toString())} className="text-xs hover:cursor-copy truncate text-invarchCream/60 hover:underline underline-offset-2">
                             {member?.toString()}
                           </div>
                         </div>

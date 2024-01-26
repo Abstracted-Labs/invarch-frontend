@@ -4,19 +4,20 @@ import { LockClosedIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import { StakingCore, CoreEraStakeInfoType, ChainPropertiesType, CoreIndexedRewardsType } from '../routes/staking';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import TotalStakersIcon from '../assets/invarch/total-stakers-icon-dark.svg';
-import TotalStakedIcon from '../assets/invarch/total-staked-icon-dark.svg';
-import MyProjectStakeIcon from '../assets/invarch/my-project-stake-icon-dark.svg';
-import ClaimedRewardsIcon from '../assets/invarch/claimed-rewards-icon-dark.svg';
-import UnclaimedRewardsIcon from '../assets/invarch/unclaimed-rewards-icon-dark.svg';
-import SupportShareIcon from '../assets/invarch/support-share-icon-dark.svg';
-import MinSupportIcon from '../assets/invarch/min-support-icon-dark.svg';
+import TotalStakersIcon from '../assets/invarch/total-stakers-icon-light.svg';
+import TotalStakedIcon from '../assets/invarch/total-staked-icon-light.svg';
+import MyProjectStakeIcon from '../assets/invarch/my-project-stake-icon-light.svg';
+import ClaimedRewardsIcon from '../assets/invarch/claimed-rewards-icon-light.svg';
+import UnclaimedRewardsIcon from '../assets/invarch/unclaimed-rewards-icon-light.svg';
+import SupportShareIcon from '../assets/invarch/support-share-icon-light.svg';
+import MinSupportIcon from '../assets/invarch/min-support-icon-light.svg';
 import Avatar from './Avatar';
 import { AnyJson } from '@polkadot/types/types';
 import useApi from '../hooks/useApi';
 import { formatNumberShorthand } from '../utils/formatNumber';
 import Button from './Button';
-import { BG_GRADIENT } from '../utils/consts';
+import { HOVER_GRADIENT } from '../utils/consts';
+
 export interface ProjectCardProps {
   core: StakingCore;
   totalUserStaked: BigNumber | undefined;
@@ -38,7 +39,7 @@ export interface ProjectCardProps {
   mini: boolean;
 }
 
-const STAT_UNDERLINE = `border-b border-b-[#2B2C30]`;
+const STAT_UNDERLINE = `border-b border-b-invarchCream border-opacity-20`;
 
 const ProjectCard = (props: ProjectCardProps) => {
   const {
@@ -128,9 +129,9 @@ const ProjectCard = (props: ProjectCardProps) => {
     elements.forEach(element => {
       const htmlElement = element as HTMLElement;
       if (isHovering) {
-        htmlElement.style.backgroundColor = 'rgba(242, 198, 207, 0.5)'; // 50% invarchRose
+        htmlElement.style.backgroundImage = HOVER_GRADIENT;
       } else {
-        htmlElement.style.backgroundColor = '';
+        htmlElement.style.backgroundImage = '';
       }
     });
   }, [mini]);
@@ -162,18 +163,18 @@ const ProjectCard = (props: ProjectCardProps) => {
       onTouchEnd={(e) => handleStatsHover(false, 'stats-1', e)}
     >
       <div className='flex flex-row items-center gap-2'>
-        <div className="w-5 h-5 rounded-full bg-invarchPink bg-opacity-60 flex items-center justify-center">
+        <div className="w-5 h-5 rounded-full bg-invarchPink bg-opacity-40 flex items-center justify-center">
           <img src={TotalStakersIcon} alt="Total Stakers Icon" className='w-3 h-auto p-[1px]' />
         </div>
-        <div className="font-normal text-invarchOffBlack text-[12px] tracking-[0] leading-[normal]">
+        <div className="font-normal text-invarchCream text-[12px] tracking-[0] leading-[normal]">
           Total Stakers
         </div>
       </div>
-      <div className="font-normal text-invarchOffBlack text-[12px] text-right tracking-[0] leading-[normal] flex flex-row items-center gap-1">
+      <div className="font-normal text-invarchCream text-[12px] text-right tracking-[0] leading-[normal] flex flex-row items-center gap-1">
         {(coreInfo?.numberOfStakers || 0) >=
           (chainProperties?.maxStakersPerCore || 0) ? (
           <LockClosedIcon
-            className="h-3 w-3 cursor-pointer text-invarchOffBlack"
+            className="h-3 w-3 cursor-pointer text-invarchCream"
             onClick={() => {
               toast.error(
                 "This core has reached the staker limit"
@@ -194,14 +195,14 @@ const ProjectCard = (props: ProjectCardProps) => {
       onTouchEnd={(e) => handleStatsHover(false, 'stats-2', e)}
     >
       <div className='flex flex-row items-center gap-2'>
-        <div className="w-5 h-5 rounded-full bg-invarchPink bg-opacity-60 flex items-center justify-center">
+        <div className="w-5 h-5 rounded-full bg-invarchPink bg-opacity-40 flex items-center justify-center">
           <img src={TotalStakedIcon} alt="Total Staked Icon" className='w-3 h-auto p-[1px]' />
         </div>
-        <div className="font-normal text-invarchOffBlack text-[12px] tracking-[0] leading-[normal]">
+        <div className="font-normal text-invarchCream text-[12px] tracking-[0] leading-[normal]">
           Total Staked
         </div>
       </div>
-      <div className="font-normal text-invarchOffBlack text-[12px] text-right tracking-[0] leading-[normal] truncate">
+      <div className="font-normal text-invarchCream text-[12px] text-right tracking-[0] leading-[normal] truncate">
         {coreInfo?.totalStaked
           ? `${ formatNumberShorthand(parseFloat(coreInfo?.totalStaked.toString()) / Math.pow(10, 12)) } TNKR`
           : '--'}
@@ -217,14 +218,14 @@ const ProjectCard = (props: ProjectCardProps) => {
       onTouchEnd={(e) => handleStatsHover(false, 'stats-3', e)}
     >
       <div className='flex flex-row items-center gap-2'>
-        <div className="w-5 h-5 rounded-full bg-invarchPink bg-opacity-60 flex items-center justify-center">
+        <div className="w-5 h-5 rounded-full bg-invarchPink bg-opacity-40 flex items-center justify-center">
           <img src={MyProjectStakeIcon} alt="My Project Stake Icon" className='w-3 h-auto p-[1px]' />
         </div>
-        <div className="font-normal text-invarchOffBlack text-[12px] tracking-[0] leading-[normal]">
+        <div className="font-normal text-invarchCream text-[12px] tracking-[0] leading-[normal]">
           My Stake
         </div>
       </div>
-      <div className="font-normal text-invarchOffBlack text-[12px] text-right tracking-[0] leading-[normal] truncate">
+      <div className="font-normal text-invarchCream text-[12px] text-right tracking-[0] leading-[normal] truncate">
         {totalUserStaked
           ? `${ formatNumberShorthand(parseFloat(totalUserStaked.toString()) / Math.pow(10, 12)) } TNKR`
           : '--'}
@@ -240,14 +241,14 @@ const ProjectCard = (props: ProjectCardProps) => {
       onTouchEnd={(e) => handleStatsHover(false, 'stats-4', e)}
     >
       <div className='flex flex-row items-center gap-2'>
-        <div className="w-5 h-5 rounded-full bg-invarchPink bg-opacity-60 flex items-center justify-center">
+        <div className="w-5 h-5 rounded-full bg-invarchPink bg-opacity-40 flex items-center justify-center">
           <img src={ClaimedRewardsIcon} alt="Total Staked Icon" className='w-3 h-auto p-[1px]' />
         </div>
-        <div className="font-normal text-invarchOffBlack text-[12px] tracking-[0] leading-[normal]">
+        <div className="font-normal text-invarchCream text-[12px] tracking-[0] leading-[normal]">
           Claimed Rewards
         </div>
       </div>
-      <div className="font-normal text-invarchOffBlack text-[12px] text-right tracking-[0] leading-[normal] truncate">
+      <div className="font-normal text-invarchCream text-[12px] text-right tracking-[0] leading-[normal] truncate">
         {coreRewards?.totalRewards
           ? `${ formatNumberShorthand(parseFloat(coreRewards?.totalRewards.toString()) / Math.pow(10, 12)) } TNKR`
           : '--'}
@@ -263,14 +264,14 @@ const ProjectCard = (props: ProjectCardProps) => {
       onTouchEnd={(e) => handleStatsHover(false, 'stats-5', e)}
     >
       <div className='flex flex-row items-center gap-2'>
-        <div className="w-5 h-5 rounded-full bg-invarchPink bg-opacity-60 flex items-center justify-center">
+        <div className="w-5 h-5 rounded-full bg-invarchPink bg-opacity-40 flex items-center justify-center">
           <img src={UnclaimedRewardsIcon} alt="Total Staked Icon" className='w-3 h-auto p-[1px]' />
         </div>
-        <div className="font-normal text-invarchOffBlack text-[12px] tracking-[0] leading-[normal]">
+        <div className="font-normal text-invarchCream text-[12px] tracking-[0] leading-[normal]">
           Unclaimed Rewards
         </div>
       </div>
-      <div className="font-normal text-invarchOffBlack text-[12px] text-right tracking-[0] leading-[normal] truncate">
+      <div className="font-normal text-invarchCream text-[12px] text-right tracking-[0] leading-[normal] truncate">
         {coreRewards?.totalUnclaimed
           ? `${ formatNumberShorthand(parseFloat(coreRewards?.totalUnclaimed.toString()) / Math.pow(10, 12)) } TNKR`
           : '--'}
@@ -286,14 +287,14 @@ const ProjectCard = (props: ProjectCardProps) => {
       onTouchEnd={(e) => handleStatsHover(false, 'stats-6', e)}
     >
       <div className='flex flex-row items-center gap-2'>
-        <div className="w-5 h-5 rounded-full bg-invarchPink bg-opacity-60 flex items-center justify-center">
+        <div className="w-5 h-5 rounded-full bg-invarchPink bg-opacity-40 flex items-center justify-center">
           <img src={SupportShareIcon} alt="Total Staked Icon" className='w-3 h-auto p-[1px]' />
         </div>
-        <div className="font-normal text-invarchOffBlack text-[12px] tracking-[0] leading-[normal]">
+        <div className="font-normal text-invarchCream text-[12px] tracking-[0] leading-[normal]">
           Support Share
         </div>
       </div>
-      <div className="font-normal text-invarchOffBlack text-[12px] text-right tracking-[0] leading-[normal] truncate">
+      <div className="font-normal text-invarchCream text-[12px] text-right tracking-[0] leading-[normal] truncate">
         {coreInfo?.totalStaked && aggregateStaked
           ? `${ new BigNumber(coreInfo?.totalStaked).times(100).div(aggregateStaked).toFixed(2) }%`
           : '--'}
@@ -309,14 +310,14 @@ const ProjectCard = (props: ProjectCardProps) => {
       onTouchEnd={(e) => handleStatsHover(false, 'stats-7', e)}
     >
       <div className='flex flex-row items-center gap-2'>
-        <div className="w-5 h-5 rounded-full bg-invarchPink bg-opacity-60 flex items-center justify-center">
+        <div className="w-5 h-5 rounded-full bg-invarchPink bg-opacity-40 flex items-center justify-center">
           <img src={MinSupportIcon} alt="Total Staked Icon" className='w-3 h-auto p-[1px]' />
         </div>
-        <div className="font-normal text-invarchOffBlack text-[12px] tracking-[0] leading-[normal]">
+        <div className="font-normal text-invarchCream text-[12px] tracking-[0] leading-[normal]">
           Min. Support Met
         </div>
       </div>
-      <div className="text-invarchOffBlack font-normal text-[12px] text-right tracking-[0] leading-[normal] truncate">
+      <div className="text-invarchCream font-normal text-[12px] text-right tracking-[0] leading-[normal] truncate">
         <span className={`${ minSupportMet ? 'text-green-400' : 'text-red-400' }`}>
           {coreInfo?.totalStaked && minStakeReward
             ? `${ minSupportMet ? '25K' : formatNumberShorthand(parseFloat(coreInfo?.totalStaked.toString()) / Math.pow(10, 12)) }/${ formatNumberShorthand(parseFloat(minStakeReward.toString()) / Math.pow(10, 12)) }`
@@ -329,35 +330,35 @@ const ProjectCard = (props: ProjectCardProps) => {
   return (
     <div
       key={core.account}
-      className={`flex flex-col justify-between w-full rounded-xl space-y-4 border border-2 border-invarchOffBlack ${ BG_GRADIENT }`}>
+      className={`flex flex-col justify-between w-full rounded-xl space-y-4 border border-invarchCream border-opacity-20 bg-invarchOffBlack bg-opacity-70`}>
       <div className={`relative p-8 flex flex-col gap-6 justify-start h-auto`}>
 
         {/* Avatar, Name, Members */}
         <div className="flex items-center space-x-4">
           <Avatar src={core.metadata.image} alt="Project Image" />
           <div className="flex flex-col items-start gap-1 justify-start text-ellipsis truncate">
-            <h4 className="font-bold text-invarchOffBlack text-[18px] text-left tracking-[0] leading-none truncate">
+            <h4 className="font-bold text-invarchCream text-[18px] text-left tracking-[0] leading-none truncate">
               {core.metadata.name}
             </h4>
-            {!mini ? <span onClick={handleViewMembers} className="text-xs text-invarchOffBlack hover:text-invarchPink cursor-pointer">Members: {members ? members.length : 0}</span> : null}
+            {!mini ? <span onClick={handleViewMembers} className={`text-xs text-invarchCream/50  hover:text-invarchGradientYellow cursor-pointer`}>Members: <span className='underline underline-offset-2'>{members ? members.length : 0}</span></span> : null}
           </div>
         </div>
 
         {/* Description */}
-        {!mini ? <div ref={descriptionRef} className={`relative bg-invarchCream rounded-lg p-4 h-28 hover:cursor-pointer`}
+        {!mini ? <div ref={descriptionRef} className={`relative bg-invarchPink bg-opacity-10 rounded-lg p-4 h-28 hover:cursor-pointer border border-px border-invarchCream border-opacity-10`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={handleReadMore}>
-          <div className={`absolute inset-0 flex justify-center items-center font-normal text-invarchOffBlack text-[12px] tracking-[0] leading-[normal] ${ isHovered ? 'opacity-100' : 'md:opacity-0 opacity-100' } z-10 pointer-events-none`}>
+          <div className={`absolute inset-0 flex justify-center items-center font-normal text-invarchGradientYellow text-[12px] tracking-[0] leading-[normal] ${ isHovered ? 'opacity-100 underline underline-offset-2' : 'md:opacity-0 opacity-100 underline underline-offset-2' } z-10 pointer-events-none`}>
             Show More
           </div>
-          <p className={`font-normal text-invarchOffBlack text-[14px] tracking-[0] leading-[18px] line-clamp-4 gradient-bottom hover:text-opacity-20 text-opacity-20 md:text-opacity-100`}>
+          <p className={`font-normal text-invarchCream text-[14px] tracking-[0] leading-[18px] line-clamp-4 gradient-bottom hover:text-opacity-20 text-opacity-20 md:text-opacity-100`}>
             {core.metadata.description}
           </p>
         </div> : null}
 
         <div
-          className={`relative stats-section grid grid-cols-1 gap-2 ${ mini ? '' : 'h-28' } overflow-y-scroll tinker-scrollbar scrollbar-thumb-invarchPink scrollbar-thin scrollbar pr-3`}
+          className={`relative stats-section grid grid-cols-1 gap-2 ${ mini ? '' : 'h-28' } overflow-y-auto tinker-scrollbar scrollbar-thumb-invarchPink scrollbar-thin scrollbar pr-3`}
           onScroll={(e) => {
             // Update the stored scroll position
             scrollPositionRef.current = (e.target as HTMLElement).scrollTop;

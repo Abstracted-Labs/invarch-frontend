@@ -26,15 +26,15 @@ const ApiProvider = ({ children }: { children: ReactNode; }) => {
 
   if (error)
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-neutral-200">
+      <div className="flex h-screen w-screen items-center justify-center bg-invarchOffBlack">
         <p className="text-center">
-          <span className="text-invarchOffBlack">
+          <span className="text-invarchCream">
             Oops! Looks like there is an RPC issue.
           </span>
 
           <br />
 
-          <span className="text-invarchOffBlack">
+          <span className="text-invarchCream">
             Head to the{" "}
             <a
               target="_blank"
@@ -52,7 +52,7 @@ const ApiProvider = ({ children }: { children: ReactNode; }) => {
 
   if (!api)
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-neutral-200">
+      <div className="flex h-screen w-screen items-center justify-center bg-invarchOffBlack">
         <LoadingSpinner />
       </div>
     );

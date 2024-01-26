@@ -275,10 +275,10 @@ const Overview = () => {
           <DaoList mini={true} isOverview={true} />
         </div>
       ) : <div className="text-center">
-        <h5 className="text-sm font-bold text-invarchOffBlack">
+        <h5 className="text-sm font-bold text-invarchCream">
           Wallet not connected
         </h5>
-        <p className="mt-2 text-xs text-invarchOffBlack">
+        <p className="mt-2 text-xs text-invarchCream">
           Connect your wallet to access your account overview.
         </p>
       </div>}

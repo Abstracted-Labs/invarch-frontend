@@ -1,7 +1,7 @@
 import { Dialog } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { shallow } from "zustand/shallow";
-import useModal from "../stores/modals";
+import useModal, { MODAL_STYLE } from "../stores/modals";
 import useAccount from "../stores/account";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import Identicon from '@polkadot/react-identicon';
@@ -9,7 +9,6 @@ import { stringShorten } from "@polkadot/util";
 import { capitalizeFirst } from "../utils/capitalizeFirst";
 import { WalletNameEnum, getWalletIcon } from "../utils/getWalletIcon";
 import Button from "../components/Button";
-import { BG_GRADIENT } from "../utils/consts";
 import toast from "react-hot-toast";
 
 const AccountSelector = (props: { isOpen: boolean; }) => {
@@ -79,23 +78,22 @@ const AccountSelector = (props: { isOpen: boolean; }) => {
   return isOpen ? (
     <Dialog open={true} onClose={closeModal}>
       <Dialog.Title className="sr-only">Select your Wallet</Dialog.Title>
-      <div className="fixed inset-0 z-[49] h-screen w-full bg-invarchCream/10 backdrop-blur-md" />
-      <button className="pointer fixed top-0 right-0 z-50 flex cursor-pointer flex-col items-center justify-center bg-neutral-200 bg-transparent bg-opacity-50 p-6 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-30">
+      <div className="fixed inset-0 z-[49] h-screen w-full backdrop-blur-md" />
+      <button className="pointer fixed top-0 right-0 z-50 flex cursor-pointer flex-col items-center justify-center p-3 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-50">
         <XMarkIcon className="h-5 w-5" />
-        <span className="block">Close</span>
       </button>
       <Dialog.Panel>
         <>
-          <div className={`fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col justify-between w-[350px] md:w-[530px] rounded-xl space-y-4 px-8 p-8 gap-2 border border-[2px] border-invarchOffBlack text-invarchLightCream ${ BG_GRADIENT }`}>
+          <div className={MODAL_STYLE}>
             <div>
-              <h2 className="text-md font-bold text-invarchOffBlack w-[310px] md:w-[490px] backdrop-blur-sm">
+              <h2 className="text-md font-bold text-invarchCream w-[310px] md:w-[490px] backdrop-blur-sm">
                 <span>Select your Wallet</span>
               </h2>
               <div className="flex-shrink flex flex-row justify-center gap-3 mt-3">
                 {Object.values(WalletNameEnum).map((walletName) => {
                   const walletIcon = getWalletIcon(walletName);
                   return (
-                    <button key={walletName} onClick={() => handleExtensionClick(walletName)} className={`rounded-lg p-3 border border-invarchOffBlack bg-invarchPink bg-opacity-10 hover:text-invarchPink hover:border-opacity-80 hover:bg-opacity-20 ${ extensions.includes(walletName) ? 'bg-invarchPink bg-opacity-20 border text-invarchPink border-opacity-60' : 'border text-invarchPink border-opacity-20 hover:bg-opacity-10' }`}>
+                    <button key={walletName} onClick={() => handleExtensionClick(walletName)} className={`rounded-lg p-3 border border-invarchCream bg-invarchPink bg-opacity-20 hover:text-invarchPink hover:border-opacity-80 hover:bg-opacity-20 ${ extensions.includes(walletName) ? 'bg-invarchPink bg-opacity-20 border text-invarchPink border-opacity-60' : 'border text-invarchPink border-opacity-20 hover:bg-opacity-10' }`}>
 
                       <div className="flex flex-col items-center justify-center">
                         <img src={walletIcon} alt={walletName} className={`h-5 w-5 ${ extensions.includes(walletName) ? '' : 'opacity-30' }`} />
@@ -105,14 +103,14 @@ const AccountSelector = (props: { isOpen: boolean; }) => {
                 })}
               </div>
             </div>
-            <ul className="w-full h-96 tinker-scrollbar scrollbar scrollbar-thumb-invarchPink overflow-y-scroll pr-4">
+            <ul className="w-full h-96 tinker-scrollbar scrollbar scrollbar-thumb-invarchPink overflow-y-auto pr-4">
               {accounts.filter(account => getWalletIcon(account.meta?.source) !== undefined).map((account, index) => {
                 return (
                   <li
                     role="menuitem"
                     tabIndex={0}
                     key={`${ account.address }-${ index }}`}
-                    className={`flex flex-row items-center gap-4 cursor-pointer p-6 transition-colors hover:text-invarchPink ${ account.address === selectedAccount?.address ? 'rounded-xl bg-invarchCream text-invarchOffBlack hover:bg-invarchLightCream' : 'text-invarchOffBlack' }`}
+                    className={`flex flex-row items-center gap-4 cursor-pointer p-6 mb-2 transition-colors hover:text-invarchPink border border-transparent bg-invarchPink/10 text-invarchCream hover:bg-invarchPink/20 ${ account.address === selectedAccount?.address ? 'rounded-xl  border-invarchPink/40' : 'rounded-xl' }`}
                     onClick={() => {
                       handleAccountSelection(account);
                     }}
@@ -122,7 +120,7 @@ const AccountSelector = (props: { isOpen: boolean; }) => {
                       }
                     }}
                   >
-                    <div className={`rounded-full p-1 flex items-center ${ account.address !== selectedAccount?.address ? 'bg-invarchLightCream' : 'bg-invarchCream' }`}>
+                    <div className={`rounded-full p-1 flex items-center ${ account.address !== selectedAccount?.address ? 'bg-invarchLightCream' : 'bg-invarchOffBlack' }`}>
                       <Identicon value={account.address} size={47} theme="substrate" />
                     </div>
                     <div className="flex flex-col gap-0 truncate">
@@ -131,9 +129,9 @@ const AccountSelector = (props: { isOpen: boolean; }) => {
                           <div className="text-xxs text-ellipsis truncate">{account.meta?.source}</div> :
                           <img src={getWalletIcon(account.meta?.source)} alt={account.meta?.source} className="w-4 h-4 mr-1" />
                         }
-                        <span className="text-md leading-[20px] font-normal text-ellipsis truncate">{capitalizeFirst(account.meta?.name)}</span>
+                        <span className="text-md leading-[20px] font-bold text-ellipsis truncate">{capitalizeFirst(account.meta?.name)}</span>
                       </div>
-                      <span onClick={(e) => handleCopy(e, account.address)} className="block overflow-hidden text-ellipsis text-xs text-gray-500 hover:underline hover:underline-offset-2 truncate mt-[2px]">
+                      <span onClick={(e) => handleCopy(e, account.address)} className="block overflow-hidden text-ellipsis text-xs text-invarchCream/60 hover:underline hover:underline-offset-2 truncate mt-[2px]">
                         {stringShorten(account.address, 20)}
                       </span>
                     </div>

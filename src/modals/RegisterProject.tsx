@@ -9,9 +9,8 @@ import { z } from "zod";
 import { shallow } from "zustand/shallow";
 import useApi from "../hooks/useApi";
 import useAccount from "../stores/account";
-import useModal from "../stores/modals";
+import useModal, { MODAL_STYLE } from "../stores/modals";
 import Button from "../components/Button";
-import { BG_GRADIENT } from "../utils/consts";
 import { getSignAndSendCallbackWithPromise } from "../utils/getSignAndSendCallback";
 import { INVARCH_WEB3_ENABLE } from "../hooks/useConnect";
 
@@ -154,16 +153,15 @@ const RegisterProject = ({ isOpen }: { isOpen: boolean; }) => {
     <Dialog open={true} onClose={closeCurrentModal}>
       <>
         <Dialog.Title className="sr-only">Register New DAO</Dialog.Title>
-        <div className="fixed inset-0 z-[49] h-screen w-full bg-invarchCream/10 backdrop-blur-md" />
-        <button className="pointer fixed top-0 right-0 z-50 flex cursor-pointer flex-col items-center justify-center bg-neutral-200 bg-transparent bg-opacity-50 p-6 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-30">
+        <div className="fixed inset-0 z-[49] h-screen w-full bg-invarchOffBlack/10 backdrop-blur-md" />
+        <button className="pointer fixed top-0 right-0 z-50 flex cursor-pointer flex-col items-center justify-center p-3 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-50">
           <XMarkIcon className="h-5 w-5" />
-          <span className="block">Close</span>
         </button>
         <Dialog.Panel>
           <>
-            <div className={`fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col justify-between w-[350px] h-[472px] bg-invarchCream rounded-xl space-y-4 p-8 border border-2 border-invarchOffBlack ${ BG_GRADIENT }`}>
+            <div className={MODAL_STYLE}>
               {/* <div className="flex flex-row gap-4">
-                <div className="relative w-full flex flex-col gap-4 overflow-hidden rounded-md border border-gray-50 bg-neutral-200 p-6 sm:flex-row">
+                <div className="relative w-full flex flex-col gap-4 overflow-hidden rounded-md border border-gray-50 bg-invarchOffBlack p-6 sm:flex-row">
                   <div className="flex w-full flex-col gap-4">
                     <div className="flex flex-shrink-0">
                       <img
@@ -177,17 +175,17 @@ const RegisterProject = ({ isOpen }: { isOpen: boolean; }) => {
                       />
                     </div>
                     <div className="flex flex-col gap-4">
-                      <h4 className="font-bold text-invarchOffBlack">{previewState.name}</h4>
+                      <h4 className="font-bold text-invarchCream">{previewState.name}</h4>
 
-                      <p className="text-sm text-invarchOffBlack">
+                      <p className="text-sm text-invarchCream">
                         {previewState.description}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="rounded-md border border-gray-50 bg-neutral-200 p-6">
-                  <h2 className="text-xl font-bold text-invarchOffBlack">Register Project</h2>
+                <div className="rounded-md border border-gray-50 bg-invarchOffBlack p-6">
+                  <h2 className="text-xl font-bold text-invarchCream">Register Project</h2>
 
                   <div className="mt-4 flex flex-col justify-between gap-4">
                     <div className="flex flex-col gap-4">
@@ -199,7 +197,7 @@ const RegisterProject = ({ isOpen }: { isOpen: boolean; }) => {
                           <div className="relative rounded-md  border border-neutral-300 px-3 py-2 shadow-sm focus-within:border-neutral-600 focus-within:ring-1 focus-within:ring-neutral-600">
                             <label
                               htmlFor="core"
-                              className="block text-xs font-medium text-invarchOffBlack"
+                              className="block text-xs font-medium text-invarchCream"
                             >
                               Core ID
                             </label>
@@ -208,7 +206,7 @@ const RegisterProject = ({ isOpen }: { isOpen: boolean; }) => {
                               {...registerProjectForm.register("core", {
                                 required: true,
                               })}
-                              className="block w-full border-0 bg-transparent p-0 text-invarchOffBlack focus:ring-transparent sm:text-sm"
+                              className="block w-full border-0 bg-transparent p-0 text-invarchCream focus:ring-transparent sm:text-sm"
                             />
                             {registerProjectForm.formState.errors.core ? (
                               <div className="text-red-400">
@@ -220,7 +218,7 @@ const RegisterProject = ({ isOpen }: { isOpen: boolean; }) => {
                           <div className="relative rounded-md  border border-neutral-300 px-3 py-2 shadow-sm focus-within:border-neutral-600 focus-within:ring-1 focus-within:ring-neutral-600">
                             <label
                               htmlFor="name"
-                              className="block text-xs font-medium text-invarchOffBlack"
+                              className="block text-xs font-medium text-invarchCream"
                             >
                               Name
                             </label>
@@ -229,7 +227,7 @@ const RegisterProject = ({ isOpen }: { isOpen: boolean; }) => {
                               {...registerProjectForm.register("name", {
                                 required: true,
                               })}
-                              className="block w-full border-0 bg-transparent p-0 text-invarchOffBlack focus:ring-transparent sm:text-sm"
+                              className="block w-full border-0 bg-transparent p-0 text-invarchCream focus:ring-transparent sm:text-sm"
                             />
                             {registerProjectForm.formState.errors.name ? (
                               <div className="text-red-400">
@@ -241,7 +239,7 @@ const RegisterProject = ({ isOpen }: { isOpen: boolean; }) => {
                           <div className="relative rounded-md  border border-neutral-300 px-3 py-2 shadow-sm focus-within:border-neutral-600 focus-within:ring-1 focus-within:ring-neutral-600">
                             <label
                               htmlFor="image"
-                              className="block text-xs font-medium text-invarchOffBlack"
+                              className="block text-xs font-medium text-invarchCream"
                             >
                               Image URL
                             </label>
@@ -250,7 +248,7 @@ const RegisterProject = ({ isOpen }: { isOpen: boolean; }) => {
                               {...registerProjectForm.register("image", {
                                 required: true,
                               })}
-                              className="block w-full border-0 bg-transparent p-0 text-invarchOffBlack focus:ring-transparent sm:text-sm"
+                              className="block w-full border-0 bg-transparent p-0 text-invarchCream focus:ring-transparent sm:text-sm"
                             />
                             {registerProjectForm.formState.errors.image ? (
                               <div className="text-red-400">
@@ -262,7 +260,7 @@ const RegisterProject = ({ isOpen }: { isOpen: boolean; }) => {
                           <div className="relative rounded-md  border border-neutral-300 px-3 py-2 shadow-sm focus-within:border-neutral-600 focus-within:ring-1 focus-within:ring-neutral-600">
                             <label
                               htmlFor="description"
-                              className="block text-xs font-medium text-invarchOffBlack"
+                              className="block text-xs font-medium text-invarchCream"
                             >
                               Description
                             </label>
@@ -270,7 +268,7 @@ const RegisterProject = ({ isOpen }: { isOpen: boolean; }) => {
                               {...registerProjectForm.register("description", {
                                 required: true,
                               })}
-                              className="block w-full border-0 bg-transparent p-0 text-invarchOffBlack focus:ring-transparent sm:text-sm"
+                              className="block w-full border-0 bg-transparent p-0 text-invarchCream focus:ring-transparent sm:text-sm"
                             />
                             {registerProjectForm.formState.errors.description ? (
                               <div className="text-red-400">
@@ -298,8 +296,8 @@ const RegisterProject = ({ isOpen }: { isOpen: boolean; }) => {
                   </div>
                 </div>
               </div> */}
-              <p className="text-invarchOffBlack text-sm">
-                Thank you for your interest in registering your DAO on the InvArch Tinkernet! While an automatic & streamlined process to register your DAO will be available soon, the ability to deploy & register new DAO accounts is currently not supported in the UI<br /><br />In the meantime, if you are interested in deploying & registering a new DAO account, please reach out to the InvArch core team via the <a target="_blank" className="text-invarchPink hover:underline underline-offset-2" rel="noreferrer" href="https://discord.gg/invarch">InvArch Discord Server</a>.
+              <p className="text-invarchCream text-sm">
+                Thank you for your interest in registering your DAO on the InvArch Tinkernet! While an automatic & streamlined process to register your DAO will be available soon, the ability to deploy & register new DAO accounts is currently not supported in the UI.<br /><br />In the meantime, if you are interested in deploying & registering a new DAO account, please reach out to the InvArch core team via the <a target="_blank" className="text-invarchPink hover:underline underline-offset-2" rel="noreferrer" href="https://discord.gg/invarch">InvArch Discord Server</a>.
               </p>
               <div>
                 <Button variant="secondary" mini onClick={closeModal}>Close</Button>

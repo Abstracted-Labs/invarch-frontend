@@ -1,13 +1,13 @@
 import { BigNumber } from 'bignumber.js';
 import { UnclaimedErasType } from '../routes/staking';
 import DashboardCard from './DashboardCard';
-import MyStakeIcon from '../assets/my-stake-icon.svg';
-import UnclaimedErasIcon from '../assets/unclaimed-era-icon.svg';
-import ClaimableRewardsIcon from '../assets/claimable-reward-icon.svg';
-import StakingApyIcon from '../assets/staking-apy-icon.svg';
-import AnnualRewardIcon from '../assets/annual-reward-icon.svg';
-import CurrentEraIcon from '../assets/current-era-icon.svg';
-import AggregateStakedIcon from '../assets/aggregate-staked-icon.svg';
+import MyStakeIcon from '../assets/invarch/my-stake-icon-light.svg';
+import UnclaimedErasIcon from '../assets/invarch/unclaimed-era-icon-light.svg';
+import ClaimableRewardsIcon from '../assets/invarch/claimable-reward-icon-light.svg';
+import StakingApyIcon from '../assets/invarch/staking-apy-icon-light.svg';
+import AnnualRewardIcon from '../assets/invarch/annual-reward-icon-light.svg';
+import CurrentEraIcon from '../assets/invarch/current-era-icon-light.svg';
+import AggregateStakedIcon from '../assets/invarch/aggregate-staked-icon-light.svg';
 import { formatBalanceToTwoDecimals } from '../utils/formatNumber';
 import { useState, useEffect } from 'react';
 
@@ -60,7 +60,7 @@ const MetricDashboard = (props: MetricDashboardProps) => {
 
   return (
     <div
-      className="min-h-40 max-w-[1068px] relative overflow-x-auto rounded-xl shadow flex lg:flex-wrap flex-grow flex-row gap-4 justify-between backdrop-blur-sm bg-invarchLightCream bg-opacity-60 tinker-scrollbar scrollbar scrollbar-thin overflow-x-auto p-4 mb-4">
+      className="min-h-40 max-w-[1068px] relative overflow-x-auto rounded-xl shadow flex lg:flex-wrap flex-grow flex-row gap-4 justify-between backdrop-blur-sm bg-invarchCream bg-opacity-5 tinker-scrollbar scrollbar scrollbar-thin overflow-x-auto p-4 mb-4">
 
       {totalUnclaimed !== undefined && <DashboardCard cardTitle="Unclaimed Rewards" iconSrc={AggregateStakedIcon}>
         {totalUnclaimed ? `${ formatBalanceToTwoDecimals(totalUnclaimed) } TNKR` : "0 TNKR"}

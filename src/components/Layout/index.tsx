@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
-// import pattern from "../../assets/pattern.svg";
+import pattern from "../../assets/invarch/invarch-gradient-bg.png";
 import SideNav from "./SideNav";
 import { useState } from "react";
 
@@ -13,12 +13,11 @@ const Layout = () => {
 
   return (
     <div
-      className="bg-invarchCream h-screen overflow-y-hidden flex flex-col justify-start"
+      className="bg-invarchOffBlack h-screen overflow-y-hidden flex flex-col justify-start"
       aria-hidden="true"
       style={{
-        // backgroundImage: `url(${ pattern })`,
-        backgroundRepeat: 'repeat',
-        backgroundSize: 'stretch',
+        backgroundImage: `url(${ pattern })`,
+        backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
       }}
@@ -35,7 +34,7 @@ const Layout = () => {
         <div className="hidden md:block">
           <SideNav />
         </div>
-        <main className="w-full relative text-invarchOffBlack tinker-scrollbar scrollbar scrollbar-thumb-invarchPink overflow-y-auto overflow-x-hidden">
+        <main className="w-full relative text-invarchCream tinker-scrollbar scrollbar scrollbar-thumb-invarchPink overflow-y-auto overflow-x-hidden">
           <Outlet />
         </main>
       </div>
