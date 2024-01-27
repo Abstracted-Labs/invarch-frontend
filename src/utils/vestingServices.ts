@@ -3,6 +3,7 @@ import BigNumber from "bignumber.js";
 import { VestingScheduleLineItem, DataResultType, LockType, SystemAccount, VestingSchedule } from "../routes/claim";
 import { ApiPromise } from "@polkadot/api";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import { TOKEN_SYMBOL } from "../utils/consts"
 
 export const fetchSystemData = async (selectedAccount: InjectedAccountWithMeta, api: ApiPromise): Promise<DataResultType> => {
   if (!selectedAccount || !api) {
@@ -16,7 +17,7 @@ export const fetchSystemData = async (selectedAccount: InjectedAccountWithMeta, 
     // vesting schedules
     api.query.vesting.vestingSchedules(selectedAccount.address),
     // current block
-    api.query.system.number(),
+    api.query.parachainSystem.lastRelayChainBlockNumber(),
     // available account data
     api.query.system.account<SystemAccount>(selectedAccount.address),
   ]);
@@ -26,7 +27,7 @@ const AVERAGE_BLOCKTIME = 6;
 
 export const calculateVestingSchedule = async (vestingSchedules: VestingSchedule[], api: ApiPromise, currentDate: Date = new Date(), averageBlockTimeInSeconds: number = AVERAGE_BLOCKTIME): Promise<VestingScheduleLineItem[]> => {
   // Fetch the current block number from the blockchain.
-  const currentBlock = new BigNumber((await api.query.system.number()).toString());
+  const currentBlock = new BigNumber((await api.query.parachainSystem.lastRelayChainBlockNumber()).toString());
 
   // Sort the vesting schedules by the end block of each vesting period in ascending order.
   return vestingSchedules.sort((a, b) => (a.start + a.period * a.periodCount) - (b.start + b.period * b.periodCount)).map(schedule => {
@@ -56,7 +57,7 @@ export const calculateVestingSchedule = async (vestingSchedules: VestingSchedule
   });
 };
 
-export const calculateVestingData = (results: DataResultType, vestingSchedules: VestingSchedule[], currentDate: Date = new Date(), averageBlockTimeInSeconds: number = 12) => {
+export const calculateVestingData = (results: DataResultType, vestingSchedules: VestingSchedule[], currentDate: Date = new Date(), averageBlockTimeInSeconds: number = AVERAGE_BLOCKTIME) => {
   if (!results) {
     throw new Error("Results is undefined");
   }
@@ -132,10 +133,10 @@ export const calculateVestingData = (results: DataResultType, vestingSchedules: 
   const endOfVestingPeriod = new Date(currentDate.getTime() + remainingVestingPeriodInSeconds * 1000);
 
   return {
-    vestedClaimable: formatBalance(unlockedClaimableTokens.toString(), { decimals: 12, withUnit: "TNKR", forceUnit: "-" }),
-    vestedRemaining: formatBalance(totalFutureLockedTokens.toString(), { decimals: 12, withUnit: "TNKR", forceUnit: "-" }),
-    frozen: formatBalance(frozen.toString(), { decimals: 12, withUnit: "TNKR", forceUnit: "-" }),
-    available: formatBalance(available.toString(), { decimals: 12, withUnit: "TNKR", forceUnit: "-" }),
+    vestedClaimable: formatBalance(unlockedClaimableTokens.toString(), { decimals: 12, withUnit: TOKEN_SYMBOL, forceUnit: "-" }),
+    vestedRemaining: formatBalance(totalFutureLockedTokens.toString(), { decimals: 12, withUnit: TOKEN_SYMBOL, forceUnit: "-" }),
+    frozen: formatBalance(frozen.toString(), { decimals: 12, withUnit: TOKEN_SYMBOL, forceUnit: "-" }),
+    available: formatBalance(available.toString(), { decimals: 12, withUnit: TOKEN_SYMBOL, forceUnit: "-" }),
     remainingVestingPeriod: new Intl.NumberFormat("en-US", {}).format(remainingVestingPeriod),
     endOfVestingPeriod
   };

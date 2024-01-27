@@ -16,6 +16,7 @@ import { loadProjectCores } from "../utils/stakingServices";
 import { getSignAndSendCallbackWithPromise } from "../utils/getSignAndSendCallback";
 import { CoreEraType } from "./staking";
 import { INVARCH_WEB3_ENABLE } from "../hooks/useConnect";
+import { TOKEN_SYMBOL } from "../utils/consts";
 
 export type SystemAccount = Struct & {
   data: {
@@ -134,7 +135,7 @@ const Claim = () => {
 
         const totalUserStaked = userStakeInfo.reduce((acc, cur) => acc.plus(cur.staked), new BigNumber(0));
 
-        const formattedStaked = formatBalance(totalUserStaked.toString(), { decimals: 12, withUnit: "TNKR", forceUnit: "-" });
+        const formattedStaked = formatBalance(totalUserStaked.toString(), { decimals: 12, withUnit: TOKEN_SYMBOL, forceUnit: "-" });
 
         setTotalStakedTNKR(formattedStaked.toString());
       }
@@ -165,7 +166,7 @@ const Claim = () => {
       }, new BigNumber(0));
 
       // Format the total remaining vesting amount
-      totalInitialVestment.current = formatBalance(remainingVesting.toString(), { decimals: 12, withUnit: "TNKR", forceUnit: "-" });
+      totalInitialVestment.current = formatBalance(remainingVesting.toString(), { decimals: 12, withUnit: TOKEN_SYMBOL, forceUnit: "-" });
 
       setPayoutSchedule(vestingScheduleData);
       setVestingSummary(vestingData);
