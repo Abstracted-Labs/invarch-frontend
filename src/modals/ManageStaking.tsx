@@ -319,10 +319,10 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
 
   const getTabClassNames = useCallback((selected: boolean) => {
     return classNames(
-      "w-full rounded-md py-2.5 text-sm font-medium leading-5 focus:outline-none",
+      "w-full rounded-md py-2.5 text-sm font-medium leading-5 focus:outline-none shadow-lg",
       selected
-        ? "bg-invarchCream text-invarchOffBlack shadow-lg border border-px border-transparent cursor-not-allowed"
-        : "border border-px border-invarchCream/40 text-invarchCream text-opacity-30 hover:text-opacity-80 bg-invarchPink/20 hover:border-invarchPink/100 hover:underline underline-offset-2"
+        ? "bg-invarchOffBlack/30 text-invarchPink border border-px border-transparent cursor-not-allowed border-invarchPink"
+        : "border border-px border-invarchCream/20 text-invarchCream/20 hover:text-invarchPink hover:text-opacity-100 bg-invarchPink/10 hover:border-invarchPink/100 hover:underline underline-offset-2"
     );
   }, []);
 

@@ -61,7 +61,7 @@ const Dropdown = memo(function Dropdown<T extends { name: string; }>(props: Drop
   return (
     <div className='flex-grow'>
       <Listbox value={optionSelected} onChange={handleSelect}>
-        <Listbox.Button className={`relative rounded-md w-full h-[45px] py-2 px-3 text-invarchCream text-sm leading-tight bg-invarchPink bg-opacity-20 border-transparent focus:outline-none focus:ring-0 hover:bg-invarchPink hover:bg-opacity-30`}>
+        <Listbox.Button className={`relative rounded-md w-full h-[45px] py-2 px-3 text-invarchCream text-sm leading-tight bg-invarchPink bg-opacity-20 border border-px border-invarchCream/20 focus:outline-none focus:ring-0 hover:bg-invarchPink hover:bg-opacity-30`}>
           {({ value, open }) => {
             let displayValue;
             if (value && typeof value === 'object' && 'props' in value && value.props.children) {
@@ -90,7 +90,7 @@ const Dropdown = memo(function Dropdown<T extends { name: string; }>(props: Drop
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Listbox.Options className={`absolute z-50 py-1 mt-1 overflow-auto text-xs bg-invarchGradientPurple rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm max-h-52 tinker-scrollbar scrollbar scrollbar-thumb-invarchPink ${ children ? 'w-2/5' : 'w-4/5' }`}>
+          <Listbox.Options className={`absolute z-50 py-1 mt-1 overflow-auto text-xs bg-invarchGradientPurple rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm max-h-52 tinker-scrollbar scrollbar border border-px border-invarchCream/20 scrollbar-thumb-invarchPink ${ children ? 'w-2/5' : 'w-4/5' }`}>
             {children ? children.map((child, childIdx) => (
               <Listbox.Option
                 key={childIdx}

@@ -86,13 +86,13 @@ const MinMaxRange = (props: MinMaxRangeProps) => {
           renderThumb={({ index, props, isDragged }) => (
             <div
               {...props}
-              className="relative h-4 w-4 rounded-lg bg-invarchGradientYellow flex flex-row items-center justify-center shadow-md"
+              className="relative h-4 w-4 rounded-lg bg-invarchPink flex flex-row items-center justify-center shadow-md"
               style={props.style}
             >
               <div className="absolute bottom-4 text-invarchCream text-xxs px-3 rounded-lg">
                 {values[index] === max && values[1 - index] <= 0 ? 'Max' : values[index]}
               </div>
-              <div className={`h-2 w-2 p-1 rounded-lg ${ isDragged ? 'bg-invarchPink' : 'bg-invarchOffBlack/70' }`} />
+              <div className={`h-2 w-2 p-1 rounded-lg ${ isDragged ? 'bg-invarchPink' : 'bg-invarchOffBlack/30' }`} />
             </div>
           )}
         />

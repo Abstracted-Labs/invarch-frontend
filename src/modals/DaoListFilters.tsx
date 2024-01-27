@@ -285,7 +285,8 @@ const DaoListFilters = (props: DaoListFiltersProps) => {
                   {HR_BREAK}
                 </div>
               </div>
-              <div onClick={resetFilters} className="text-center text-xs text-invarchCream/60 hover:text-invarchGradientYellow hover:text-opacity-80 hover:underline hover:cursor-pointer hover:underline-offset-4">Reset Default Filters</div>
+              {/* <div onClick={resetFilters} className="text-center text-xs text-invarchCream/60 hover:text-invarchGradientYellow hover:text-opacity-80 hover:underline hover:cursor-pointer hover:underline-offset-4">Reset Default Filters</div> */}
+              <Button variant="secondary" mini onClick={resetFilters}>Reset Default Filters</Button>
               <div>
                 <Button variant="primary" mini onClick={applyFilters}>Apply Filters</Button>
               </div>

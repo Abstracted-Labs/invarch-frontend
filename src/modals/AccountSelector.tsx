@@ -110,7 +110,7 @@ const AccountSelector = (props: { isOpen: boolean; }) => {
                     role="menuitem"
                     tabIndex={0}
                     key={`${ account.address }-${ index }}`}
-                    className={`flex flex-row items-center gap-4 cursor-pointer p-6 mb-2 transition-colors hover:text-invarchPink border border-transparent bg-invarchPink/10 text-invarchCream hover:bg-invarchPink/20 ${ account.address === selectedAccount?.address ? 'rounded-xl  border-invarchPink/40' : 'rounded-xl' }`}
+                    className={`flex flex-row items-center gap-4 cursor-pointer p-6 mb-2 transition-colors hover:text-invarchPink border border-transparent bg-invarchPink/10 text-invarchCream hover:bg-invarchPink/20 ${ account.address === selectedAccount?.address ? 'rounded-xl border-px border-invarchPink/80' : 'rounded-xl' }`}
                     onClick={() => {
                       handleAccountSelection(account);
                     }}
