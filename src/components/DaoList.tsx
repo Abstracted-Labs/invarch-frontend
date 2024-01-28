@@ -493,13 +493,13 @@ const DaoList = (props: DaoListProps) => {
     <div>
       <div className='flex flex-col md:flex-row gap-2 md:gap-10 items-stretch md:items-center justify-between mb-4 mt-14 md:mt-0'>
         <h4 className="text-md">{isOverview ? 'My Staked DAOs' : 'All Registered DAOs'} ({stakedCoresCount || '0'})</h4>
-        <div className="bg-invarchCream bg-opacity-5 rounded-lg flex flex-row gap-2 p-4">
-          <div className='relative w-full'>
+        <div className="bg-invarchCream bg-opacity-5 backdrop-blur-sm rounded-lg flex flex-row gap-2 p-4">
+          <div className='relative w-full shadow'>
             <Input type="text" id="filterDaos" placeholder='Search' onChange={handleSearch} value={searchTerm} className='pr-12' />
             {searchTerm && <button type='button' className='absolute -translate-x-10 pt-[4px] translate-y-1/2 hover:underline-offset-2 hover:underline text-invarchGradientYellow text-xxs' onClick={() => setSearchTerm('')}>clear</button>}
           </div>
           <div className='relative'>
-            <button type='button' className='rounded-lg bg-invarchPink bg-opacity-40 hover:bg-opacity-75 p-3' onClick={handleFilters}>
+            <button type='button' className='rounded-lg bg-invarchPink/10 hover:bg-invarchPink/40 p-3 border border-px border-invarchPink/40 hover:border-invarchPink/100' onClick={handleFilters}>
               <img src={FilterIcon} alt="Filter" className='h-5 w-5' />
             </button>
             {activeFilterCount > 0 && <span className='absolute -right-[8px] -top-[6px] rounded-full px-[6px] bg-invarchGradientYellow text-invarchOffBlack text-center font-bold text-xxs'>{activeFilterCount}</span>}

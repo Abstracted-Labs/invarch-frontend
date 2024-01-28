@@ -345,7 +345,7 @@ const ProjectCard = (props: ProjectCardProps) => {
         </div>
 
         {/* Description */}
-        {!mini ? <div ref={descriptionRef} className={`relative bg-invarchPink bg-opacity-10 rounded-lg p-4 h-28 hover:cursor-pointer border border-px border-invarchCream border-opacity-10`}
+        {!mini ? <div ref={descriptionRef} className={`relative bg-invarchPink bg-opacity-10 rounded-lg p-4 h-28 hover:cursor-pointer border border-px border-invarchCream border-opacity-10 shadow-lg`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={handleReadMore}>

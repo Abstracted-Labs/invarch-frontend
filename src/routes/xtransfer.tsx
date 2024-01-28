@@ -25,7 +25,7 @@ import { INVARCH_WEB3_ENABLE } from "../hooks/useConnect";
 
 const RPC_PROVIDER_BASILISK = "wss://basilisk-rpc.dwellir.com";
 
-const MINI_BUTTON_STYLE = "cursor-pointer bg-invarchPink/10 border border-invarchPink/50 hover:border-invarchPink/100 hover:bg-invarchPink/30 text-invarchCream py-1 px-2 sm:py-2 sm:px-3 rounded-lg text-xs font-medium";
+const MINI_BUTTON_STYLE = "cursor-pointer bg-invarchPink/10 border border-px border-invarchPink/50 hover:border-invarchPink/100 hover:bg-invarchPink/30 text-invarchCream py-1 px-2 sm:py-2 sm:px-3 rounded-lg text-xs font-medium";
 
 type SystemAccount = Struct & {
   data: {

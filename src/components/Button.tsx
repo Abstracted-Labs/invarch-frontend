@@ -16,7 +16,7 @@ const Button = (props: ButtonProps) => {
   const parentMiniStyles = `${ mini ? 'h-9 lg:h-[46px] text-xs md:text-sm lg:text-md px-[2px]' : 'py-[2px] px-[2px] text-xs sm:text-sm lg:text-lg' }`;
   const parentVariantStyles = `${ variant === 'secondary' ? 'text-invarchPink text-opacity-80 bg-invarchPink bg-opacity-50 text-invarchPink border-opacity-50 hover:text-opacity-100 hover:bg-opacity-100 hover:border-opacity-100 disabled:border-opacity-30 disabled:bg-opacity-5 disabled:text-opacity-40 enabled:hover:underline underline-offset-2' : `text-invarchCream enabled:hover:text-invarchGradientYellow enabled:hover:underline underline-offset-2 hover:cursor-pointer ${ COLOR_GRADIENT_REVERSE }` }`;
   const parentGroupStyles = `${ group ? 'rounded-tl-lg rounded-bl-lg flex-grow' : 'rounded-lg' }`;
-  const parentGlobalStyles = `focus:outline-none w-full flex items-center justify-center disabled:cursor-not-allowed disabled:opacity-80 disabled:text-invarchCream disabled:text-opacity-40 text-center leading-normal whitespace-nowrap backdrop-blur-sm transition duration-100 z-40`;
+  const parentGlobalStyles = `focus:outline-none w-full flex items-center justify-center disabled:cursor-not-allowed disabled:opacity-80 disabled:text-invarchCream disabled:text-opacity-40 text-center leading-normal whitespace-nowrap backdrop-blur-sm z-40`;
   const allParentStyles = `${ parentMiniStyles } ${ parentVariantStyles } ${ parentGlobalStyles } ${ parentGroupStyles }`; ``;
 
   const childGlobalStyles = `px-3 bg-invarchOffBlack/80 w-full flex flex-row items-center justify-center`;

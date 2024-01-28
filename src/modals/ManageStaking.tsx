@@ -321,7 +321,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
     return classNames(
       "w-full rounded-md py-2.5 text-sm font-medium leading-5 focus:outline-none shadow-lg",
       selected
-        ? "bg-invarchOffBlack/30 text-invarchPink border border-px border-transparent cursor-not-allowed border-invarchPink"
+        ? "bg-invarchOffBlack/30 text-invarchPink border border-px border-transparent cursor-not-allowed border-invarchPink/100"
         : "border border-px border-invarchCream/20 text-invarchCream/20 hover:text-invarchPink hover:text-opacity-100 bg-invarchPink/10 hover:border-invarchPink/100 hover:underline underline-offset-2"
     );
   }, []);
@@ -539,7 +539,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                             />
                             <div className="absolute inset-y-0 right-0 flex flex-row items-center gap-4 transform -translate-x-1/2">
                               <span
-                                className="block cursor-pointer text-invarchCream hover:text- text-xs focus:outline-none"
+                                className="block cursor-pointer text-invarchCream hover:text- text-xs focus:outline-none hover:underline underline-offset-2"
                                 onClick={handleUnstakeMax}
                                 tabIndex={0}
                               >
