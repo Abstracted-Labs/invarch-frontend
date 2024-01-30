@@ -22,7 +22,7 @@ const navLinks = [
   { path: "/overview", name: "Account Overview", icon: OverviewNavIcon, icon2: OverviewNavIcon2 },
   { path: "/staking", name: "DAO Staking", icon: StakingNavIcon, icon2: StakingNavIcon2 },
   { path: "/claim", name: "Claim Vesting", icon: ClaimNavIcon, icon2: ClaimNavIcon2 },
-  { path: "/transfer", name: "Asset Transfers", icon: TransferNavIcon, icon2: TransferNavIcon2 },
+ // { path: "/transfer", name: "Asset Transfers", icon: TransferNavIcon, icon2: TransferNavIcon2 },
 ];
 
 const SideNav = (props: SideNavProps) => {
