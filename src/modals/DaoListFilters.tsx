@@ -273,7 +273,7 @@ const DaoListFilters = (props: DaoListFiltersProps) => {
                       onMaxChange={handleTotalStakersMaxChange}
                     />
                     <MinMaxRange
-                      label=`Total ${ TOKEN_SYMBOL } Staked`
+                      label={`Total ${ TOKEN_SYMBOL } Staked`}
                       min={0}
                       max={99999}
                       step={5000}
