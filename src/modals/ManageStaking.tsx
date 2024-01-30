@@ -105,7 +105,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
     if (parsedAmount <= 0) {
       stakeForm.setError("amount", {
         type: "min",
-        message: "Amount must be greater than 0",
+        message: "Amount must be greater than or equal to 50",
       });
 
       return;
@@ -117,7 +117,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
     ) {
       stakeForm.setError("amount", {
         type: "min",
-        message: "Amount must be greater than or equal to 10",
+        message: "Amount must be greater than or equal to 50",
       });
 
       return;
