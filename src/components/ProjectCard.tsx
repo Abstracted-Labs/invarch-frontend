@@ -322,7 +322,7 @@ const ProjectCard = (props: ProjectCardProps) => {
           {coreInfo?.totalStaked && minStakeReward
             ? `${ minSupportMet ? formatNumberShorthand(parseFloat(minStakeReward.toString()) / Math.pow(10, 12)) : formatNumberShorthand(parseFloat(coreInfo?.totalStaked.toString()) / Math.pow(10, 12)) }/${ formatNumberShorthand(parseFloat(minStakeReward.toString()) / Math.pow(10, 12)) }`
             : '--'}
-        </span> { `${ TOKEN_SYMBOL }` }
+        </span> {`${ TOKEN_SYMBOL }`}
       </div>
     </div> : null}
   </div>;
@@ -358,7 +358,7 @@ const ProjectCard = (props: ProjectCardProps) => {
         </div> : null}
 
         <div
-          className={`relative stats-section grid grid-cols-1 gap-2 ${ mini ? '' : 'h-28' } overflow-y-auto tinker-scrollbar scrollbar-thumb-invarchPink scrollbar-thin scrollbar pr-3`}
+          className={`relative stats-section grid grid-cols-1 gap-2 ${ mini ? '' : 'h-28' } overflow-y-scroll tinker-scrollbar scrollbar-thumb-invarchPink scrollbar pr-3`}
           onScroll={(e) => {
             // Update the stored scroll position
             scrollPositionRef.current = (e.target as HTMLElement).scrollTop;
