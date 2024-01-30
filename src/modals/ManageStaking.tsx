@@ -557,7 +557,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         <Button mini variant="primary" type="submit" disabled={!unstakeForm.formState.isValid}>
                           Unstake {watchedUnstakeAmount} { `${ TOKEN_SYMBOL }` }
                         </Button>
-                        <p className="text-xxs text-center text-invarchCream">NOTE: Unstaking { `${ TOKEN_SYMBOL }` } will have an unbonding period of 7 days.</p>
+                        <p className="text-xxs text-center text-invarchCream">NOTE: Unstaking { `${ TOKEN_SYMBOL }` } will have an unbonding period of 28 days.</p>
                       </form>
                     </Tab.Panel>
                   </Tab.Panels>
