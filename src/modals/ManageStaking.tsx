@@ -100,7 +100,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
         .toString();
     }
 
-    const minValue = new BigNumber(10);
+    const minValue = new BigNumber(50);
 
     if (parsedAmount <= 0) {
       stakeForm.setError("amount", {
