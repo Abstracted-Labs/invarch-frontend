@@ -19,6 +19,7 @@ import { autoRestake } from "../utils/autoRestake";
 import { restakeClaim } from "../utils/restakeClaim";
 import { Balance } from "@polkadot/types/interfaces";
 import { INVARCH_SS58 } from "../hooks/useConnect";
+import { TOKEN_SYMBOL } from "../utils/consts";
 
 export type UnsubFunction = () => Promise<void>;
 
@@ -392,7 +393,7 @@ const Staking = () => {
       unclaimedRewards = unclaimedRewards.minus(new BigNumber(partialFee.toString()).times(1.20));
     }
 
-    // Divide unclaimedRewards by the number of stakedDaos the user has staked TNKR in
+    // Divide unclaimedRewards by the number of stakedDaos the user has staked tokens in
     const unclaimedPerCore = unclaimedRewards.div(stakedCores || 1);
     return unclaimedPerCore;
   };
@@ -529,7 +530,7 @@ const Staking = () => {
               onClick={handleUnbondTokens}
               disabled={isWaiting}
               variant="secondary">
-              Claim Unbonded TNKR
+              Claim Unbonded { `${ TOKEN_SYMBOL }` }
             </Button>
           </div>
           <div className="flex flex-row items-center gap-1">
@@ -538,7 +539,7 @@ const Staking = () => {
               onClick={handleClaimRewards}
               disabled={disableClaiming}
               variant="primary">
-              Claim TNKR Rewards
+              Claim { `${ TOKEN_SYMBOL }` } Rewards
             </Button>
             <div className="flex flex-col items-center justify-around relative border-2 border-invarchGradientLightPurple text-invarchCream border-opacity-80 bg-invarchOffBlack bg-opacity-40 rounded-lg scale-70 lg:scale-90">
               <div className="flex-grow">

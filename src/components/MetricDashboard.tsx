@@ -10,12 +10,13 @@ import CurrentEraIcon from '../assets/invarch/current-era-icon-light.svg';
 import AggregateStakedIcon from '../assets/invarch/aggregate-staked-icon-light.svg';
 import { formatBalanceToTwoDecimals } from '../utils/formatNumber';
 import { useState, useEffect } from 'react';
+import { TOKEN_SYMBOL } from "../utils/consts";
 
 interface MetricDashboardProps {
   vestingBalance: string | undefined;
   availableBalance: BigNumber | undefined;
   lockedBalance: BigNumber | undefined;
-  aggregateStaked: BigNumber | undefined; // Required for total TNKR supply staked
+  aggregateStaked: BigNumber | undefined; // Required for total supply staked
   totalUserStaked: BigNumber | undefined; // Required for my total stake
   totalSupply: BigNumber | undefined; // Required for projected annual DAO rewards
   totalStaked: BigNumber | undefined; // Required for my total stake
@@ -63,7 +64,7 @@ const MetricDashboard = (props: MetricDashboardProps) => {
       className="min-h-40 max-w-[1068px] relative overflow-x-auto rounded-xl shadow flex lg:flex-wrap flex-grow flex-row gap-4 justify-between backdrop-blur-sm bg-invarchCream bg-opacity-5 tinker-scrollbar scrollbar scrollbar-thin overflow-x-auto p-4 mb-4">
 
       {totalUnclaimed !== undefined && <DashboardCard cardTitle="Unclaimed Rewards" iconSrc={AggregateStakedIcon}>
-        {totalUnclaimed ? `${ formatBalanceToTwoDecimals(totalUnclaimed) } TNKR` : "0 TNKR"}
+        {totalUnclaimed ? `${ formatBalanceToTwoDecimals(totalUnclaimed) } ${ TOKEN_SYMBOL }` : `0 ${ TOKEN_SYMBOL }`}
       </DashboardCard>}
 
       {unclaimedEras !== undefined && <DashboardCard cardTitle="Unclaimed Eras" iconSrc={UnclaimedErasIcon}>
@@ -79,33 +80,33 @@ const MetricDashboard = (props: MetricDashboardProps) => {
       </DashboardCard>}
 
       {totalClaimed !== undefined && <DashboardCard cardTitle="Claimed Rewards" iconSrc={ClaimableRewardsIcon}>
-        {totalClaimed ? `${ formatBalanceToTwoDecimals(totalClaimed) } TNKR` : "0 TNKR"}
+        {totalClaimed ? `${ formatBalanceToTwoDecimals(totalClaimed) } ${ TOKEN_SYMBOL }` : `0 ${ TOKEN_SYMBOL }`}
       </DashboardCard>}
 
       {availableBalance !== undefined && <DashboardCard cardTitle="Available Balance" iconSrc={AggregateStakedIcon}>
-        {availableBalance ? `${ formatBalanceToTwoDecimals(availableBalance) } TNKR` : "0 TNKR"}
+        {availableBalance ? `${ formatBalanceToTwoDecimals(availableBalance) } ${ TOKEN_SYMBOL }` : `0 ${ TOKEN_SYMBOL }`}
       </DashboardCard>}
 
       {totalUserStaked !== undefined && vestingBalance === undefined && <DashboardCard
-        cardTitle="My Staked TNKR" iconSrc={MyStakeIcon}>
+        cardTitle={`My Staked ${ TOKEN_SYMBOL }`} iconSrc={MyStakeIcon}>
         {
           totalUserStaked
             ? formatBalanceToTwoDecimals(
               new BigNumber(totalUserStaked).isNaN()
                 ? new BigNumber(0)
                 : totalUserStaked
-            ) + ' TNKR'
-            : '0 TNKR'
+            ) + ` ${ TOKEN_SYMBOL }`
+            : `0 ${ TOKEN_SYMBOL }`
         }
       </DashboardCard>}
 
-      {lockedBalance && <DashboardCard cardTitle="My Staked + Vesting TNKR" iconSrc={MyStakeIcon}>
+      {lockedBalance && <DashboardCard cardTitle={`My Staked + Vesting ${ TOKEN_SYMBOL }`} iconSrc={MyStakeIcon}>
         {
           lockedBalance
             ? lockedBalance.isNaN()
-              ? '0 TNKR'
-              : formatBalanceToTwoDecimals(lockedBalance) + ' TNKR'
-            : '0 TNKR'
+              ? `0 ${ TOKEN_SYMBOL }`
+              : formatBalanceToTwoDecimals(lockedBalance) + ` ${ TOKEN_SYMBOL }`
+            : `0 ${ TOKEN_SYMBOL }`
         }
       </DashboardCard>}
 
@@ -135,13 +136,13 @@ const MetricDashboard = (props: MetricDashboardProps) => {
               .times(0.06)
               .times(10 ** 12) // Convert to smallest unit
               .integerValue() // Ensure it's an integer
-          ) } TNKR`
-          : '0 TNKR'}
+          ) } ${ TOKEN_SYMBOL }`
+          : `0 ${ TOKEN_SYMBOL }`}
       </DashboardCard>}
 
       {aggregateStaked !== undefined && totalStaked !== undefined && <DashboardCard
         mini={mini}
-        cardTitle="Total TNKR Staked (%)"
+        cardTitle={`Total ${ TOKEN_SYMBOL } Staked (%)`}
         iconSrc={AggregateStakedIcon}
         leading="leading-tight"
       >
@@ -150,11 +151,11 @@ const MetricDashboard = (props: MetricDashboardProps) => {
 
       {totalSupply !== undefined && <DashboardCard
         mini={mini}
-        cardTitle="Total TNKR Supply"
+        cardTitle={`Total ${ TOKEN_SYMBOL } Supply`}
         iconSrc={AggregateStakedIcon}
         leading="leading-tight"
       >
-        {totalSupply ? `${ formatBalanceToTwoDecimals(totalSupply) } TNKR` : "0 TNKR"}
+        {totalSupply ? `${ formatBalanceToTwoDecimals(totalSupply) } ${ TOKEN_SYMBOL }` : `0 ${ TOKEN_SYMBOL }`}
       </DashboardCard>}
     </div>
   );
