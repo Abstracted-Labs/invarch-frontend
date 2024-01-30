@@ -270,14 +270,20 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
     if (!metadata) throw new Error(NO_METADATA_ERROR);
 
     const availableBalance = new BigNumber(metadata.availableBalance as string)
-      .dividedBy(new BigNumber(10).pow(12))
-      .toString();
+      .dividedBy(new BigNumber(10).pow(12));
 
-    const balance = altBalance ? coreStakedBalance : availableBalance;
+    let balance = altBalance ? coreStakedBalance : availableBalance.toString();
+    // Remove commas before performing the subtraction
+    balance = balance.replace(/,/g, '');
+
+    // Subtract 1 VARCH to cover fees if balance is greater than 1
+    const balanceToStake = new BigNumber(balance).gte(new BigNumber(1))
+      ? new BigNumber(balance).minus(new BigNumber(1)).toString()
+      : balance;
 
     stakeForm.setValue(
       "amount",
-      balance.replace(/,/g, '')
+      balanceToStake
     );
 
     stakeForm.trigger("amount", {
@@ -288,11 +294,21 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
   const handleUnstakeMax = () => {
     if (!metadata) throw new Error(NO_METADATA_ERROR);
 
+    const totalUserStaked = new BigNumber(metadata.totalUserStaked as string)
+      .dividedBy(new BigNumber(10).pow(12));
+
+    let balance = totalUserStaked.toString();
+    // Remove commas before performing the subtraction
+    balance = balance.replace(/,/g, '');
+
+    // Subtract 1 VARCH to cover fees if balance is greater than 1
+    const balanceToUnstake = new BigNumber(balance).gt(1)
+      ? new BigNumber(balance).minus(1).toString()
+      : balance;
+
     unstakeForm.setValue(
       "amount",
-      new BigNumber(metadata.totalUserStaked as string)
-        .dividedBy(new BigNumber(10).pow(12))
-        .toString().replace(/,/g, '')
+      balanceToUnstake
     );
 
     unstakeForm.trigger("amount", {
@@ -391,6 +407,22 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
 
     return <Dropdown initialValue={(initialSelectedCore.current?.metadata as SelectedCoreInfo)?.name as string} currentValue={selectedCoreInfo} list={list} onSelect={handleSelect} />;
   });
+
+  // Watch for changes in stakeForm.amount
+  useEffect(() => {
+    const value = stakeForm.getValues('amount');
+    if (value && !/^[0-9]*\.?[0-9]*$/.test(value)) {
+      stakeForm.setValue('amount', value.replace(/[^0-9.]/g, ''));
+    }
+  }, [stakeForm, watchedStakeAmount]);
+
+  // Watch for changes in unstakeForm.amount
+  useEffect(() => {
+    const value = unstakeForm.getValues('amount');
+    if (value && !/^[0-9]*\.?[0-9]*$/.test(value)) {
+      unstakeForm.setValue('amount', value.replace(/[^0-9.]/g, ''));
+    }
+  }, [unstakeForm, watchedUnstakeAmount]);
 
   return isOpen ? (
     <Dialog open={true} onClose={closeCurrentModal}>
@@ -493,12 +525,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                             <div className="relative flex flex-row items-center">
                               <Input {...stakeForm.register("amount", {
                                 required: true,
-                              })} type="text" id="stakeAmount" onChange={(e) => {
-                                const value = e.target.value;
-                                if (/^[0-9]*\.?[0-9]*$/.test(value)) {
-                                  stakeForm.setValue("amount", value);
-                                }
-                              }} />
+                              })} type="text" id="stakeAmount" />
                               <div className="absolute inset-y-0 right-0 flex flex-row items-center gap-4 transform -translate-x-1/2">
                                 <span
                                   className="block cursor-pointer text-invarchCream hover:text- text-xs focus:outline-none"
@@ -540,12 +567,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                           <div className="relative flex flex-row items-center">
                             <Input {...unstakeForm.register("amount", {
                               required: true,
-                            })} type="text" id="unstakeAmount" onChange={(e) => {
-                              const value = e.target.value;
-                              if (/^[0-9]*\.?[0-9]*$/.test(value)) {
-                                unstakeForm.setValue("amount", value);
-                              }
-                            }} />
+                            })} type="text" id="unstakeAmount" />
                             <div className="absolute inset-y-0 right-0 flex flex-row items-center gap-4 transform -translate-x-1/2">
                               <span
                                 className="block cursor-pointer text-invarchCream hover:text- text-xs focus:outline-none hover:underline underline-offset-2"
