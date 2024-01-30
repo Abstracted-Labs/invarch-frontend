@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  font-feature-settings: "salt", "zero", "calt", "ccmp", "kern";
+  background-color: #000000;
+}
+
+@layer utilities {
+  /* Scrollbars */
+  .tinker-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .tinker-scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    height: 100vh;
+  }
+
+  .tinker-scrollbar::-webkit-scrollbar-track, .tinker-scrollbar::-webkit-scrollbar-track:hover {
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  .tinker-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 100vh;
+    background: linear-gradient(45deg, theme('colors.invarchPink'), theme('colors.invarchGradientPink'), theme('colors.invarchGradientYellow'));
+  }
+
+  /* Description gradient */
+  .gradient-bottom::after {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%; /* Adjust this value to control the height of the gradient */
+    border-radius: 0.5rem;
+    background: linear-gradient(to top, #050505 0%, transparent 100%);
+  }
+
+  /* ProjectCard stats section */
+  .scroll-container {
+    animation: scroll 16s linear infinite;
+  }
+  
+  @keyframes scroll {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-50%);
+    }
+  }
+
+  /* H1-H6 */
+  h1 {
+    @apply text-defaultHeading;
+  }
+  
+  h2 {
+    @apply text-defaultHeading;
+  }
+  
+  h3 {
+    @apply text-defaultHeading;
+  }
+  
+  h4 {
+    @apply text-defaultHeading;
+  }
+  
+  h5 {
+    @apply text-defaultHeading;
+  }
+  
+  h6 {
+    @apply text-defaultHeading;
+  }
+
+  label {
+    @apply text-defaultHeading;
+  }
+}
+ 

@@ -1,0 +1,152 @@
+import { Dialog } from "@headlessui/react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import { shallow } from "zustand/shallow";
+import useModal, { MODAL_STYLE } from "../stores/modals";
+import useAccount from "../stores/account";
+import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import Identicon from '@polkadot/react-identicon';
+import { stringShorten } from "@polkadot/util";
+import { capitalizeFirst } from "../utils/capitalizeFirst";
+import { WalletNameEnum, getWalletIcon } from "../utils/getWalletIcon";
+import Button from "../components/Button";
+import toast from "react-hot-toast";
+
+const AccountSelector = (props: { isOpen: boolean; }) => {
+  const { isOpen } = props;
+  const closeCurrentModal = useModal((state) => state.closeCurrentModal);
+
+  const { selectedAccount, accounts, setSelectedAccount, setExtensions, extensions } = useAccount(
+    (state) => ({
+      selectedAccount: state.selectedAccount,
+      accounts: state.accounts,
+      setSelectedAccount: state.setSelectedAccount,
+      setExtensions: state.setExtensions,
+      extensions: state.extensions,
+    }),
+    shallow
+  );
+
+  const closeModal = () => {
+    closeCurrentModal();
+  };
+
+  const handleAccountSelection = async (
+    account: InjectedAccountWithMeta | null
+  ) => {
+    if (!account) {
+      setSelectedAccount(null);
+      closeModal();
+
+      return;
+    }
+
+    setSelectedAccount(account);
+    closeModal();
+  };
+
+  const handleExtensionClick = async (walletName: string) => {
+    if (!walletName) {
+      console.error("Wallet name is not provided");
+      return;
+    }
+
+    if (!Object.values(WalletNameEnum).includes(walletName as WalletNameEnum)) {
+      console.error("Invalid wallet name");
+      return;
+    }
+
+    if (!extensions.includes(walletName)) {
+      setExtensions([...extensions, walletName]);
+    } else {
+      setExtensions(extensions.filter((extension) => extension !== walletName));
+
+      if (selectedAccount && selectedAccount.meta.source === walletName) {
+        setSelectedAccount(null);
+      }
+    }
+  };
+
+  const handleCopy = (e: React.MouseEvent<HTMLElement>, value: string | undefined) => {
+    e.stopPropagation();
+
+    if (!value) return;
+
+    navigator.clipboard.writeText(value);
+    toast.success("Copied to clipboard");
+  };
+
+  return isOpen ? (
+    <Dialog open={true} onClose={closeModal}>
+      <Dialog.Title className="sr-only">Select your Wallet</Dialog.Title>
+      <div className="fixed inset-0 z-[49] h-screen w-full backdrop-blur-md" />
+      <button className="pointer fixed top-0 right-0 z-50 flex cursor-pointer flex-col items-center justify-center p-3 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-50">
+        <XMarkIcon className="h-5 w-5" />
+      </button>
+      <Dialog.Panel>
+        <>
+          <div className={`${ MODAL_STYLE } h-[550px]`}>
+            <div>
+              <h2 className="text-md font-bold text-invarchCream w-[310px] md:w-[490px] backdrop-blur-sm">
+                <span>Select your Wallet</span>
+              </h2>
+              <div className="flex-shrink flex flex-row justify-center gap-3 mt-3">
+                {Object.values(WalletNameEnum).map((walletName) => {
+                  const walletIcon = getWalletIcon(walletName);
+                  return (
+                    <button key={walletName} onClick={() => handleExtensionClick(walletName)} className={`rounded-lg p-3 border border-invarchCream bg-invarchPink bg-opacity-20 hover:text-invarchPink hover:border-opacity-80 hover:bg-opacity-20 ${ extensions.includes(walletName) ? 'bg-invarchPink bg-opacity-20 border text-invarchPink border-opacity-60' : 'border text-invarchPink border-opacity-20 hover:bg-opacity-10' }`}>
+
+                      <div className="flex flex-col items-center justify-center">
+                        <img src={walletIcon} alt={walletName} className={`h-5 w-5 ${ extensions.includes(walletName) ? '' : 'opacity-30' }`} />
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <ul className="w-full h-96 tinker-scrollbar scrollbar scrollbar-thumb-invarchPink overflow-y-auto pr-4">
+              {accounts.filter(account => getWalletIcon(account.meta?.source) !== undefined).map((account, index) => {
+                return (
+                  <li
+                    role="menuitem"
+                    tabIndex={0}
+                    key={`${ account.address }-${ index }}`}
+                    className={`flex flex-row items-center gap-4 cursor-pointer p-6 mb-2 transition-colors hover:text-invarchPink border border-transparent bg-invarchPink/10 text-invarchCream hover:bg-invarchPink/20 ${ account.address === selectedAccount?.address ? 'rounded-xl border-px border-invarchPink/80' : 'rounded-xl' }`}
+                    onClick={() => {
+                      handleAccountSelection(account);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleAccountSelection(account);
+                      }
+                    }}
+                  >
+                    <div className={`rounded-full p-1 flex items-center ${ account.address !== selectedAccount?.address ? 'bg-invarchLightCream' : 'bg-invarchOffBlack' }`}>
+                      <Identicon value={account.address} size={47} theme="substrate" />
+                    </div>
+                    <div className="flex flex-col gap-0 truncate">
+                      <div className="flex flex-row gap-1 items-center">
+                        {typeof getWalletIcon(account.meta?.source) === 'undefined' ?
+                          <div className="text-xxs text-ellipsis truncate">{account.meta?.source}</div> :
+                          <img src={getWalletIcon(account.meta?.source)} alt={account.meta?.source} className="w-4 h-4 mr-1" />
+                        }
+                        <span className="text-md leading-[20px] font-bold text-ellipsis truncate">{capitalizeFirst(account.meta?.name)}</span>
+                      </div>
+                      <span onClick={(e) => handleCopy(e, account.address)} className="block overflow-hidden text-ellipsis text-xs text-invarchCream/60 hover:underline hover:underline-offset-2 truncate mt-[2px]">
+                        {stringShorten(account.address, 20)}
+                      </span>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+            <div>
+              <Button variant="secondary" mini onClick={closeModal}>Close</Button>
+            </div>
+          </div>
+        </>
+      </Dialog.Panel>
+    </Dialog>
+  ) : null;
+};
+
+export default AccountSelector;
