@@ -270,14 +270,20 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
     if (!metadata) throw new Error(NO_METADATA_ERROR);
 
     const availableBalance = new BigNumber(metadata.availableBalance as string)
-      .dividedBy(new BigNumber(10).pow(12))
-      .toString();
+      .dividedBy(new BigNumber(10).pow(12));
 
-    const balance = altBalance ? coreStakedBalance : availableBalance;
+    let balance = altBalance ? coreStakedBalance : availableBalance.toString();
+    // Remove commas before performing the subtraction
+    balance = balance.replace(/,/g, '');
+
+    // Subtract 1 VARCH to cover fees if balance is greater than 1
+    const balanceToStake = new BigNumber(balance).gte(new BigNumber(1))
+      ? new BigNumber(balance).minus(new BigNumber(1)).toString()
+      : balance;
 
     stakeForm.setValue(
       "amount",
-      balance
+      balanceToStake
     );
 
     stakeForm.trigger("amount", {
@@ -288,11 +294,21 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
   const handleUnstakeMax = () => {
     if (!metadata) throw new Error(NO_METADATA_ERROR);
 
+    const totalUserStaked = new BigNumber(metadata.totalUserStaked as string)
+      .dividedBy(new BigNumber(10).pow(12));
+
+    let balance = totalUserStaked.toString();
+    // Remove commas before performing the subtraction
+    balance = balance.replace(/,/g, '');
+
+    // Subtract 1 VARCH to cover fees if balance is greater than 1
+    const balanceToUnstake = new BigNumber(balance).gt(1)
+      ? new BigNumber(balance).minus(1).toString()
+      : balance;
+
     unstakeForm.setValue(
       "amount",
-      new BigNumber(metadata.totalUserStaked as string)
-        .dividedBy(new BigNumber(10).pow(12))
-        .toString()
+      balanceToUnstake
     );
 
     unstakeForm.trigger("amount", {
@@ -322,7 +338,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
     return classNames(
       "w-full rounded-md py-2.5 text-sm font-medium leading-5 focus:outline-none shadow-lg",
       selected
-        ? "bg-invarchOffBlack/30 text-invarchPink border border-px border-transparent cursor-not-allowed border-invarchPink/100"
+        ? "bg-invarchOffBlack/30 text-invarchPink border border-px cursor-not-allowed border-invarchPink/100"
         : "border border-px border-invarchCream/20 text-invarchCream/20 hover:text-invarchPink hover:text-opacity-100 bg-invarchPink/10 hover:border-invarchPink/100 hover:underline underline-offset-2"
     );
   }, []);
@@ -377,7 +393,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
       const currentAmount = parseFloat(stakeForm.getValues('amount'));
       const maxBalance = parseFloat(coreStakedBalance);
       if (currentAmount > maxBalance) {
-        stakeForm.setValue('amount', maxBalance.toString());
+        stakeForm.setValue('amount', maxBalance.toString().replace(/,/g, ''));
       }
     }
   }, [altBalance, coreStakedBalance, stakeForm]);
@@ -391,6 +407,22 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
 
     return <Dropdown initialValue={(initialSelectedCore.current?.metadata as SelectedCoreInfo)?.name as string} currentValue={selectedCoreInfo} list={list} onSelect={handleSelect} />;
   });
+
+  // Watch for changes in stakeForm.amount
+  useEffect(() => {
+    const value = stakeForm.getValues('amount');
+    if (value && !/^[0-9]*\.?[0-9]*$/.test(value)) {
+      stakeForm.setValue('amount', value.replace(/[^0-9.]/g, ''));
+    }
+  }, [stakeForm, watchedStakeAmount]);
+
+  // Watch for changes in unstakeForm.amount
+  useEffect(() => {
+    const value = unstakeForm.getValues('amount');
+    if (value && !/^[0-9]*\.?[0-9]*$/.test(value)) {
+      unstakeForm.setValue('amount', value.replace(/[^0-9.]/g, ''));
+    }
+  }, [unstakeForm, watchedUnstakeAmount]);
 
   return isOpen ? (
     <Dialog open={true} onClose={closeCurrentModal}>
@@ -418,7 +450,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         forceUnit: "-",
                       }
                     ).slice(0, -2) || "0"}{" "}
-                    { `${ TOKEN_SYMBOL }` }
+                    {`${ TOKEN_SYMBOL }`}
                   </div>
                   <div className="text-xxs/none">Available Balance</div>
                 </div>
@@ -431,7 +463,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         decimals: 12,
                         withUnit: false,
                         forceUnit: "-",
-                      }).slice(0, -2) || "0"} { `${ TOKEN_SYMBOL }` }
+                      }).slice(0, -2) || "0"} {`${ TOKEN_SYMBOL }`}
                     </div>
                     <div className="text-xxs/none">Currently Staked</div>
                   </div>
@@ -487,14 +519,13 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                               <span>Stake Amount</span>
                               {altBalance ?
                                 <span className="float-right">
-                                  Balance: <span className="font-bold">{coreStakedBalance}</span> { `${ TOKEN_SYMBOL }` }
+                                  Balance: <span className="font-bold">{coreStakedBalance}</span> {`${ TOKEN_SYMBOL }`}
                                 </span> : null}
                             </label>
                             <div className="relative flex flex-row items-center">
                               <Input {...stakeForm.register("amount", {
                                 required: true,
-                              })} type="text" id="stakeAmount"
-                              />
+                              })} type="text" id="stakeAmount" />
                               <div className="absolute inset-y-0 right-0 flex flex-row items-center gap-4 transform -translate-x-1/2">
                                 <span
                                   className="block cursor-pointer text-invarchCream hover:text- text-xs focus:outline-none"
@@ -513,7 +544,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         </div>
 
                         <Button mini variant="primary" type="submit" disabled={!stakeForm.formState.isValid}>
-                          {altBalance ? 'Restake' : 'Stake'} {watchedStakeAmount} { `${ TOKEN_SYMBOL }` }
+                          {altBalance ? 'Restake' : 'Stake'} {watchedStakeAmount} {`${ TOKEN_SYMBOL }`}
                         </Button>
                       </form>
                     </Tab.Panel>
@@ -536,8 +567,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                           <div className="relative flex flex-row items-center">
                             <Input {...unstakeForm.register("amount", {
                               required: true,
-                            })} type="text" id="unstakeAmount"
-                            />
+                            })} type="text" id="unstakeAmount" />
                             <div className="absolute inset-y-0 right-0 flex flex-row items-center gap-4 transform -translate-x-1/2">
                               <span
                                 className="block cursor-pointer text-invarchCream hover:text- text-xs focus:outline-none hover:underline underline-offset-2"
@@ -555,9 +585,9 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         </div>
 
                         <Button mini variant="primary" type="submit" disabled={!unstakeForm.formState.isValid}>
-                          Unstake {watchedUnstakeAmount} { `${ TOKEN_SYMBOL }` }
+                          Unstake {watchedUnstakeAmount} {`${ TOKEN_SYMBOL }`}
                         </Button>
-                        <p className="text-xxs text-center text-invarchCream">NOTE: Unstaking { `${ TOKEN_SYMBOL }` } will have an unbonding period of 28 days.</p>
+                        <p className="text-xxs text-center text-invarchCream">NOTE: Unstaking {`${ TOKEN_SYMBOL }`} will have an unbonding period of 28 days.</p>
                       </form>
                     </Tab.Panel>
                   </Tab.Panels>

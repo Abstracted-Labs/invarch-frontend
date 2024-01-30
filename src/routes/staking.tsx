@@ -206,7 +206,7 @@ const Staking = () => {
     };
 
     const userStakedInfoMap: Map<number, UserStakedInfoType> = new Map();
-
+    console.log('hello?');
     if (coreEraStakeInfo && coreEraStakeInfo.length > 0) {
       const promises = stakingCores.map((stakingCore) =>
         api.query.ocifStaking.generalStakerInfo(
@@ -530,7 +530,7 @@ const Staking = () => {
               onClick={handleUnbondTokens}
               disabled={isWaiting}
               variant="secondary">
-              Claim Unbonded { `${ TOKEN_SYMBOL }` }
+              Claim Unbonded {`${ TOKEN_SYMBOL }`}
             </Button>
           </div>
           <div className="flex flex-row items-center gap-1">
@@ -539,7 +539,7 @@ const Staking = () => {
               onClick={handleClaimRewards}
               disabled={disableClaiming}
               variant="primary">
-              Claim { `${ TOKEN_SYMBOL }` } Rewards
+              Claim {`${ TOKEN_SYMBOL }`} Rewards
             </Button>
             <div className="flex flex-col items-center justify-around relative border-2 border-invarchGradientLightPurple text-invarchCream border-opacity-80 bg-invarchOffBlack bg-opacity-40 rounded-lg scale-70 lg:scale-90">
               <div className="flex-grow">
