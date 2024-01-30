@@ -3,7 +3,7 @@ import { ApiOptions } from "@polkadot/api/types";
 import { createWithEqualityFn } from "zustand/traditional";
 
 const host = {
-  REMOTE: "wss://tinkernet-rpc.dwellir.com",
+  REMOTE: "wss://invarch-rpc.dwellir.com",
   // LOCAL: "ws://127.0.0.1:9944",
   LOCAL: 'ws://localhost:8000'
 } as const;
