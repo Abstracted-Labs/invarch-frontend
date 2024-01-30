@@ -320,7 +320,7 @@ const ProjectCard = (props: ProjectCardProps) => {
       <div className="text-invarchCream font-normal text-[12px] text-right tracking-[0] leading-[normal] truncate">
         <span className={`${ minSupportMet ? 'text-green-400' : 'text-red-400' }`}>
           {coreInfo?.totalStaked && minStakeReward
-            ? `${ minSupportMet ? '25K' : formatNumberShorthand(parseFloat(coreInfo?.totalStaked.toString()) / Math.pow(10, 12)) }/${ formatNumberShorthand(parseFloat(minStakeReward.toString()) / Math.pow(10, 12)) }`
+            ? `${ minSupportMet ? '250K' : formatNumberShorthand(parseFloat(coreInfo?.totalStaked.toString()) / Math.pow(10, 12)) }/${ formatNumberShorthand(parseFloat(minStakeReward.toString()) / Math.pow(10, 12)) }`
             : '--'}
         </span> { `${ TOKEN_SYMBOL }` }
       </div>
