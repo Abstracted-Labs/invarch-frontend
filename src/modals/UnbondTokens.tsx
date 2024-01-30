@@ -11,6 +11,7 @@ import useModal, { MODAL_STYLE } from "../stores/modals";
 import Button from "../components/Button";
 import { getSignAndSendCallbackWithPromise } from "../utils/getSignAndSendCallback";
 import { INVARCH_WEB3_ENABLE } from "../hooks/useConnect";
+import { TOKEN_SYMBOL } from "../utils/consts";
 
 const UnbondTokens = ({ isOpen }: { isOpen: boolean; }) => {
   const { closeCurrentModal } = useModal(
@@ -104,7 +105,7 @@ const UnbondTokens = ({ isOpen }: { isOpen: boolean; }) => {
           withUnit: false,
           forceUnit: "-",
         }).slice(0, -2) || "0"
-          } TNKR
+          } ${ TOKEN_SYMBOL }
         `,
         unlockIn: unlockEra - currentEra,
       })
@@ -121,14 +122,14 @@ const UnbondTokens = ({ isOpen }: { isOpen: boolean; }) => {
 
   return isOpen ? (
     <Dialog open={true} onClose={closeCurrentModal}>
-      <Dialog.Title className="sr-only">Claim Unbonded TNKR</Dialog.Title>
+      <Dialog.Title className="sr-only">Claim Unbonded { `${ TOKEN_SYMBOL }` }</Dialog.Title>
       <div className="fixed inset-0 z-[49] h-screen w-full bg-invarchOffBlack/10 backdrop-blur-md" />
       <button className="pointer fixed top-0 right-0 z-50 flex cursor-pointer flex-col items-center justify-center p-3 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-50">
         <XMarkIcon className="h-5 w-5" />
       </button>
       <Dialog.Panel>
         <div className={MODAL_STYLE}>
-          <h2 className="text-md font-bold text-invarchCream w-[calc(100%-2rem)] max-w-lg truncate">Claim Unbonded TNKR</h2>
+          <h2 className="text-md font-bold text-invarchCream w-[calc(100%-2rem)] max-w-lg truncate">Claim Unbonded { `${ TOKEN_SYMBOL }` }</h2>
 
           <div className="mt-4 flex flex-col justify-between gap-4">
             {unbondingInfo.map(({ amount, unlockIn }) => {
@@ -155,7 +156,7 @@ const UnbondTokens = ({ isOpen }: { isOpen: boolean; }) => {
               className="inline-flex w-full justify-center rounded-md border border-transparent bg-amber-400 py-2 px-4 text-sm font-bold text-neutral-900 shadow-sm transition-colors hover:bg-amber-200 focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 disabled:bg-neutral-300"
               disabled={disableUnbonding}
             >
-              {disableUnbonding ? 'Please come back later!' : 'Claim unbonded TNKR'}
+              {disableUnbonding ? 'Please come back later!' : `Claim unbonded ${ TOKEN_SYMBOL }`}
             </Button>
           </div>
         </div>
