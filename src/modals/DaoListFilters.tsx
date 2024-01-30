@@ -8,6 +8,7 @@ import TriStateCheckbox from "../components/TriStateCheckbox";
 import MinMaxRange from "../components/MinMaxRange";
 import Dropdown from "../components/Dropdown";
 import { loadFiltersFromLocalStorage, saveFiltersToLocalStorage } from "../utils/filterStorage";
+import { TOKEN_SYMBOL } from "../utils/consts";
 
 export const HR_BREAK = <hr className="border-t-1 border-invarchCream border-opacity-20 my-4" />;
 
@@ -272,7 +273,7 @@ const DaoListFilters = (props: DaoListFiltersProps) => {
                       onMaxChange={handleTotalStakersMaxChange}
                     />
                     <MinMaxRange
-                      label="Total TNKR Staked"
+                      label=`Total ${ TOKEN_SYMBOL } Staked`
                       min={0}
                       max={99999}
                       step={5000}
