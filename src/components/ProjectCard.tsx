@@ -16,7 +16,7 @@ import { AnyJson } from '@polkadot/types/types';
 import useApi from '../hooks/useApi';
 import { formatNumberShorthand } from '../utils/formatNumber';
 import Button from './Button';
-import { HOVER_GRADIENT } from '../utils/consts';
+import { HOVER_GRADIENT, TOKEN_SYMBOL } from '../utils/consts';
 
 export interface ProjectCardProps {
   core: StakingCore;
@@ -204,7 +204,7 @@ const ProjectCard = (props: ProjectCardProps) => {
       </div>
       <div className="font-normal text-invarchCream text-[12px] text-right tracking-[0] leading-[normal] truncate">
         {coreInfo?.totalStaked
-          ? `${ formatNumberShorthand(parseFloat(coreInfo?.totalStaked.toString()) / Math.pow(10, 12)) } TNKR`
+          ? `${ formatNumberShorthand(parseFloat(coreInfo?.totalStaked.toString()) / Math.pow(10, 12)) } ${ TOKEN_SYMBOL }`
           : '--'}
       </div>
     </div> : null}
@@ -227,7 +227,7 @@ const ProjectCard = (props: ProjectCardProps) => {
       </div>
       <div className="font-normal text-invarchCream text-[12px] text-right tracking-[0] leading-[normal] truncate">
         {totalUserStaked
-          ? `${ formatNumberShorthand(parseFloat(totalUserStaked.toString()) / Math.pow(10, 12)) } TNKR`
+          ? `${ formatNumberShorthand(parseFloat(totalUserStaked.toString()) / Math.pow(10, 12)) } ${ TOKEN_SYMBOL }`
           : '--'}
       </div>
     </div>
@@ -250,7 +250,7 @@ const ProjectCard = (props: ProjectCardProps) => {
       </div>
       <div className="font-normal text-invarchCream text-[12px] text-right tracking-[0] leading-[normal] truncate">
         {coreRewards?.totalRewards
-          ? `${ formatNumberShorthand(parseFloat(coreRewards?.totalRewards.toString()) / Math.pow(10, 12)) } TNKR`
+          ? `${ formatNumberShorthand(parseFloat(coreRewards?.totalRewards.toString()) / Math.pow(10, 12)) } ${ TOKEN_SYMBOL }`
           : '--'}
       </div>
     </div> : null}
@@ -273,7 +273,7 @@ const ProjectCard = (props: ProjectCardProps) => {
       </div>
       <div className="font-normal text-invarchCream text-[12px] text-right tracking-[0] leading-[normal] truncate">
         {coreRewards?.totalUnclaimed
-          ? `${ formatNumberShorthand(parseFloat(coreRewards?.totalUnclaimed.toString()) / Math.pow(10, 12)) } TNKR`
+          ? `${ formatNumberShorthand(parseFloat(coreRewards?.totalUnclaimed.toString()) / Math.pow(10, 12)) } ${ TOKEN_SYMBOL }`
           : '--'}
       </div>
     </div> : null}
@@ -322,7 +322,7 @@ const ProjectCard = (props: ProjectCardProps) => {
           {coreInfo?.totalStaked && minStakeReward
             ? `${ minSupportMet ? '25K' : formatNumberShorthand(parseFloat(coreInfo?.totalStaked.toString()) / Math.pow(10, 12)) }/${ formatNumberShorthand(parseFloat(minStakeReward.toString()) / Math.pow(10, 12)) }`
             : '--'}
-        </span> TNKR
+        </span> { `${ TOKEN_SYMBOL }` }
       </div>
     </div> : null}
   </div>;
