@@ -88,7 +88,7 @@ const MetricDashboard = (props: MetricDashboardProps) => {
       </DashboardCard>}
 
       {totalUserStaked !== undefined && vestingBalance === undefined && <DashboardCard
-        cardTitle=`My Staked ${ TOKEN_SYMBOL }` iconSrc={MyStakeIcon}>
+        cardTitle={`My Staked ${ TOKEN_SYMBOL }`} iconSrc={MyStakeIcon}>
         {
           totalUserStaked
             ? formatBalanceToTwoDecimals(
@@ -100,7 +100,7 @@ const MetricDashboard = (props: MetricDashboardProps) => {
         }
       </DashboardCard>}
 
-      {lockedBalance && <DashboardCard cardTitle=`My Staked + Vesting ${ TOKEN_SYMBOL }` iconSrc={MyStakeIcon}>
+      {lockedBalance && <DashboardCard cardTitle={`My Staked + Vesting ${ TOKEN_SYMBOL }`} iconSrc={MyStakeIcon}>
         {
           lockedBalance
             ? lockedBalance.isNaN()
@@ -142,7 +142,7 @@ const MetricDashboard = (props: MetricDashboardProps) => {
 
       {aggregateStaked !== undefined && totalStaked !== undefined && <DashboardCard
         mini={mini}
-        cardTitle=`Total ${ TOKEN_SYMBOL } Staked (%)`
+        cardTitle={`Total ${ TOKEN_SYMBOL } Staked (%)`}
         iconSrc={AggregateStakedIcon}
         leading="leading-tight"
       >
@@ -151,7 +151,7 @@ const MetricDashboard = (props: MetricDashboardProps) => {
 
       {totalSupply !== undefined && <DashboardCard
         mini={mini}
-        cardTitle=`Total ${ TOKEN_SYMBOL } Supply`
+        cardTitle={`Total ${ TOKEN_SYMBOL } Supply`}
         iconSrc={AggregateStakedIcon}
         leading="leading-tight"
       >
