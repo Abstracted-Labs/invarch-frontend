@@ -277,7 +277,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
 
     stakeForm.setValue(
       "amount",
-      balance
+      balance.replace(/,/g, '')
     );
 
     stakeForm.trigger("amount", {
@@ -292,7 +292,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
       "amount",
       new BigNumber(metadata.totalUserStaked as string)
         .dividedBy(new BigNumber(10).pow(12))
-        .toString()
+        .toString().replace(/,/g, '')
     );
 
     unstakeForm.trigger("amount", {
@@ -322,7 +322,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
     return classNames(
       "w-full rounded-md py-2.5 text-sm font-medium leading-5 focus:outline-none shadow-lg",
       selected
-        ? "bg-invarchOffBlack/30 text-invarchPink border border-px border-transparent cursor-not-allowed border-invarchPink/100"
+        ? "bg-invarchOffBlack/30 text-invarchPink border border-px cursor-not-allowed border-invarchPink/100"
         : "border border-px border-invarchCream/20 text-invarchCream/20 hover:text-invarchPink hover:text-opacity-100 bg-invarchPink/10 hover:border-invarchPink/100 hover:underline underline-offset-2"
     );
   }, []);
@@ -377,7 +377,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
       const currentAmount = parseFloat(stakeForm.getValues('amount'));
       const maxBalance = parseFloat(coreStakedBalance);
       if (currentAmount > maxBalance) {
-        stakeForm.setValue('amount', maxBalance.toString());
+        stakeForm.setValue('amount', maxBalance.toString().replace(/,/g, ''));
       }
     }
   }, [altBalance, coreStakedBalance, stakeForm]);
@@ -418,7 +418,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         forceUnit: "-",
                       }
                     ).slice(0, -2) || "0"}{" "}
-                    { `${ TOKEN_SYMBOL }` }
+                    {`${ TOKEN_SYMBOL }`}
                   </div>
                   <div className="text-xxs/none">Available Balance</div>
                 </div>
@@ -431,7 +431,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         decimals: 12,
                         withUnit: false,
                         forceUnit: "-",
-                      }).slice(0, -2) || "0"} { `${ TOKEN_SYMBOL }` }
+                      }).slice(0, -2) || "0"} {`${ TOKEN_SYMBOL }`}
                     </div>
                     <div className="text-xxs/none">Currently Staked</div>
                   </div>
@@ -487,14 +487,18 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                               <span>Stake Amount</span>
                               {altBalance ?
                                 <span className="float-right">
-                                  Balance: <span className="font-bold">{coreStakedBalance}</span> { `${ TOKEN_SYMBOL }` }
+                                  Balance: <span className="font-bold">{coreStakedBalance}</span> {`${ TOKEN_SYMBOL }`}
                                 </span> : null}
                             </label>
                             <div className="relative flex flex-row items-center">
                               <Input {...stakeForm.register("amount", {
                                 required: true,
-                              })} type="text" id="stakeAmount"
-                              />
+                              })} type="text" id="stakeAmount" onChange={(e) => {
+                                const value = e.target.value;
+                                if (/^[0-9]*\.?[0-9]*$/.test(value)) {
+                                  stakeForm.setValue("amount", value);
+                                }
+                              }} />
                               <div className="absolute inset-y-0 right-0 flex flex-row items-center gap-4 transform -translate-x-1/2">
                                 <span
                                   className="block cursor-pointer text-invarchCream hover:text- text-xs focus:outline-none"
@@ -513,7 +517,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         </div>
 
                         <Button mini variant="primary" type="submit" disabled={!stakeForm.formState.isValid}>
-                          {altBalance ? 'Restake' : 'Stake'} {watchedStakeAmount} { `${ TOKEN_SYMBOL }` }
+                          {altBalance ? 'Restake' : 'Stake'} {watchedStakeAmount} {`${ TOKEN_SYMBOL }`}
                         </Button>
                       </form>
                     </Tab.Panel>
@@ -536,8 +540,12 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                           <div className="relative flex flex-row items-center">
                             <Input {...unstakeForm.register("amount", {
                               required: true,
-                            })} type="text" id="unstakeAmount"
-                            />
+                            })} type="text" id="unstakeAmount" onChange={(e) => {
+                              const value = e.target.value;
+                              if (/^[0-9]*\.?[0-9]*$/.test(value)) {
+                                unstakeForm.setValue("amount", value);
+                              }
+                            }} />
                             <div className="absolute inset-y-0 right-0 flex flex-row items-center gap-4 transform -translate-x-1/2">
                               <span
                                 className="block cursor-pointer text-invarchCream hover:text- text-xs focus:outline-none hover:underline underline-offset-2"
@@ -555,9 +563,9 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         </div>
 
                         <Button mini variant="primary" type="submit" disabled={!unstakeForm.formState.isValid}>
-                          Unstake {watchedUnstakeAmount} { `${ TOKEN_SYMBOL }` }
+                          Unstake {watchedUnstakeAmount} {`${ TOKEN_SYMBOL }`}
                         </Button>
-                        <p className="text-xxs text-center text-invarchCream">NOTE: Unstaking { `${ TOKEN_SYMBOL }` } will have an unbonding period of 28 days.</p>
+                        <p className="text-xxs text-center text-invarchCream">NOTE: Unstaking {`${ TOKEN_SYMBOL }`} will have an unbonding period of 28 days.</p>
                       </form>
                     </Tab.Panel>
                   </Tab.Panels>
