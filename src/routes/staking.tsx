@@ -19,6 +19,7 @@ import { autoRestake } from "../utils/autoRestake";
 import { restakeClaim } from "../utils/restakeClaim";
 import { Balance } from "@polkadot/types/interfaces";
 import { INVARCH_SS58 } from "../hooks/useConnect";
+import { TOKEN_SYMBOL } from "../utils/consts";
 
 export type UnsubFunction = () => Promise<void>;
 
