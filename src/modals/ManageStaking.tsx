@@ -19,6 +19,7 @@ import Button from "../components/Button";
 import { StakingCore, TotalUserStakedData } from "../routes/staking";
 import Dropdown from "../components/Dropdown";
 import { INVARCH_WEB3_ENABLE } from "../hooks/useConnect";
+import { TOKEN_SYMBOL } from "../utils/consts";
 
 export interface SelectedCoreInfo extends Metadata {
   id: number;
@@ -417,7 +418,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         forceUnit: "-",
                       }
                     ).slice(0, -2) || "0"}{" "}
-                    TNKR
+                    { `${ TOKEN_SYMBOL }` }
                   </div>
                   <div className="text-xxs/none">Available Balance</div>
                 </div>
@@ -430,7 +431,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         decimals: 12,
                         withUnit: false,
                         forceUnit: "-",
-                      }).slice(0, -2) || "0"} TNKR
+                      }).slice(0, -2) || "0"} { `${ TOKEN_SYMBOL }` }
                     </div>
                     <div className="text-xxs/none">Currently Staked</div>
                   </div>
@@ -486,7 +487,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                               <span>Stake Amount</span>
                               {altBalance ?
                                 <span className="float-right">
-                                  Balance: <span className="font-bold">{coreStakedBalance}</span> TNKR
+                                  Balance: <span className="font-bold">{coreStakedBalance}</span> { `${ TOKEN_SYMBOL }` }
                                 </span> : null}
                             </label>
                             <div className="relative flex flex-row items-center">
@@ -512,7 +513,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         </div>
 
                         <Button mini variant="primary" type="submit" disabled={!stakeForm.formState.isValid}>
-                          {altBalance ? 'Restake' : 'Stake'} {watchedStakeAmount} TNKR
+                          {altBalance ? 'Restake' : 'Stake'} {watchedStakeAmount} { `${ TOKEN_SYMBOL }` }
                         </Button>
                       </form>
                     </Tab.Panel>
@@ -554,9 +555,9 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         </div>
 
                         <Button mini variant="primary" type="submit" disabled={!unstakeForm.formState.isValid}>
-                          Unstake {watchedUnstakeAmount} TNKR
+                          Unstake {watchedUnstakeAmount} { `${ TOKEN_SYMBOL }` }
                         </Button>
-                        <p className="text-xxs text-center text-invarchCream">NOTE: Unstaking TNKR will have an unbonding period of 7 days.</p>
+                        <p className="text-xxs text-center text-invarchCream">NOTE: Unstaking { `${ TOKEN_SYMBOL }` } will have an unbonding period of 7 days.</p>
                       </form>
                     </Tab.Panel>
                   </Tab.Panels>
