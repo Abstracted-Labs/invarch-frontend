@@ -297,7 +297,7 @@ const RegisterProject = ({ isOpen }: { isOpen: boolean; }) => {
                 </div>
               </div> */}
               <p className="text-invarchCream text-sm">
-                Thank you for your interest in registering your DAO on the InvArch Tinkernet! While an automatic & streamlined process to register your DAO will be available soon, the ability to deploy & register new DAO accounts is currently not supported in the UI.<br /><br />In the meantime, if you are interested in deploying & registering a new DAO account, please reach out to the InvArch core team via the <a target="_blank" className="text-invarchPink hover:underline underline-offset-2" rel="noreferrer" href="https://discord.gg/invarch">InvArch Discord Server</a>.
+                Thank you for your interest in registering your DAO on InvArch! While an automatic & streamlined process to register your DAO will be available soon, the ability to deploy & register new DAO accounts is currently not supported in the UI.<br /><br />In the meantime, if you are interested in deploying & registering a new DAO account, please reach out to the InvArch core team via the <a target="_blank" className="text-invarchPink hover:underline underline-offset-2" rel="noreferrer" href="https://discord.gg/invarch">InvArch Discord Server</a>.
               </p>
               <div>
                 <Button variant="secondary" mini onClick={closeModal}>Close</Button>
