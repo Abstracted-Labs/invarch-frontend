@@ -37,6 +37,7 @@ export interface ProjectCardProps {
   selectedAccount: InjectedAccountWithMeta | null;
   members: AnyJson[];
   mini: boolean;
+  totalStakedInSystem: BigNumber;
 }
 
 const STAT_UNDERLINE = `border-b border-b-invarchCream border-opacity-20`;
@@ -56,7 +57,8 @@ const ProjectCard = (props: ProjectCardProps) => {
     toggleViewMembers,
     selectedAccount,
     members,
-    mini
+    mini,
+    totalStakedInSystem
   } = props;
   const api = useApi();
   const scrollPositionRef = useRef(0);
@@ -295,8 +297,8 @@ const ProjectCard = (props: ProjectCardProps) => {
         </div>
       </div>
       <div className="font-normal text-invarchCream text-[12px] text-right tracking-[0] leading-[normal] truncate">
-        {coreInfo?.totalStaked && aggregateStaked
-          ? `${ new BigNumber(coreInfo?.totalStaked).times(100).div(aggregateStaked).toFixed(2) }%`
+        {coreInfo?.totalStaked
+          ? `${ new BigNumber(coreInfo?.totalStaked).times(100).div(totalStakedInSystem).toFixed(2) }%`
           : '--'}
       </div>
     </div> : null}
