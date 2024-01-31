@@ -422,7 +422,6 @@ const Staking = () => {
   const refreshQuery = () => {
     if (!claimAllSuccess) return;
     reexecuteQuery({ requestPolicy: 'network-only' });
-    reexecuteCoreQuery({ requestPolicy: 'network-only' });
     setClaimAllSuccess(false);
   };
 
