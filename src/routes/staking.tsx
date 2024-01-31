@@ -193,10 +193,6 @@ const Staking = () => {
     pause: !selectedAccount,
   });
 
-  if (selectedAccount) {
-    selectedAccount.address = "i51rZpsRvubSZ8a6sE94WMLU315iY6acz1SDnS28sFEbMbv4M";
-  }
-
   const setupSubscriptions = useCallback(async () => {
     if (!selectedAccount) {
       throw new Error("selectedAccount is null");
