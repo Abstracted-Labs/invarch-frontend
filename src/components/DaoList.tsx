@@ -18,7 +18,7 @@ import FilterIcon from '../assets/invarch/filter-icon-light.svg';
 import { CHOOSE_ONE, FilterStates, OrderByOption } from '../modals/DaoListFilters';
 import { clearFiltersFromLocalStorage } from '../utils/filterStorage';
 
-interface DaoListProps { mini: boolean; isOverview: boolean; totalStakedInSystem: BigNumber; }
+interface DaoListProps { mini: boolean; isOverview: boolean; totalStakedInSystem: BigNumber | undefined; }
 
 const DaoList = (props: DaoListProps) => {
   const { mini, isOverview, totalStakedInSystem } = props;
@@ -533,7 +533,7 @@ const DaoList = (props: DaoListProps) => {
               availableBalance={availableBalance}
               descriptionRef={minified ? projectCardRef : descriptionRef}
               selectedAccount={selectedAccount}
-              totalStakedInSystem={totalStakedInSystem}
+              totalStakedInSystem={totalStakedInSystem || new BigNumber(0)}
             />
           );
 
