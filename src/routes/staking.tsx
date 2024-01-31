@@ -193,20 +193,12 @@ const Staking = () => {
     pause: !selectedAccount,
   });
 
-  const [rewardsCoreClaimedQuery, reexecuteCoreQuery] = useQuery({
-    query: TotalRewardsCoreClaimedQuery,
-    variables: {},
-
-    pause: !selectedAccount,
-  });
-
   const setupSubscriptions = useCallback(async () => {
     if (!selectedAccount) {
       throw new Error("selectedAccount is null");
     };
 
     const userStakedInfoMap: Map<number, UserStakedInfoType> = new Map();
-    console.log('hello?');
     if (coreEraStakeInfo && coreEraStakeInfo.length > 0) {
       const promises = stakingCores.map((stakingCore) =>
         api.query.ocifStaking.generalStakerInfo(
@@ -430,7 +422,6 @@ const Staking = () => {
   const refreshQuery = () => {
     if (!claimAllSuccess) return;
     reexecuteQuery({ requestPolicy: 'network-only' });
-    reexecuteCoreQuery({ requestPolicy: 'network-only' });
     setClaimAllSuccess(false);
   };
 
@@ -475,7 +466,7 @@ const Staking = () => {
     if (!rewardsUserClaimedQuery.data?.stakers?.length) {
       setTotalClaimed(new BigNumber(0));
       setTotalUnclaimed(new BigNumber(0));
-      setUnclaimedEras({ cores: [], total: 0 });
+      //setUnclaimedEras({ cores: [], total: 0 });
       return;
     }
 
@@ -495,16 +486,45 @@ const Staking = () => {
   }, [selectedAccount, rewardsUserClaimedQuery.fetching, rewardsUserClaimedQuery.data, claimAllSuccess]);
 
   useEffect(() => {
-    if (rewardsCoreClaimedQuery.fetching || !rewardsCoreClaimedQuery.data?.cores?.length || !selectedAccount) return;
+    // Yaki please clean this code.
 
-    const coreEraStakeInfoMap: CoreEraStakeInfoType[] = rewardsCoreClaimedQuery.data.cores;
+     const coreEraStakeInfoMap: Map<
+      number, CoreEraStakeInfoType> = new Map();
 
-    const uniqueCoreEraStakeInfo = coreEraStakeInfoMap.filter((core, index, self) =>
-      index === self.findIndex((item) => item.coreId === core.coreId)
-    );
+    const run = async () => {
+      const currentEra = await api.query.ocifStaking.currentEra();
 
-    setCoreEraStakeInfo(uniqueCoreEraStakeInfo);
-  }, [selectedAccount, stakingCores, rewardsCoreClaimedQuery.fetching, rewardsCoreClaimedQuery.data]);
+      for (const stakingCore of stakingCores) {
+      await api.query.ocifStaking.coreEraStake(stakingCore.key, currentEra, (inf: Codec) => {
+
+        const info: {
+          total: string;
+          numberOfStakers: number;
+          rewardClaimed: boolean;
+          active: boolean;
+        } = inf.toPrimitive() as {
+          total: string;
+          numberOfStakers: number;
+          rewardClaimed: boolean;
+          active: boolean;
+        };
+
+        coreEraStakeInfoMap.set(stakingCore.key, {
+          totalStaked: info.total,
+          active: info.active,
+          rewardClaimed: info.rewardClaimed,
+          numberOfStakers: info.numberOfStakers,
+          coreId: stakingCore.key
+        });
+
+        const coreEraStake = Array.from(coreEraStakeInfoMap.values());
+        setCoreEraStakeInfo(coreEraStake);
+      });
+    }
+    };
+
+    run();
+  }, [selectedAccount, stakingCores, api]);
 
   return (
     <div className="mx-auto w-full flex max-w-7xl flex-col justify-between p-4 sm:px-6 lg:px-8 mt-14 md:mt-0 gap-3">
