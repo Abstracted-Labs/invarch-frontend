@@ -317,7 +317,7 @@ const Staking = () => {
       setStakingCores(cores);
 
       const coreEraStakeInfoMap: Map<
-      number, CoreEraStakeInfoType> = new Map();
+        number, CoreEraStakeInfoType> = new Map();
 
       const currentEra = await api.query.ocifStaking.currentEra();
 
