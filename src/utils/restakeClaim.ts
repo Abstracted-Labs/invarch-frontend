@@ -39,8 +39,8 @@ export const restakeClaim = async ({
     if (disableClaiming) {
       setWaiting(false);
       toast.dismiss();
-      toast.error("Can only claim when unclaimed TNKR is greater than the existential deposit");
-      throw new Error("Can only claim when unclaimed TNKR is greater than the existential deposit");
+      toast.error("Can only claim when unclaimed VARCH is greater than the existential deposit");
+      throw new Error("Can only claim when unclaimed VARCH is greater than the existential deposit");
     }
 
     await web3Enable(INVARCH_WEB3_ENABLE);
