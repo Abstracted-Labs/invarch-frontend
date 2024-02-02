@@ -37,7 +37,7 @@ type SystemAccount = Struct & {
 
 const currency = {
   BASILISK: "Basilisk",
-  TINKERNET: "Tinkernet",
+  INVARCH: "Invarch",
 } as const;
 
 type Currency = (typeof currency)[keyof typeof currency];
@@ -56,7 +56,7 @@ const Transfer = () => {
     from: Currency;
     to: Currency;
   }>({
-    from: currency.TINKERNET,
+    from: currency.INVARCH,
     to: currency.BASILISK,
   });
 
@@ -66,7 +66,7 @@ const Transfer = () => {
   const api = useApi();
   const [apiBasilisk, setApiBasilisk] = useState<ApiPromise>();
 
-  const [balanceInTinkernet, setBalanceInTinkernet] = useState<BigNumber>(
+  const [balanceInvArch, setbalanceInvArch] = useState<BigNumber>(
     new BigNumber(0)
   );
   const [balanceInBasilisk, setBalanceInBasilisk] = useState<BigNumber>(
@@ -101,7 +101,7 @@ const Transfer = () => {
 
         const transferable = total.minus(frozen).minus(reserved);
 
-        setBalanceInTinkernet(transferable);
+        setbalanceInvArch(transferable);
       }
     );
 
@@ -152,7 +152,7 @@ const Transfer = () => {
       const reserved = new BigNumber(balance.data.reserved.toString());
       const transferable = total.minus(frozen).minus(reserved);
 
-      setBalanceInTinkernet(transferable);
+      setbalanceInvArch(transferable);
 
       const balanceInBasilisk = new BigNumber(
         (
@@ -202,23 +202,23 @@ const Transfer = () => {
     }
   };
 
-  const balanceTNKR25 = () => {
-    const balance = balanceInTinkernet.multipliedBy(0.25).dividedBy(new BigNumber(10).pow(12));
+  const balanceVARCH25 = () => {
+    const balance = balanceInvArch.multipliedBy(0.25).dividedBy(new BigNumber(10).pow(12));
     setAmount(balance.toString());
   };
 
-  const balanceTNKR50 = () => {
-    const balance = balanceInTinkernet.multipliedBy(0.5).dividedBy(new BigNumber(10).pow(12));
+  const balanceVARCH50 = () => {
+    const balance = balanceInvArch.multipliedBy(0.5).dividedBy(new BigNumber(10).pow(12));
     setAmount(balance.toString());
   };
 
-  const balanceTNKR75 = () => {
-    const balance = balanceInTinkernet.multipliedBy(0.75).dividedBy(new BigNumber(10).pow(12));
+  const balanceVARCH75 = () => {
+    const balance = balanceInvArch.multipliedBy(0.75).dividedBy(new BigNumber(10).pow(12));
     setAmount(balance.toString());
   };
 
-  const balanceTNKR100 = () => {
-    const balance = balanceInTinkernet.multipliedBy(1).dividedBy(new BigNumber(10).pow(12));
+  const balanceVARCH100 = () => {
+    const balance = balanceInvArch.multipliedBy(1).dividedBy(new BigNumber(10).pow(12));
     setAmount(balance.toString());
   };
 
@@ -498,9 +498,9 @@ const Transfer = () => {
               <div className="flex flex-row items-center justify-around gap-4">
                 <div className="flex flex-col items-center">
                   <span className="text-lg font-bold text-invarchCream leading-none">
-                    {formatBalance(balanceInTinkernet.toString(), {
+                    {formatBalance(balanceInvArch.toString(), {
                       decimals: 12,
-                      withUnit: "TNKR",
+                      withUnit: "VARCH",
                       forceUnit: "-",
                     })}
                   </span>
@@ -513,7 +513,7 @@ const Transfer = () => {
                   <span className="text-lg font-bold text-invarchCream leading-none">
                     {formatBalance(balanceInBasilisk.toString(), {
                       decimals: 12,
-                      withUnit: "TNKR",
+                      withUnit: "VARCH",
                       forceUnit: "-",
                     })}
                   </span>
@@ -593,7 +593,7 @@ const Transfer = () => {
                 </div>
               </div>
 
-              {pair.from === currency.TINKERNET &&
+              {pair.from === currency.INVARCH &&
                 pair.to === currency.BASILISK ? (
                 <div className="flex flex-col gap-4 mt-3">
                   <div className="flex flex-row items-start justify-between gap-4">
@@ -602,20 +602,20 @@ const Transfer = () => {
                         htmlFor="amount"
                         className="block text-xxs font-medium text-invarchCream mb-1"
                       >
-                        TNKR Amount
+                        VARCH Amount
                       </label>
                       <div>
                         <Input type="text"
                           value={amount}
                           name="amount"
                           id="amount"
-                          disabled={balanceInTinkernet.toNumber() === 0 || isWaiting}
-                          onChange={(e) => handleChangedAmount(e.target.value, balanceInTinkernet)} />
+                          disabled={balanceInvArch.toNumber() === 0 || isWaiting}
+                          onChange={(e) => handleChangedAmount(e.target.value, balanceInvArch)} />
                         <div className="flex flex-row justify-between mt-2 gap-2">
-                          <span className={MINI_BUTTON_STYLE} onClick={balanceTNKR25}>25%</span>
-                          <span className={MINI_BUTTON_STYLE} onClick={balanceTNKR50}>50%</span>
-                          <span className={MINI_BUTTON_STYLE} onClick={balanceTNKR75}>75%</span>
-                          <span className={MINI_BUTTON_STYLE} onClick={balanceTNKR100}>100%</span>
+                          <span className={MINI_BUTTON_STYLE} onClick={balanceVARCH25}>25%</span>
+                          <span className={MINI_BUTTON_STYLE} onClick={balanceVARCH50}>50%</span>
+                          <span className={MINI_BUTTON_STYLE} onClick={balanceVARCH75}>75%</span>
+                          <span className={MINI_BUTTON_STYLE} onClick={balanceVARCH100}>100%</span>
                         </div>
                       </div>
                     </div>
@@ -647,9 +647,9 @@ const Transfer = () => {
                     variant="primary"
                     type="button"
                     disabled={
-                      (pair.from === "Tinkernet"
+                      (pair.from === "Invarch"
                         ? new BigNumber(amount).div(1000000000000).toNumber() >=
-                        balanceInTinkernet
+                        balanceInvArch
                           .minus(100000000000)
                           .div(1000000000000)
                           .toNumber() || !destination
@@ -667,7 +667,7 @@ const Transfer = () => {
               ) : null}
 
               {pair.from === currency.BASILISK &&
-                pair.to === currency.TINKERNET ? (
+                pair.to === currency.INVARCH ? (
                 <div className="flex flex-col gap-4 mt-3">
                   <div className="flex flex-col md:flex-row items-stretch justify-between gap-4">
                     <div>
@@ -675,7 +675,7 @@ const Transfer = () => {
                         htmlFor="amount"
                         className="block text-xxs font-medium text-invarchCream mb-2"
                       >
-                        TNKR Amount
+                        VARCH Amount
                       </label>
                       <div>
                         <Input type="text"
@@ -727,7 +727,7 @@ const Transfer = () => {
                           .div(1000000000000)
                           .toNumber() || !destination
                         : new BigNumber(amount).div(1000000000000).toNumber() >=
-                        balanceInTinkernet
+                        balanceInvArch
                           .minus(100000000000)
                           .div(1000000000000)
                           .toNumber() || !destination) || isWaiting

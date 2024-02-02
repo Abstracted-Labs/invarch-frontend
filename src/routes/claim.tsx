@@ -81,7 +81,7 @@ const Claim = () => {
   const [payoutSchedule, setPayoutSchedule] = useState<VestingScheduleLineItem[]>([]);
   const [isBalanceLoading, setBalanceLoading] = useState(false);
   const [isClaimWaiting, setClaimWaiting] = useState(false);
-  const [totalStakedTNKR, setTotalStakedTNKR] = useState<string>('0');
+  const [totalStakedVARCH, setTotalStakedVARCH] = useState<string>('0');
   const api = useApi();
 
   const dateOptions = {
@@ -96,7 +96,7 @@ const Claim = () => {
     vestingCompletionDate = new Date(maxPayoutDate).toLocaleString('en-US', dateOptions);
   }
 
-  const loadStakedTNKR = useCallback(async (selectedAccount: InjectedAccountWithMeta | null) => {
+  const loadStakedVARCH = useCallback(async (selectedAccount: InjectedAccountWithMeta | null) => {
     try {
       const currentEra = (await api.query.ocifStaking.currentEra()).toPrimitive() as number;
       const stakingCores = await loadProjectCores(api);
@@ -137,7 +137,7 @@ const Claim = () => {
 
         const formattedStaked = formatBalance(totalUserStaked.toString(), { decimals: 12, withUnit: TOKEN_SYMBOL, forceUnit: "-" });
 
-        setTotalStakedTNKR(formattedStaked.toString());
+        setTotalStakedVARCH(formattedStaked.toString());
       }
     } catch (error) {
       toast.error(`${ error }`);
@@ -149,7 +149,7 @@ const Claim = () => {
 
     try {
       toast.loading("Loading balances...");
-      await loadStakedTNKR(selectedAccount);
+      await loadStakedVARCH(selectedAccount);
       const results = await fetchSystemData(selectedAccount, api);
       if (!results) {
         console.error("Failed to fetch data");
@@ -180,7 +180,7 @@ const Claim = () => {
       toast.error("Failed to load balances!");
       console.error(error);
     }
-  }, [api, loadStakedTNKR]);
+  }, [api, loadStakedVARCH]);
 
   const handleClaim = async (selectedAccount: InjectedAccountWithMeta) => {
     try {
@@ -312,7 +312,7 @@ const Claim = () => {
                   Staked:
                 </span>{" "}
                 <span className="text-lg font-bold leading-6 text-invarchCream">
-                  {totalStakedTNKR}
+                  {totalStakedVARCH}
                 </span>
               </div>
             </div>
