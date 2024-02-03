@@ -1,21 +1,18 @@
 import Button from "./Button";
 import DisconnectIcon from "../assets/disconnect-icon.svg";
 import InvarchLogoIcon from "../assets/invarch/invarch-gradient.svg";
-import { useCallback, useEffect, useState } from "react";
-import BigNumber from "bignumber.js";
+import { useEffect, useState } from "react";
 import { shallow } from "zustand/shallow";
-import useApi from "../hooks/useApi";
 import useConnect from "../hooks/useConnect";
 import useAccount from "../stores/account";
 import useModal from "../stores/modals";
 import { formatBalanceToTwoDecimals } from "../utils/formatNumber";
+import { useBalance } from "../providers/balance";
 
 const LoginButton = () => {
-  const [balance, setBalance] = useState<BigNumber>();
-  // const [isHovered, setIsHovered] = useState(false);
+  const { availableBalance } = useBalance();
   const [showFirstSpan, setShowFirstSpan] = useState(true);
   const { handleConnect } = useConnect();
-  const api = useApi();
   const closeCurrentModal = useModal((state) => state.closeCurrentModal);
   const { selectedAccount, setSelectedAccount } = useAccount(
     (state) => ({
@@ -30,42 +27,6 @@ const LoginButton = () => {
     closeCurrentModal();
   };
 
-  const loadBalance = useCallback(async () => {
-    if (!selectedAccount) return;
-
-    await api.query.system.account(selectedAccount.address, ({ data }) => {
-      const balance = data.toPrimitive() as {
-        free: string;
-        reserved: string;
-        miscFrozen: string;
-        feeFrozen: string;
-      };
-
-      setBalance(new BigNumber(balance.free));
-    });
-  }, [selectedAccount, api]);
-
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     setIsHovered(false);
-  //   };
-
-  //   // Set the initial state based on the current window size
-  //   handleResize();
-
-  //   // Add event listener
-  //   window.addEventListener('resize', handleResize);
-
-  //   // Remove event listener on cleanup
-  //   return () => {
-  //     window.removeEventListener('resize', handleResize);
-  //   };
-  // }, []);
-
-  useEffect(() => {
-    loadBalance();
-  }, [loadBalance]);
-
   useEffect(() => {
     const intervalId = setInterval(() => {
       setShowFirstSpan(prev => !prev);
@@ -74,7 +35,7 @@ const LoginButton = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const formattedBalance = balance ? formatBalanceToTwoDecimals(balance) : 0;
+  const formattedBalance = availableBalance ? formatBalanceToTwoDecimals(availableBalance) : 0;
 
   return <Button
     mini

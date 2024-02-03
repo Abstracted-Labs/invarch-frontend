@@ -64,7 +64,7 @@ const ProjectCard = (props: ProjectCardProps) => {
   const scrollPositionRef = useRef(0);
   const [isHovered, setIsHovered] = useState(false);
   const [minSupportMet, setMinSupportMet] = useState(false);
-  const [aggregateStaked, setAggregateStaked] = useState<BigNumber>(new BigNumber(0));
+  // const [aggregateStaked, setAggregateStaked] = useState<BigNumber>(new BigNumber(0));
   const [minStakeReward, setMinStakeReward] = useState<BigNumber>(new BigNumber(0));
   const [totalUserStaked, setTotalUserStaked] = useState<BigNumber>(new BigNumber(0));
 
@@ -81,11 +81,11 @@ const ProjectCard = (props: ProjectCardProps) => {
     toggleViewMembers(core, members);
   };
 
-  const loadAggregateStaked = useCallback(async () => {
-    const totalIssuance = (await api.query.balances.totalIssuance()).toPrimitive() as string;
-    const inactiveIssuance = (await api.query.balances.inactiveIssuance()).toPrimitive() as string;
-    setAggregateStaked(new BigNumber(totalIssuance).minus(new BigNumber(inactiveIssuance)));
-  }, [api]);
+  // const loadAggregateStaked = useCallback(async () => {
+  //   const totalIssuance = (await api.query.balances.totalIssuance()).toPrimitive() as string;
+  //   const inactiveIssuance = (await api.query.balances.inactiveIssuance()).toPrimitive() as string;
+  //   setAggregateStaked(new BigNumber(totalIssuance).minus(new BigNumber(inactiveIssuance)));
+  // }, [api]);
 
   const loadStakeRewardMinimum = useCallback(() => {
     const minStakeReward = api.consts.ocifStaking.stakeThresholdForActiveCore.toPrimitive() as string;
@@ -139,9 +139,11 @@ const ProjectCard = (props: ProjectCardProps) => {
   }, [mini]);
 
   useEffect(() => {
-    loadAggregateStaked();
+    // loadAggregateStaked();
     loadStakeRewardMinimum();
-  }, [loadAggregateStaked, loadStakeRewardMinimum]);
+  }, [
+    // loadAggregateStaked, 
+    loadStakeRewardMinimum]);
 
   useEffect(() => {
     calcMinSupportMet();

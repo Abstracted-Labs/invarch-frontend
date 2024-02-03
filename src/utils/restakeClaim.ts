@@ -1,7 +1,7 @@
 import { ApiPromise } from "@polkadot/api";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import BigNumber from "bignumber.js";
-import { UnclaimedErasType } from "../routes/staking";
+import { CoreEraType, StakingCore, UnclaimedErasType } from "../routes/staking";
 import { getSignAndSendCallbackWithPromise } from "./getSignAndSendCallback";
 import { Vec } from "@polkadot/types";
 import { Balance, Call } from "@polkadot/types/interfaces";
@@ -18,6 +18,7 @@ export interface RestakeClaimProps {
   disableClaiming: boolean;
   enableAutoRestake: boolean;
   handleRestakingLogic: (partialFee?: Balance | undefined, stakedDaos?: number) => void | BigNumber;
+  stakingCores: StakingCore[];
 }
 
 export const restakeClaim = async ({
@@ -29,6 +30,7 @@ export const restakeClaim = async ({
   disableClaiming,
   enableAutoRestake,
   handleRestakingLogic,
+  stakingCores,
 }: RestakeClaimProps): Promise<boolean> => {
   let result = false;
 
@@ -48,7 +50,7 @@ export const restakeClaim = async ({
     const injector = await web3FromAddress(selectedAccount.address);
     const uniqueCores = [...new Map(unclaimedEras.cores.map((x) => [x['coreId'], x])).values()];
     const batch: unknown[] = [];
-
+    console.log('uniqueCores', uniqueCores);
     // Create claim transactions
     uniqueCores.forEach(core => {
       if (!core?.earliestEra) return;
@@ -57,14 +59,25 @@ export const restakeClaim = async ({
       }
     });
 
+    // If uniqueCores and batch are empty, iterate over stakingCores
+    if (uniqueCores.length === 0 && batch.length === 0) {
+      stakingCores.forEach(core => {
+        // Directly use core.key for stakingCores, as there's no earliestEra property
+        batch.push(api.tx.ocifStaking.stakerClaimRewards(core.key));
+      });
+    }
+
     // Optionally create restake transactions
     if (enableAutoRestake) {
-      uniqueCores.forEach(core => {
-        if (!core?.earliestEra) return;
-        const restakeUnclaimedAmount = handleRestakingLogic(undefined, uniqueCores.length);
-        if (restakeUnclaimedAmount && !restakeUnclaimedAmount.isZero()) {
+      const coresToRestake = uniqueCores.length > 0 ? uniqueCores : stakingCores;
+      coresToRestake.forEach(core => {
+        // For uniqueCores, check earliestEra. stakingCores doesn't have earliestEra, so it's always processed.
+        if ('earliestEra' in core && !core?.earliestEra) return;
+        const coreIdOrKey = 'coreId' in core ? core.coreId : core.key; // Determine if we're using coreId (uniqueCores) or key (stakingCores)
+        const restakeUnclaimedAmount = handleRestakingLogic(undefined, coresToRestake.length);
+        if (restakeUnclaimedAmount && restakeUnclaimedAmount.isGreaterThan(0)) {
           const restakeAmountInteger = restakeUnclaimedAmount.integerValue().toString();
-          batch.push(api.tx.ocifStaking.stake(core.coreId, restakeAmountInteger));
+          batch.push(api.tx.ocifStaking.stake(coreIdOrKey, restakeAmountInteger));
         }
       });
     }
@@ -85,21 +98,34 @@ export const restakeClaim = async ({
 
     // Rebuild the batch exactly like we did before,
     const rebuildBatch: unknown[] = [];
-    uniqueCores.forEach(core => {
-      if (!core?.earliestEra) return;
-      for (let i = core.earliestEra; i < currentStakingEra; i++) {
-        rebuildBatch.push(api.tx.ocifStaking.stakerClaimRewards(core.coreId));
+    const coresToProcess = uniqueCores.length > 0 ? uniqueCores : stakingCores;
+
+    coresToProcess.forEach(core => {
+      // Type guard to check if 'earliestEra' exists, indicating a CoreEraType object
+      if ('earliestEra' in core) {
+        const coreEraType = core as CoreEraType; // Type assertion
+        const coreIdOrKey = coreEraType.coreId; // 'coreId' is available since it's CoreEraType
+        for (let i = coreEraType.earliestEra || 0; i < currentStakingEra; i++) {
+          rebuildBatch.push(api.tx.ocifStaking.stakerClaimRewards(coreIdOrKey));
+        }
+      } else {
+        // Handle as StakingCore, which doesn't have 'earliestEra'
+        const stakingCore = core as StakingCore;
+        const coreIdOrKey = stakingCore.key; // Use 'key' for StakingCore
+        rebuildBatch.push(api.tx.ocifStaking.stakerClaimRewards(coreIdOrKey));
       }
     });
 
     // But this time, use the adjusted restakeUnclaimedAmount (minus fees)
     if (enableAutoRestake) {
-      uniqueCores.forEach(core => {
-        if (!core?.earliestEra) return;
-        const restakeUnclaimedAmount = handleRestakingLogic(batchTxFees, uniqueCores.length);
+      coresToProcess.forEach(core => {
+        // For uniqueCores, check earliestEra. stakingCores doesn't have earliestEra, so it's always processed.
+        if ('earliestEra' in core && !core?.earliestEra) return;
+        const coreIdOrKey = 'coreId' in core ? core.coreId : core.key; // Determine if we're using coreId (uniqueCores) or key (stakingCores)
+        const restakeUnclaimedAmount = handleRestakingLogic(batchTxFees, coresToProcess.length);
         if (restakeUnclaimedAmount && restakeUnclaimedAmount.isGreaterThan(0)) {
           const restakeAmountInteger = restakeUnclaimedAmount.integerValue().toString();
-          rebuildBatch.push(api.tx.ocifStaking.stake(core.coreId, restakeAmountInteger));
+          rebuildBatch.push(api.tx.ocifStaking.stake(coreIdOrKey, restakeAmountInteger));
         } else {
           toast.dismiss();
           toast.error("The batch transaction fee is greater than the unclaimed rewards.");
