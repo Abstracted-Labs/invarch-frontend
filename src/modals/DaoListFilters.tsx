@@ -156,11 +156,11 @@ const DaoListFilters = (props: DaoListFiltersProps) => {
     setFilters(filters => ({ ...filters, totalStakersRange: { ...filters.totalStakersRange, maxValue: newMaxValue } }));
   }, []);
 
-  const handleTotalTNKRStakedMinChange = useCallback((newMinValue: number) => {
+  const handleTotalVARCHStakedMinChange = useCallback((newMinValue: number) => {
     setFilters(filters => ({ ...filters, totalStakedRange: { ...filters.totalStakedRange, minValue: newMinValue } }));
   }, []);
 
-  const handleTotalTNKRStakedMaxChange = useCallback((newMaxValue: number) => {
+  const handleTotalVARCHStakedMaxChange = useCallback((newMaxValue: number) => {
     setFilters(filters => ({ ...filters, totalStakedRange: { ...filters.totalStakedRange, maxValue: newMaxValue } }));
   }, []);
 
@@ -279,8 +279,8 @@ const DaoListFilters = (props: DaoListFiltersProps) => {
                       step={5000}
                       minValue={filters.totalStakedRange.minValue}
                       maxValue={filters.totalStakedRange.maxValue}
-                      onMinChange={handleTotalTNKRStakedMinChange}
-                      onMaxChange={handleTotalTNKRStakedMaxChange}
+                      onMinChange={handleTotalVARCHStakedMinChange}
+                      onMaxChange={handleTotalVARCHStakedMaxChange}
                     />
                   </div>
                   {HR_BREAK}
