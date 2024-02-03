@@ -454,14 +454,14 @@ const Staking = () => {
     refreshQuery();
   };
 
-  const refreshQuery = () => {
+  const refreshQuery = useCallback(() => {
     if (!claimAllSuccess) return;
     reexecuteQuery({ requestPolicy: 'network-only' });
     setClaimAllSuccess(false);
-  };
+  }, [claimAllSuccess, reexecuteQuery]);
 
   const disableClaiming = useMemo(() => {
-    return isWaiting || unclaimedEras.total === 0 && totalUnclaimed.toNumber() > 0;
+    return isWaiting || unclaimedEras.total === 0 && totalUnclaimed.toNumber() === 0;
   }, [isWaiting, unclaimedEras, totalUnclaimed]);
 
   useEffect(() => {
@@ -518,7 +518,7 @@ const Staking = () => {
     if (initialUnclaimed.current === null) {
       initialUnclaimed.current = totalUnclaimed;
     }
-  }, [selectedAccount, rewardsUserClaimedQuery.fetching, rewardsUserClaimedQuery.data, claimAllSuccess]);
+  }, [selectedAccount, rewardsUserClaimedQuery.fetching, rewardsUserClaimedQuery.data, claimAllSuccess, refreshQuery]);
 
   return (
     <div className="mx-auto w-full flex max-w-7xl flex-col justify-between p-4 sm:px-6 lg:px-8 mt-14 md:mt-0 gap-3">
