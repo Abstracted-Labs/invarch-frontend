@@ -55,7 +55,7 @@ const LoginButton = () => {
             {selectedAccount.meta.name || selectedAccount.address}
           </span>
           <span className={`relative -top-[8px] md:-top-[10px] flex flex-row items-center gap-2 transition-transform transform ${ showFirstSpan ? 'translate-y-10' : 'translate-y-0' }`}>
-            <img className="w-3 h-3" src={InvarchLogoIcon} alt="tnkr icon" />
+            <img className="w-3 h-3" src={InvarchLogoIcon} alt="varch icon" />
             <span className="truncate">
               {formattedBalance} VARCH
             </span>
