@@ -16,15 +16,17 @@ export const fetchSystemData = async (selectedAccount: InjectedAccountWithMeta, 
     // vesting schedules
     api.query.vesting.vestingSchedules(selectedAccount.address),
     // current block
-    api.query.system.number(),
+    api.query.parachainSystem.lastRelayChainBlockNumber(),
     // available account data
     api.query.system.account<SystemAccount>(selectedAccount.address),
   ]);
 };
 
-export const calculateVestingSchedule = async (vestingSchedules: VestingSchedule[], api: ApiPromise, currentDate: Date = new Date(), averageBlockTimeInSeconds: number = 12): Promise<VestingScheduleLineItem[]> => {
+const AVERAGE_BLOCKTIME = 6;
+
+export const calculateVestingSchedule = async (vestingSchedules: VestingSchedule[], api: ApiPromise, currentDate: Date = new Date(), averageBlockTimeInSeconds: number = AVERAGE_BLOCKTIME): Promise<VestingScheduleLineItem[]> => {
   // Fetch the current block number from the blockchain.
-  const currentBlock = new BigNumber((await api.query.system.number()).toString());
+  const currentBlock = new BigNumber((await api.query.parachainSystem.lastRelayChainBlockNumber()).toString());
 
   // Sort the vesting schedules by the end block of each vesting period in ascending order.
   return vestingSchedules.sort((a, b) => (a.start + a.period * a.periodCount) - (b.start + b.period * b.periodCount)).map(schedule => {
