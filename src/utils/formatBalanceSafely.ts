@@ -1,3 +1,4 @@
+import { TOKEN_SYMBOL } from './consts';
 import { formatBalance } from "@polkadot/util";
 import BigNumber from "bignumber.js";
 
@@ -29,7 +30,7 @@ export const formatBalanceSafely = (value: string | BigNumber) => {
     }
 
     // If the value is valid, call formatBalance
-    return formatBalance(valueAsString, { decimals: 12, withUnit: "TNKR", forceUnit: "-" });
+    return formatBalance(valueAsString, { decimals: 12, withUnit: TOKEN_SYMBOL, forceUnit: "-" });
   } catch (error) {
     console.error("Error formatting balance:", error);
     return "Error"; // Error or fallback value
