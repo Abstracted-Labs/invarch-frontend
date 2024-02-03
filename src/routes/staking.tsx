@@ -437,6 +437,7 @@ const Staking = () => {
       setWaiting,
       disableClaiming,
       handleRestakingLogic,
+      stakingCores,
     });
 
     if (!result) {
