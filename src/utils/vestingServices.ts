@@ -130,8 +130,8 @@ export const calculateVestingData = (results: DataResultType, vestingSchedules: 
   const endOfVestingPeriod = new Date(currentDate.getTime() + remainingVestingPeriodInSeconds * 1000);
 
   // Use formatBalanceSafely instead of formatBalance in your calculations
-  const vestedClaimable = formatBalanceSafely(unlockedClaimableTokens);
-  const vestedRemaining = formatBalanceSafely(totalFutureLockedTokens);
+  const vestedClaimable = formatBalanceSafely(unlockedClaimableTokens.absoluteValue().toString(10));
+  const vestedRemaining = formatBalanceSafely(totalFutureLockedTokens.absoluteValue().toString(10));
   const frozenFormatted = formatBalanceSafely(frozen);
   const availableFormatted = formatBalanceSafely(available);
 
