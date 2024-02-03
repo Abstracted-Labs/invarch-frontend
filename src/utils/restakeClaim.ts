@@ -62,7 +62,7 @@ export const restakeClaim = async ({
       uniqueCores.forEach(core => {
         if (!core?.earliestEra) return;
         const restakeUnclaimedAmount = handleRestakingLogic(undefined, uniqueCores.length);
-        if (restakeUnclaimedAmount && !restakeUnclaimedAmount.isZero()) {
+        if (restakeUnclaimedAmount && restakeUnclaimedAmount.isGreaterThan(0)) {
           const restakeAmountInteger = restakeUnclaimedAmount.integerValue().toString();
           batch.push(api.tx.ocifStaking.stake(core.coreId, restakeAmountInteger));
         }
