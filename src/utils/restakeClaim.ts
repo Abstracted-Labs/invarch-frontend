@@ -24,7 +24,7 @@ export interface RestakeClaimProps {
 export const restakeClaim = async ({
   selectedAccount,
   unclaimedEras,
-  currentStakingEra,
+  // currentStakingEra,
   api,
   setWaiting,
   disableClaiming,
@@ -48,7 +48,6 @@ export const restakeClaim = async ({
     await web3Enable(INVARCH_WEB3_ENABLE);
 
     const injector = await web3FromAddress(selectedAccount.address);
-    const processedCoreIdsOrKeys = new Set<number>();
     const uniqueCores = [...new Map(unclaimedEras.cores.map((x) => [x['coreId'], x])).values()];
     const batch: unknown[] = [];
 
@@ -62,12 +61,7 @@ export const restakeClaim = async ({
 
     // Create claim transactions for cores where the user has a stake
     coresWithStake.forEach(core => {
-      // Use currentStakingEra as a fallback if earliestEra is not available
-      const startEra = core.earliestEra ?? currentStakingEra;
-
-      for (let i = startEra; i <= currentStakingEra; i++) {
-        batch.push(api.tx.ocifStaking.stakerClaimRewards(core.coreId));
-      }
+      batch.push(api.tx.ocifStaking.stakerClaimRewards(core.coreId));
     });
 
     // Optionally create restake transactions
@@ -95,9 +89,6 @@ export const restakeClaim = async ({
     const info = await api.tx.utility.batch(batch as Vec<Call>).paymentInfo(selectedAccount.address, { signer: injector.signer });
     const batchTxFees: Balance = info.partialFee;
     const rebuildBatch: unknown[] = [];
-
-    // Clear the set to track processed coreId or key for the new batch
-    processedCoreIdsOrKeys.clear();
 
     // Rebuild the batch with only the cores where the user has a non-zero stake
     coresWithStake.forEach(core => {
