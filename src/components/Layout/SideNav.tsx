@@ -4,11 +4,11 @@ import Footer from "./Footer";
 import LoginButton from "../LoginButton";
 import { useEffect } from "react";
 import ClaimNavIcon from "../../assets/invarch/claim-nav-icon-light.svg";
-import TransferNavIcon from "../../assets/invarch/transfer-nav-icon-light.svg";
+// import TransferNavIcon from "../../assets/invarch/transfer-nav-icon-light.svg";
 import StakingNavIcon from "../../assets/invarch/staking-nav-icon-light.svg";
 import OverviewNavIcon from "../../assets/invarch/overview-nav-icon-light.svg";
 import ClaimNavIcon2 from "../../assets/invarch/claim-nav-icon-gr.svg";
-import TransferNavIcon2 from "../../assets/invarch/transfer-nav-icon-gr.svg";
+// import TransferNavIcon2 from "../../assets/invarch/transfer-nav-icon-gr.svg";
 import StakingNavIcon2 from "../../assets/invarch/staking-nav-icon-gr.svg";
 import OverviewNavIcon2 from "../../assets/invarch/overview-nav-icon-gr.svg";
 import { COLOR_GRADIENT_REVERSE } from "../../utils/consts";
@@ -22,7 +22,7 @@ const navLinks = [
   { path: "/overview", name: "Account Overview", icon: OverviewNavIcon, icon2: OverviewNavIcon2 },
   { path: "/staking", name: "DAO Staking", icon: StakingNavIcon, icon2: StakingNavIcon2 },
   { path: "/claim", name: "Claim Vesting", icon: ClaimNavIcon, icon2: ClaimNavIcon2 },
- // { path: "/transfer", name: "Asset Transfers", icon: TransferNavIcon, icon2: TransferNavIcon2 },
+  // { path: "/transfer", name: "Asset Transfers", icon: TransferNavIcon, icon2: TransferNavIcon2 },
 ];
 
 const SideNav = (props: SideNavProps) => {
