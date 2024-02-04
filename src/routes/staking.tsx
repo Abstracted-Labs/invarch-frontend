@@ -181,6 +181,11 @@ const Staking = () => {
   const [currentBlock, setCurrentBlock] = useState<number>(0);
   const [nextEraBlock, setNextEraBlock] = useState<number>(0);
   const [blocksPerEra, setBlocksPerEra] = useState<number>(0);
+  const [userStakedInfoMap, setUserStakedInfoMap] = useState<Map<number, UserStakedInfoType>>(new Map());
+
+  const disableClaiming = useMemo(() => {
+    return isWaiting || unclaimedEras.total === 0 && totalUnclaimed.toNumber() === 0;
+  }, [isWaiting, unclaimedEras, totalUnclaimed]);
 
   const [rewardsUserClaimedQuery, reexecuteQuery] = useQuery({
     query: TotalRewardsClaimedQuery,
@@ -198,8 +203,6 @@ const Staking = () => {
       throw new Error("selectedAccount is null");
     };
 
-    const userStakedInfoMap: Map<number, UserStakedInfoType> = new Map();
-
     if (coreEraStakeInfo && coreEraStakeInfo.length > 0) {
       const promises = stakingCores.map((stakingCore) =>
         api.query.ocifStaking.generalStakerInfo(
@@ -215,7 +218,7 @@ const Staking = () => {
             if (info.stakes.length > 0) {
               const unclaimedEarliest = info.stakes.reduce((p, v) => parseInt(p.era) < parseInt(v.era) ? p : v).era;
 
-              if (parseInt(unclaimedEarliest) < currentStakingEra) {
+              if (parseInt(unclaimedEarliest) <= currentStakingEra) {
                 setUnclaimedEras(prevState => {
                   const unclaimedCore = prevState.cores.find(value => value.coreId === stakingCore.key);
 
@@ -249,10 +252,19 @@ const Staking = () => {
               staked = new BigNumber(latestInfo.staked);
             }
 
-            userStakedInfoMap.set(stakingCore.key, {
-              coreId: stakingCore.key,
-              era: era,
-              staked: staked,
+            setUserStakedInfoMap((currentMap) => {
+              // Clone the current map to a new variable
+              const updatedMap = new Map(currentMap);
+
+              // Update the cloned map with new data
+              updatedMap.set(stakingCore.key, {
+                coreId: stakingCore.key,
+                era: era,
+                staked: staked,
+              });
+
+              // Return the updated map to be set as the new state
+              return updatedMap;
             });
 
             const newTotalStaked = Array.from(
@@ -266,6 +278,7 @@ const Staking = () => {
 
       await Promise.all(promises);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, stakingCores, selectedAccount, coreEraStakeInfo, currentStakingEra]);
 
   const loadCurrentEraAndStake = useCallback(async () => {
@@ -394,8 +407,8 @@ const Staking = () => {
     autoRestake(bool);
   };
 
-  const handleRestakingLogic = (partialFee?: Balance | undefined, stakedCores?: number) => {
-    // grab the total unclaimed rewards and account for the existential deposit
+  const handleRestakingLogic = useCallback((partialFee?: Balance | undefined, stakedCores?: number) => {
+    // Grab the total unclaimed rewards
     let unclaimedRewards = new BigNumber(totalUnclaimed);
 
     // Check if unclaimedRewards is a valid number
@@ -409,23 +422,29 @@ const Staking = () => {
       return new BigNumber(0);
     }
 
-    // Check if stakedDaos.length is a valid number and not zero to avoid division by zero
+    // Check if stakedCores is a valid number and not zero to avoid division by zero
     if (stakedCores && (isNaN(stakedCores) || stakedCores === 0)) {
-      console.error("Invalid stakedCores length");
+      console.error("Invalid stakedCores");
       return new BigNumber(0);
     }
 
-    // Subtract partialFee * 1.x from unclaimedRewards if partialFee exists
+    // Subtract partialFee * 1.20 from unclaimedRewards if partialFee exists
     if (partialFee) {
       unclaimedRewards = unclaimedRewards.minus(new BigNumber(partialFee.toString()).times(1.20));
     }
 
-    // Divide unclaimedRewards by the number of stakedDaos the user has staked tokens in
+    // Divide unclaimedRewards by the number of stakedCores the user has staked tokens in
     const unclaimedPerCore = unclaimedRewards.div(stakedCores || 1);
     return unclaimedPerCore;
-  };
+  }, [totalUnclaimed]);
 
-  const handleClaimRewards = async () => {
+  const refreshQuery = useCallback(() => {
+    if (!claimAllSuccess) return;
+    reexecuteQuery({ requestPolicy: 'network-only' });
+    setClaimAllSuccess(false);
+  }, [claimAllSuccess, reexecuteQuery]);
+
+  const handleClaimRewards = useCallback(async () => {
     if (!selectedAccount || !unclaimedEras || !currentStakingEra) return;
 
     const result = await restakeClaim({
@@ -437,11 +456,12 @@ const Staking = () => {
       setWaiting,
       disableClaiming,
       handleRestakingLogic,
-      stakingCores,
+      userStakedInfoMap,
     });
 
     if (!result) {
       // Halt if there is a restake error
+      console.error("Error in restakeClaim. Aborting claim.");
       return;
     }
 
@@ -453,17 +473,7 @@ const Staking = () => {
     setUnclaimedEras({ cores: [], total: 0 });
     setClaimAllSuccess(result);
     refreshQuery();
-  };
-
-  const refreshQuery = useCallback(() => {
-    if (!claimAllSuccess) return;
-    reexecuteQuery({ requestPolicy: 'network-only' });
-    setClaimAllSuccess(false);
-  }, [claimAllSuccess, reexecuteQuery]);
-
-  const disableClaiming = useMemo(() => {
-    return isWaiting || unclaimedEras.total === 0 && totalUnclaimed.toNumber() === 0;
-  }, [isWaiting, unclaimedEras, totalUnclaimed]);
+  }, [api, currentStakingEra, enableAutoRestake, selectedAccount, unclaimedEras, userStakedInfoMap, handleRestakingLogic, disableClaiming, refreshQuery]);
 
   useEffect(() => {
     // Load auto-restake value from local storage
