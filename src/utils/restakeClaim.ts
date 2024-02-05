@@ -66,19 +66,6 @@ export const restakeClaim = async ({
       }
     });
 
-    // Optionally create restake transactions
-    if (enableAutoRestake) {
-      coresWithStake.forEach(core => {
-        if (!core?.earliestEra) return;
-        const restakeUnclaimedAmount = handleRestakingLogic(undefined, coresWithStake.length);
-        if (restakeUnclaimedAmount && restakeUnclaimedAmount.isGreaterThan(0)) {
-          const restakeAmountInteger = restakeUnclaimedAmount.integerValue().toString();
-          console.log(`Restaking ${ restakeAmountInteger } VARCH for core ID: ${ core.coreId }`);
-          batch.push(api.tx.ocifStaking.stake(core.coreId, restakeAmountInteger));
-        }
-      });
-    }
-
     if (batch.length === 0) {
       const message = "Please wait until the next era to claim rewards.";
       setWaiting(false);
@@ -86,6 +73,18 @@ export const restakeClaim = async ({
       toast.error(message);
       throw new Error(message);
     };
+
+    // Optionally create restake transactions
+    if (enableAutoRestake) {
+      coresWithStake.forEach(core => {
+        if (!core?.earliestEra) return;
+        const restakeUnclaimedAmount = handleRestakingLogic(undefined, coresWithStake.length);
+        if (restakeUnclaimedAmount && restakeUnclaimedAmount.isGreaterThan(0)) {
+          const restakeAmountInteger = restakeUnclaimedAmount.integerValue().toString();
+          batch.push(api.tx.ocifStaking.stake(core.coreId, restakeAmountInteger));
+        }
+      });
+    }
 
     // Calculate the transaction fees for the initial batch
     // TODO: Proper solution is to still use batchAll but not attempt to claim eras where stake == 0
