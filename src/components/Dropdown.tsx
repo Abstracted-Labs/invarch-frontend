@@ -1,6 +1,7 @@
-import { Fragment, useEffect, useState, ReactNode, isValidElement, memo } from 'react';
+import { Fragment, useEffect, useState, ReactNode, isValidElement, memo, useMemo } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import { debounce } from '../utils/debounce';
 
 export interface DropdownProps<T> {
   list?: T[];
@@ -19,10 +20,10 @@ const Dropdown = memo(function Dropdown<T extends { name: string; }>(props: Drop
   const { initialValue, list, onSelect, defaultOption = DEFAULT_OPTION, currentValue, children, reset, onReset } = props;
   const [optionSelected, setOptionSelected] = useState<T | ReactNode | null>(null);
 
-  const handleSelect = (value: T | ReactNode | null) => {
+  const debouncedHandleSelect = useMemo(() => debounce((value: T | ReactNode | null) => {
     setOptionSelected(value || null);
     onSelect(value as T | null);
-  };
+  }, 200), [onSelect]);
 
   useEffect(() => {
     if (list) {
@@ -60,8 +61,8 @@ const Dropdown = memo(function Dropdown<T extends { name: string; }>(props: Drop
 
   return (
     <div className='flex-grow'>
-      <Listbox value={optionSelected} onChange={handleSelect}>
-        <Listbox.Button className={`relative rounded-md w-full h-[45px] py-2 px-3 text-invarchCream text-sm leading-tight bg-invarchPink bg-opacity-20 border border-px border-invarchCream/20 focus:outline-none focus:ring-0 hover:bg-invarchPink hover:bg-opacity-30`}>
+      <Listbox value={optionSelected} onChange={debouncedHandleSelect}>
+        <Listbox.Button className={`relative rounded-md w-full h-[45px] py-2 px-3 text-white text-sm leading-tight bg-tinkerGrey border-transparent focus:outline-none focus:ring-0 focus:border-tinkerYellow hover:bg-tinkerYellow hover:bg-opacity-20`}>
           {({ value, open }) => {
             let displayValue;
             if (value && typeof value === 'object' && 'props' in value && value.props.children) {
@@ -90,15 +91,15 @@ const Dropdown = memo(function Dropdown<T extends { name: string; }>(props: Drop
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Listbox.Options className={`absolute z-50 py-1 mt-1 overflow-auto text-xs bg-invarchGradientPurple rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm max-h-52 tinker-scrollbar scrollbar border border-px border-invarchCream/20 scrollbar-thumb-invarchPink ${ children ? 'w-2/5' : 'w-4/5' }`}>
+          <Listbox.Options className={`absolute z-50 py-1 mt-1 overflow-auto text-xs bg-tinkerGrey rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm max-h-52 tinker-scrollbar scrollbar scrollbar-thumb-amber-300 ${ children ? 'w-2/5' : 'w-4/5' }`}>
             {children ? children.map((child, childIdx) => (
               <Listbox.Option
                 key={childIdx}
                 className={({ active }) =>
-                  `${ active ? `text-invarchGradientYellow bg-invarchOffBlack bg-opacity-30 cursor-pointer` : 'text-invarchCream' } cursor-default select-none relative py-3 pr-4 pl-3 flex flex-row items-center`}
+                  `${ active ? 'text-tinkerYellow bg-tinkerLightGrey cursor-pointer' : 'text-white' } cursor-default select-none relative py-3 pr-4 pl-3 flex flex-row items-center`}
                 value={isValidElement(child) ? { name: child.key } : { name: child }}
               >
-                <div className='h-4 w-4 mr-1 text-invarchGradientYellow'>
+                <div className='h-4 w-4 mr-1 text-tinkerYellow'>
                   {optionSelected && typeof optionSelected === 'object' && 'name' in optionSelected && isValidElement(child) && typeof child.key === 'string' && optionSelected.name === child.key ? <CheckIcon /> : null}
                 </div>
                 <div>{child}</div>
@@ -109,13 +110,13 @@ const Dropdown = memo(function Dropdown<T extends { name: string; }>(props: Drop
                   id={item?.name}
                   key={itemIdx}
                   className={({ active }) =>
-                    `${ active ? 'text-invarchGradientYellow bg-invarchOffBlack bg-opacity-30 cursor-pointer' : 'text-invarchCream' } cursor-default select-none relative py-3 pr-4 pl-3`}
+                    `${ active ? 'text-tinkerYellow bg-tinkerLightGrey cursor-pointer' : 'text-white' } cursor-default select-none relative py-3 pr-4 pl-3`}
                   value={item}
                 >
                   <>
                     <div className={`${ optionSelected === item ? 'font-medium' : 'font-normal' } text-xs`}>
                       <div className='flex flex-row items-center'>
-                        <div className='h-4 w-4 mr-1 text-invarchRose'>
+                        <div className='h-4 w-4 mr-1 text-tinkerYellow'>
                           {(typeof optionSelected === 'object' && optionSelected !== null && 'name' in optionSelected && typeof item === 'object' && item !== null && 'name' in item && optionSelected.name === item.name) ? <CheckIcon /> : null}
                         </div>
                         <div>
