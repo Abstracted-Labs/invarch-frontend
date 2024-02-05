@@ -355,29 +355,6 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
     });
   };
 
-  const handleDropdownChange = () => {
-    if (!metadata) {
-      console.error("Metadata not available");
-      return;
-    };
-
-    let balanceBN;
-    const oneVARCH = new BigNumber(1);
-
-    if (altBalance) {
-      const numericCoreStakedBalance = coreStakedBalance.replace(/[^\d.]/g, '');
-      balanceBN = new BigNumber(numericCoreStakedBalance);
-    } else {
-      balanceBN = new BigNumber(metadata.availableBalance as string);
-    }
-
-    // Subtract one VARCH from the balance to cover fees or maintain a minimum balance
-    const stakeAmount = balanceBN.minus(oneVARCH);
-
-    // Update the stake amount in the form, converting it to a string
-    stakeForm.setValue('amount', stakeAmount.toString());
-  };
-
   const handleTabChange = (index: number) => {
     if (index === 0) {
       stakeForm.reset();
@@ -392,7 +369,6 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
       const selectCore = stakingCores.find(core => core.metadata.name === selected.name);
       if (selectCore) {
         setSelectedCore(selectCore);
-        handleDropdownChange();
       }
     }
   };
@@ -431,6 +407,29 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
       setSelectedCore(null);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!metadata) {
+      console.error("Metadata not available");
+      return;
+    }
+
+    let balanceBN;
+    const oneVARCH = new BigNumber(1);
+
+    if (altBalance) {
+      const numericCoreStakedBalance = coreStakedBalance.replace(/[^\d.]/g, '');
+      balanceBN = new BigNumber(numericCoreStakedBalance);
+    } else {
+      balanceBN = new BigNumber(metadata.availableBalance as string);
+    }
+
+    // Subtract one VARCH from the balance to cover fees or maintain a minimum balance
+    const stakeAmount = balanceBN.minus(oneVARCH);
+
+    // Update the stake amount in the form, converting it to a string
+    stakeForm.setValue('amount', stakeAmount.toString());
+  }, [coreStakedBalance, altBalance, metadata, stakeForm]);
 
   useEffect(() => {
     if (selectedCoreInfo && initialCore && selectedCoreInfo?.name !== initialCore?.name) {
@@ -478,12 +477,14 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
   }, [selectedCoreInfo, stakeForm, unstakeForm]);
 
   useEffect(() => {
-    const availableBalanceBN = new BigNumber(metadata?.availableBalance as string);
-    const oneVARCH = new BigNumber(10).pow(12); // Adjust the exponent according to your token's decimals
-    const initialStakeAmount = availableBalanceBN.minus(oneVARCH).dividedBy(oneVARCH);
+    if (!metadata || !metadata.availableBalance) return;
 
-    // Set the initial stake amount in the form
-    stakeForm.setValue('amount', initialStakeAmount.toString());
+    const availableBalanceBN = new BigNumber(metadata.availableBalance as string);
+    const oneVARCH = new BigNumber(10).pow(12);
+    const initialStakeAmount = availableBalanceBN.minus(oneVARCH);
+    const stakeValue = initialStakeAmount.dividedBy(oneVARCH).toString();
+
+    stakeForm.setValue('amount', stakeValue);
   }, [metadata, stakeForm]);
 
   const RestakingDropdown = memo(() => {
@@ -630,7 +631,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                       >
                         <div>
                           <label
-                            htmlFor="stakeAmount"
+                            htmlFor="unstakeAmount"
                             className="block text-xxs font-medium text-invarchCream mb-1 truncate"
                           >Unstake Amount</label>
                           <div className="relative flex flex-row items-center">
