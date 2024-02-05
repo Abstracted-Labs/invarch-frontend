@@ -68,7 +68,12 @@ const UnbondTokens = ({ isOpen }: { isOpen: boolean; }) => {
 
             toast.error("Transaction dropped");
           },
-        })
+          onError: (error) => {
+            toast.dismiss();
+
+            toast.error(error);
+          }
+        }, api)
       );
 
       closeCurrentModal();
@@ -122,14 +127,14 @@ const UnbondTokens = ({ isOpen }: { isOpen: boolean; }) => {
 
   return isOpen ? (
     <Dialog open={true} onClose={closeCurrentModal}>
-      <Dialog.Title className="sr-only">Claim Unbonded { `${ TOKEN_SYMBOL }` }</Dialog.Title>
+      <Dialog.Title className="sr-only">Claim Unbonded {`${ TOKEN_SYMBOL }`}</Dialog.Title>
       <div className="fixed inset-0 z-[49] h-screen w-full bg-invarchOffBlack/10 backdrop-blur-md" />
       <button className="pointer fixed top-0 right-0 z-50 flex cursor-pointer flex-col items-center justify-center p-3 text-gray-100 outline-none duration-500 hover:bg-opacity-100 hover:opacity-50">
         <XMarkIcon className="h-5 w-5" />
       </button>
       <Dialog.Panel>
         <div className={MODAL_STYLE}>
-          <h2 className="text-md font-bold text-invarchCream w-[calc(100%-2rem)] max-w-lg truncate">Claim Unbonded { `${ TOKEN_SYMBOL }` }</h2>
+          <h2 className="text-md font-bold text-invarchCream w-[calc(100%-2rem)] max-w-lg truncate">Claim Unbonded {`${ TOKEN_SYMBOL }`}</h2>
 
           <div className="mt-4 flex flex-col justify-between gap-4">
             {unbondingInfo.map(({ amount, unlockIn }) => {
