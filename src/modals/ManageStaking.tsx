@@ -358,8 +358,8 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
   const handleDropdownChange = (selectedOption: { name: string; } | null) => {
     if (selectedOption && selectedOption.name === 'Available Balance') {
       const availableBalanceBN = new BigNumber(metadata?.availableBalance as string);
-      const oneTNKR = new BigNumber(10).pow(12); // Adjust the exponent according to your token's decimals
-      const stakeAmount = availableBalanceBN.minus(oneTNKR).dividedBy(oneTNKR);
+      const oneVARCH = new BigNumber(10).pow(12); // Adjust the exponent according to your token's decimals
+      const stakeAmount = availableBalanceBN.minus(oneVARCH).dividedBy(oneVARCH);
 
       // Update the stake amount in the form
       stakeForm.setValue('amount', stakeAmount.toString());
@@ -478,8 +478,8 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
 
   useEffect(() => {
     const availableBalanceBN = new BigNumber(metadata?.availableBalance as string);
-    const oneTNKR = new BigNumber(10).pow(12); // Adjust the exponent according to your token's decimals
-    const initialStakeAmount = availableBalanceBN.minus(oneTNKR).dividedBy(oneTNKR);
+    const oneVARCH = new BigNumber(10).pow(12); // Adjust the exponent according to your token's decimals
+    const initialStakeAmount = availableBalanceBN.minus(oneVARCH).dividedBy(oneVARCH);
 
     // Set the initial stake amount in the form
     stakeForm.setValue('amount', initialStakeAmount.toString());
@@ -496,20 +496,20 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
       }
       maxStake = new BigNumber(metadata.availableBalance as string);
 
-      // Adjust oneTNKR to match the unit scale of the balance
-      const oneTNKR = new BigNumber(10).pow(12); // Represents 1 TNKR in the smallest unit
+      // Adjust oneVARCH to match the unit scale of the balance
+      const oneVARCH = new BigNumber(10).pow(12); // Represents 1 VARCH in the smallest unit
 
-      if (maxStake.gt(oneTNKR)) {
-        maxStake = maxStake.minus(oneTNKR);
+      if (maxStake.gt(oneVARCH)) {
+        maxStake = maxStake.minus(oneVARCH);
       } else {
-        // If the balance is less than 1 TNKR, set it to 0
+        // If the balance is less than 1 VARCH, set it to 0
         maxStake = new BigNumber(0);
       }
 
-      if (maxUnstake && maxUnstake.gt(oneTNKR)) {
-        maxUnstake = maxUnstake.minus(oneTNKR);
+      if (maxUnstake && maxUnstake.gt(oneVARCH)) {
+        maxUnstake = maxUnstake.minus(oneVARCH);
       } else {
-        // If the balance is less than 1 TNKR, set it to 0
+        // If the balance is less than 1 VARCH, set it to 0
         maxUnstake = new BigNumber(0);
       }
 
@@ -685,7 +685,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         <Button mini variant="primary" type="submit" disabled={!unstakeForm.formState.isValid}>
                           Unstake {watchedUnstakeAmount} {`${ TOKEN_SYMBOL }`}
                         </Button>
-                        <p className="text-xxs text-center text-invarchCream">NOTE: Unstaking {`${ TOKEN_SYMBOL }`} will have an unbonding period of 28 days.</p>
+                        <p className="text-xxs text-center text-invarchPink">NOTE: Unstaking {`${ TOKEN_SYMBOL }`} will have an unbonding period of 28 days.</p>
                       </form>
                     </Tab.Panel>
                   </Tab.Panels>
