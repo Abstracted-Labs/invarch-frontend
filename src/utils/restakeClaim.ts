@@ -126,48 +126,58 @@ export const restakeClaim = async ({
     const castedBatch = rebuildBatch as Vec<Call>;
 
     // TODO: Proper solution is to still use batchAll but not attempt to claim eras where stake == 0
-    await api.tx.utility.batch(castedBatch).signAndSend(
-      selectedAccount.address,
-      { signer: injector.signer },
-      getSignAndSendCallbackWithPromise({
-        onInvalid: () => {
-          toast.dismiss();
-          toast.error("Invalid transaction");
-          setWaiting(false);
-        },
-        onExecuted: () => {
-          toast.dismiss();
-          toast.loading("Waiting for confirmation...");
-          setWaiting(true);
-        },
-        onSuccess: () => {
-          toast.dismiss();
-          toast.success("Claimed successfully");
-          setWaiting(false);
-          result = true;
-        },
-        onDropped: () => {
-          toast.dismiss();
-          toast.error("Transaction dropped");
-          setWaiting(false);
-          result = false;
-        },
-        onError: (error) => {
-          toast.dismiss();
-          toast.error(error);
-          setWaiting(false);
-          result = false;
-        }
-      }, api)
-    );
-
-    toast.dismiss();
+    result = await new Promise<boolean>((resolve, reject) => {
+      api.tx.utility.batch(castedBatch).signAndSend(
+        selectedAccount.address,
+        { signer: injector.signer },
+        getSignAndSendCallbackWithPromise({
+          onInvalid: () => {
+            toast.dismiss();
+            toast.error("Invalid transaction");
+            console.error("Invalid transaction");
+            setWaiting(false);
+            reject(false);
+          },
+          onExecuted: () => {
+            toast.dismiss();
+            toast.loading("Waiting for confirmation...");
+            setWaiting(true);
+          },
+          onSuccess: () => {
+            toast.dismiss();
+            toast.success("Claimed successfully");
+            setWaiting(false);
+            resolve(true);
+          },
+          onDropped: () => {
+            toast.dismiss();
+            toast.error("Transaction dropped");
+            setWaiting(false);
+            console.error("Transaction dropped");
+            resolve(false);
+          },
+          onError: (error) => {
+            toast.dismiss();
+            toast.error(error);
+            setWaiting(false);
+            console.error('error', error);
+            resolve(false);
+          },
+          onInterrupt: (message) => {
+            toast.dismiss();
+            toast.error(message);
+            setWaiting(false);
+            console.error('message', message);
+            resolve(true);
+          },
+        }, api)
+      );
+    });
   } catch (error) {
     toast.dismiss();
     toast.error(`${ error }`);
     console.error(error);
     setWaiting(false);
-    result = false;
   }
 
   return result;
