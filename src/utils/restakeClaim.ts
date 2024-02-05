@@ -19,6 +19,7 @@ export interface RestakeClaimProps {
   enableAutoRestake: boolean;
   handleRestakingLogic: (partialFee?: Balance | undefined, stakedDaos?: number) => void | BigNumber;
   userStakedInfoMap: Map<number, UserStakedInfoType>;
+  callback?: (result: boolean) => void;
 }
 
 export const restakeClaim = async ({
@@ -31,9 +32,8 @@ export const restakeClaim = async ({
   enableAutoRestake,
   handleRestakingLogic,
   userStakedInfoMap,
-}: RestakeClaimProps): Promise<boolean> => {
-  let result = false;
-
+  callback
+}: RestakeClaimProps): Promise<void> => {
   try {
     setWaiting(true);
     toast.loading("Claiming...");
@@ -126,59 +126,55 @@ export const restakeClaim = async ({
     const castedBatch = rebuildBatch as Vec<Call>;
 
     // TODO: Proper solution is to still use batchAll but not attempt to claim eras where stake == 0
-    result = await new Promise<boolean>((resolve, reject) => {
-      api.tx.utility.batch(castedBatch).signAndSend(
-        selectedAccount.address,
-        { signer: injector.signer },
-        getSignAndSendCallbackWithPromise({
-          onInvalid: () => {
-            toast.dismiss();
-            toast.error("Invalid transaction");
-            console.error("Invalid transaction");
-            setWaiting(false);
-            reject(false);
-          },
-          onExecuted: () => {
-            toast.dismiss();
-            toast.loading("Waiting for confirmation...");
-            setWaiting(true);
-          },
-          onSuccess: () => {
-            toast.dismiss();
-            toast.success("Claimed successfully");
-            setWaiting(false);
-            resolve(true);
-          },
-          onDropped: () => {
-            toast.dismiss();
-            toast.error("Transaction dropped");
-            setWaiting(false);
-            console.error("Transaction dropped");
-            resolve(false);
-          },
-          onError: (error) => {
-            toast.dismiss();
-            toast.error(error);
-            setWaiting(false);
-            console.error('error', error);
-            resolve(false);
-          },
-          onInterrupt: (message) => {
-            toast.dismiss();
-            toast.error(message);
-            setWaiting(false);
-            console.error('message', message);
-            resolve(true);
-          },
-        }, api)
-      );
-    });
+    await api.tx.utility.batch(castedBatch).signAndSend(
+      selectedAccount.address,
+      { signer: injector.signer },
+      getSignAndSendCallbackWithPromise({
+        onInvalid: () => {
+          toast.dismiss();
+          toast.error("Invalid transaction");
+          console.error("Invalid transaction");
+          setWaiting(false);
+          callback?.(false);
+        },
+        onExecuted: () => {
+          toast.dismiss();
+          toast.loading("Waiting for confirmation...");
+          setWaiting(true);
+        },
+        onSuccess: () => {
+          toast.dismiss();
+          toast.success("Claimed successfully");
+          setWaiting(false);
+          callback?.(true);
+        },
+        onDropped: () => {
+          toast.dismiss();
+          toast.error("Transaction dropped");
+          console.error("Transaction dropped");
+          setWaiting(false);
+          callback?.(false);
+        },
+        onError: (error) => {
+          toast.dismiss();
+          toast.error(error);
+          setWaiting(false);
+          console.error('error', error);
+          callback?.(false);
+        },
+        onInterrupt: (message) => {
+          toast.dismiss();
+          toast.error(message);
+          setWaiting(false);
+          console.error('message', message);
+          callback?.(true);
+        },
+      }, api)
+    );
   } catch (error) {
     toast.dismiss();
     toast.error(`${ error }`);
     console.error(error);
     setWaiting(false);
   }
-
-  return result;
 };

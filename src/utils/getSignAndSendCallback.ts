@@ -102,6 +102,7 @@ export const getSignAndSendCallback = (props: ISignAndSendCallback) => {
       } else {
         const isSuccess = result.events.some(({ event }) => api.events.system.ExtrinsicSuccess.is(event));
         if (isSuccess) {
+          console.log("Transaction succeeded");
           onSuccess?.();
         } else {
           onError?.("Transaction did not succeed");

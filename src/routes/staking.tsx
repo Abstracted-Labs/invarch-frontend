@@ -447,7 +447,7 @@ const Staking = () => {
   const handleClaimRewards = useCallback(async () => {
     if (!selectedAccount || !unclaimedEras || !currentStakingEra) return;
 
-    const result = await restakeClaim({
+    await restakeClaim({
       api,
       selectedAccount,
       unclaimedEras,
@@ -457,22 +457,23 @@ const Staking = () => {
       disableClaiming,
       handleRestakingLogic,
       userStakedInfoMap,
+      callback: (result) => {
+        if (!result) {
+          // Halt if there is a restake error
+          console.error("There was an error in restakeClaim");
+          return;
+        }
+
+        if (initialUnclaimed.current !== null) {
+          setTotalClaimed(prevTotalClaimed => prevTotalClaimed.plus(initialUnclaimed.current || new BigNumber(0)));
+        }
+
+        setTotalUnclaimed(new BigNumber(0));
+        setUnclaimedEras({ cores: [], total: 0 });
+        setClaimAllSuccess(true);
+        refreshQuery();
+      }
     });
-
-    if (!result) {
-      // Halt if there is a restake error
-      console.error("There was an error in restakeClaim");
-      return;
-    }
-
-    if (initialUnclaimed.current !== null) {
-      setTotalClaimed(prevTotalClaimed => prevTotalClaimed.plus(initialUnclaimed.current || new BigNumber(0)));
-    }
-
-    setTotalUnclaimed(new BigNumber(0));
-    setUnclaimedEras({ cores: [], total: 0 });
-    setClaimAllSuccess(true);
-    refreshQuery();
   }, [api, currentStakingEra, enableAutoRestake, selectedAccount, unclaimedEras, userStakedInfoMap, handleRestakingLogic, disableClaiming, refreshQuery]);
 
   useEffect(() => {
