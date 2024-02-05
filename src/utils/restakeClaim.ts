@@ -158,15 +158,15 @@ export const restakeClaim = async ({
         onError: (error) => {
           toast.dismiss();
           toast.error(error);
-          setWaiting(false);
           console.error('error', error);
+          setWaiting(false);
           callback?.(false);
         },
         onInterrupt: (message) => {
           toast.dismiss();
           toast.error(message);
-          setWaiting(false);
           console.error('message', message);
+          setWaiting(false);
           callback?.(true);
         },
       }, api)
