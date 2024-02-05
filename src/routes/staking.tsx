@@ -461,7 +461,7 @@ const Staking = () => {
 
     if (!result) {
       // Halt if there is a restake error
-      console.error("Error in restakeClaim. Aborting claim.");
+      console.error("There was an error in restakeClaim");
       return;
     }
 
@@ -471,7 +471,7 @@ const Staking = () => {
 
     setTotalUnclaimed(new BigNumber(0));
     setUnclaimedEras({ cores: [], total: 0 });
-    setClaimAllSuccess(result);
+    setClaimAllSuccess(true);
     refreshQuery();
   }, [api, currentStakingEra, enableAutoRestake, selectedAccount, unclaimedEras, userStakedInfoMap, handleRestakingLogic, disableClaiming, refreshQuery]);
 
