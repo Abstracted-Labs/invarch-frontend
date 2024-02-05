@@ -48,7 +48,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
   const [stakingCores, setStakingCores] = useState<StakingCore[]>([]);
   const [selectedCore, setSelectedCore] = useState<StakingCore | null>(null);
   const [totalUserStakedData, setTotalUserStakedData] = useState<TotalUserStakedData>({});
-  const [altBalance, isAltBalance] = useState<boolean>(false);
+  const [altBalance, setAltBalance] = useState<boolean>(false);
   const [coreStakedBalance, setCoreStakedBalance] = useState<string>("0");
   const { closeCurrentModal, openModals } = useModal<ModalState>(
     (state) => state,
@@ -355,15 +355,27 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
     });
   };
 
-  const handleDropdownChange = (selectedOption: { name: string; } | null) => {
-    if (selectedOption && selectedOption.name === 'Available Balance') {
-      const availableBalanceBN = new BigNumber(metadata?.availableBalance as string);
-      const oneVARCH = new BigNumber(10).pow(12); // Adjust the exponent according to your token's decimals
-      const stakeAmount = availableBalanceBN.minus(oneVARCH).dividedBy(oneVARCH);
+  const handleDropdownChange = () => {
+    if (!metadata) {
+      console.error("Metadata not available");
+      return;
+    };
 
-      // Update the stake amount in the form
-      stakeForm.setValue('amount', stakeAmount.toString());
+    let balanceBN;
+    const oneVARCH = new BigNumber(1);
+
+    if (altBalance) {
+      const numericCoreStakedBalance = coreStakedBalance.replace(/[^\d.]/g, '');
+      balanceBN = new BigNumber(numericCoreStakedBalance);
+    } else {
+      balanceBN = new BigNumber(metadata.availableBalance as string);
     }
+
+    // Subtract one VARCH from the balance to cover fees or maintain a minimum balance
+    const stakeAmount = balanceBN.minus(oneVARCH);
+
+    // Update the stake amount in the form, converting it to a string
+    stakeForm.setValue('amount', stakeAmount.toString());
   };
 
   const handleTabChange = (index: number) => {
@@ -380,7 +392,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
       const selectCore = stakingCores.find(core => core.metadata.name === selected.name);
       if (selectCore) {
         setSelectedCore(selectCore);
-        handleDropdownChange(selected);
+        handleDropdownChange();
       }
     }
   };
@@ -422,7 +434,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
 
   useEffect(() => {
     if (selectedCoreInfo && initialCore && selectedCoreInfo?.name !== initialCore?.name) {
-      isAltBalance(true);
+      setAltBalance(true);
 
       if (selectedCoreInfo?.userStaked) {
         const stakedBalance = formatBalanceSafely(selectedCoreInfo?.userStaked?.toString());
@@ -431,31 +443,21 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
       return;
     }
 
-    isAltBalance(false);
+    setAltBalance(false);
     setCoreStakedBalance("0");
   }, [selectedCoreInfo, initialCore, metadata]);
 
   useEffect(() => {
     if (altBalance) {
       const currentAmount = parseFloat(stakeForm.getValues('amount'));
-      const maxBalance = parseFloat(coreStakedBalance);
+      const numericCoreStakedBalance = coreStakedBalance.replace(/[^\d.]/g, '');
+      const maxBalance = parseFloat(numericCoreStakedBalance);
       if (currentAmount > maxBalance) {
         stakeForm.setValue('amount', maxBalance.toString().replace(/,/g, ''));
       }
     }
   }, [altBalance, coreStakedBalance, stakeForm]);
 
-  const RestakingDropdown = memo(() => {
-    const list = stakingCores
-      .map(core => ({ id: core.key, userStaked: totalUserStakedData[core.key], name: core.metadata.name }) as SelectedCoreInfo)
-      .filter(core => core.userStaked && core.userStaked.gt(new BigNumber(0)));
-
-    if (!list || list.length === 0) return null;
-
-    return <Dropdown initialValue={(initialSelectedCore.current?.metadata as SelectedCoreInfo)?.name as string} currentValue={selectedCoreInfo} list={list} onSelect={handleSelect} />;
-  });
-
-  // Watch for changes in stakeForm.amount
   useEffect(() => {
     const value = stakeForm.getValues('amount');
     if (value && !/^[0-9]*\.?[0-9]*$/.test(value)) {
@@ -463,7 +465,6 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
     }
   }, [stakeForm, watchedStakeAmount]);
 
-  // Watch for changes in unstakeForm.amount
   useEffect(() => {
     const value = unstakeForm.getValues('amount');
     if (value && !/^[0-9]*\.?[0-9]*$/.test(value)) {
@@ -485,45 +486,15 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
     stakeForm.setValue('amount', initialStakeAmount.toString());
   }, [metadata, stakeForm]);
 
-  useEffect(() => {
-    const recalculateMaxAmount = () => {
-      if (!metadata || !selectedCoreInfo) return;
+  const RestakingDropdown = memo(() => {
+    const list = stakingCores
+      .map(core => ({ id: core.key, userStaked: totalUserStakedData[core.key], name: core.metadata.name }) as SelectedCoreInfo)
+      .filter(core => core.userStaked && core.userStaked.gt(new BigNumber(0)));
 
-      let maxStake;
-      let maxUnstake;
-      if (selectedCoreInfo && selectedCoreInfo.userStaked) {
-        maxUnstake = new BigNumber(selectedCoreInfo.userStaked.toString());
-      }
-      maxStake = new BigNumber(metadata.availableBalance as string);
+    if (!list || list.length === 0) return null;
 
-      // Adjust oneVARCH to match the unit scale of the balance
-      const oneVARCH = new BigNumber(10).pow(12); // Represents 1 VARCH in the smallest unit
-
-      if (maxStake.gt(oneVARCH)) {
-        maxStake = maxStake.minus(oneVARCH);
-      } else {
-        // If the balance is less than 1 VARCH, set it to 0
-        maxStake = new BigNumber(0);
-      }
-
-      if (maxUnstake && maxUnstake.gt(oneVARCH)) {
-        maxUnstake = maxUnstake.minus(oneVARCH);
-      } else {
-        // If the balance is less than 1 VARCH, set it to 0
-        maxUnstake = new BigNumber(0);
-      }
-
-      // Convert back to a more user-friendly unit if necessary
-      const userFriendlyMaxStake = maxStake.dividedBy(new BigNumber(10).pow(12));
-      const userFriendlyMaxUnstake = maxUnstake ? maxUnstake.dividedBy(new BigNumber(10).pow(12)) : 0;
-
-      // Set the initial stake/unstake amount in the form if needed
-      stakeForm.setValue("amount", userFriendlyMaxStake.toString());
-      unstakeForm.setValue("amount", userFriendlyMaxUnstake.toString());
-    };
-
-    recalculateMaxAmount();
-  }, [metadata, selectedCoreInfo, stakeForm, unstakeForm]);
+    return <Dropdown initialValue={(initialSelectedCore.current?.metadata as SelectedCoreInfo)?.name as string} currentValue={selectedCoreInfo} list={list} onSelect={handleSelect} />;
+  });
 
   return isOpen ? (
     <Dialog open={true} onClose={closeCurrentModal}>
@@ -624,7 +595,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                                 {
                                   showStakeMaxButton && (
                                     <span
-                                      className="block cursor-pointer text-white hover:text-tinkerYellow text-xs focus:outline-none"
+                                      className="block cursor-pointer text-white hover:text-tinkerYellow text-xs focus:outline-none hover:underline underline-offset-2"
                                       onClick={handleStakeMax}
                                       tabIndex={0}
                                     >
