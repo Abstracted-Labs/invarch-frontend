@@ -11,7 +11,7 @@ import { AnyJson, Codec } from "@polkadot/types/types";
 import { StakesInfo, VestingData, VestingSchedule } from "./claim";
 import MetricDashboard from "../components/MetricDashboard";
 import { loadProjectCores } from '../utils/stakingServices';
-import { StakingCore, CoreEraStakeInfoType, UserStakedInfoType, BalanceType, LockedType, TotalRewardsClaimedQuery, TotalRewardsCoreClaimedQuery, UnclaimedErasType } from "./staking";
+import { StakingCore, CoreEraStakeInfoType, UserStakedInfoType, BalanceType, LockedType, TotalRewardsClaimedQuery, TotalRewardsCoreClaimedQuery, UnclaimedErasType, StakedType } from "./staking";
 import { calculateVestingData, fetchSystemData } from "../utils/vestingServices";
 import DaoList from "../components/DaoList";
 import { INVARCH_SS58 } from "../hooks/useConnect";
@@ -34,6 +34,7 @@ const Overview = () => {
   const [totalUnclaimed, setTotalUnclaimed] = useState<BigNumber>(new BigNumber(0));
   const [totalClaimed, setTotalClaimed] = useState<BigNumber>(new BigNumber(0));
   const [vestingSummary, setVestingSummary] = useState<VestingData | null>(null);
+  const [totalStaked, setTotalStaked] = useState<BigNumber>();
 
   const [rewardsUserClaimedQuery] = useQuery({
     query: TotalRewardsClaimedQuery,
@@ -150,9 +151,12 @@ const Overview = () => {
     setLockedBalance(new BigNumber(balance.data.frozen));
   }, [api]);
 
-  const loadCurrentEra = useCallback(async () => {
+  const loadCurrentEraAndStake = useCallback(async () => {
     const currentStakingEra = (await api.query.ocifStaking.currentEra()).toPrimitive() as number;
+    const generalEraInfo = (await api.query.ocifStaking.generalEraInfo(currentStakingEra)).toPrimitive() as StakedType;
+    const totalStaked = new BigNumber(generalEraInfo.staked);
     setCurrentStakingEra(currentStakingEra);
+    setTotalStaked(totalStaked);
   }, [api]);
 
   const loadVestingBalance = useCallback(async (selectedAccount: InjectedAccountWithMeta | null) => {
@@ -180,7 +184,7 @@ const Overview = () => {
       if (selectedAccount) {
         await Promise.all([
           loadAccountInfo(selectedAccount),
-          loadCurrentEra(),
+          loadCurrentEraAndStake(),
           loadCores(),
           loadAggregateStaked(),
           loadVestingBalance(selectedAccount)
@@ -195,7 +199,7 @@ const Overview = () => {
       setLoading(false);
       setDataLoaded(true);
     }
-  }, [loadAccountInfo, loadCores, loadAggregateStaked, loadVestingBalance, loadCurrentEra]);
+  }, [loadAccountInfo, loadCores, loadAggregateStaked, loadVestingBalance, loadCurrentEraAndStake]);
 
   useEffect(() => {
     const setup = async () => {
@@ -272,7 +276,7 @@ const Overview = () => {
             unclaimedEras={undefined}
           />
 
-          <DaoList mini={true} isOverview={true} totalStakedInSystem={undefined} />
+          <DaoList mini={true} isOverview={true} totalStakedInSystem={totalStaked} />
         </div>
       ) : <div className="text-center">
         <h5 className="text-sm font-bold text-invarchCream">
