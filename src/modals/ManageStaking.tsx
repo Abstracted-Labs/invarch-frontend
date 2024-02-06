@@ -78,8 +78,15 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
   }, [selectedCore, totalUserStakedData]);
 
   const showStakeMaxButton = useMemo(() => {
-    return metadata ? new BigNumber(metadata.availableBalance as string).dividedBy(new BigNumber(10).pow(12)).gte(1) : false;
-  }, [metadata]);
+    let balance;
+    if (altBalance) {
+      const numericValue = coreStakedBalance.replace(/[^\d.]/g, '');
+      balance = new BigNumber(numericValue);
+    } else {
+      balance = metadata ? new BigNumber(metadata.availableBalance as string).dividedBy(new BigNumber(10).pow(12)) : new BigNumber(0);
+    }
+    return balance.gte(1);
+  }, [metadata, altBalance, coreStakedBalance]);
 
   const stakeError = useMemo(() => {
     return stakeForm.formState.errors.amount?.message;
@@ -447,17 +454,6 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
   }, [selectedCoreInfo, initialCore, metadata]);
 
   useEffect(() => {
-    if (altBalance) {
-      const currentAmount = parseFloat(stakeForm.getValues('amount'));
-      const numericCoreStakedBalance = coreStakedBalance.replace(/[^\d.]/g, '');
-      const maxBalance = parseFloat(numericCoreStakedBalance);
-      if (currentAmount > maxBalance) {
-        stakeForm.setValue('amount', maxBalance.toString().replace(/,/g, ''));
-      }
-    }
-  }, [altBalance, coreStakedBalance, stakeForm]);
-
-  useEffect(() => {
     const value = stakeForm.getValues('amount');
     if (value && !/^[0-9]*\.?[0-9]*$/.test(value)) {
       stakeForm.setValue('amount', value.replace(/[^0-9.]/g, ''));
@@ -477,15 +473,30 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
   }, [selectedCoreInfo, stakeForm, unstakeForm]);
 
   useEffect(() => {
-    if (!metadata || !metadata.availableBalance) return;
+    if (!metadata) {
+      console.error("Metadata not available");
+      return;
+    }
 
-    const availableBalanceBN = new BigNumber(metadata.availableBalance as string);
-    const oneVARCH = new BigNumber(10).pow(12);
-    const initialStakeAmount = availableBalanceBN.minus(oneVARCH);
-    const stakeValue = initialStakeAmount.dividedBy(oneVARCH).toString();
+    let balanceBN;
+    const oneVARCH = new BigNumber(1);
 
-    stakeForm.setValue('amount', stakeValue);
-  }, [metadata, stakeForm]);
+    if (altBalance) {
+      const numericCoreStakedBalance = coreStakedBalance.replace(/[^\d.]/g, '');
+      balanceBN = new BigNumber(numericCoreStakedBalance);
+    } else {
+      balanceBN = new BigNumber(metadata.availableBalance as string).dividedBy(new BigNumber(10).pow(12));
+    }
+
+    // Subtract one VARCH from the balance to cover fees or maintain a minimum balance
+    const stakeAmount = balanceBN.minus(oneVARCH);
+
+    // Ensure stakeAmount is not negative; if it is, set it to 0
+    const finalStakeAmount = stakeAmount.isNegative() ? new BigNumber(0) : stakeAmount;
+
+    // Update the stake amount in the form, converting it to a string
+    stakeForm.setValue('amount', finalStakeAmount.toString());
+  }, [coreStakedBalance, altBalance, metadata, stakeForm]);
 
   const RestakingDropdown = memo(() => {
     const list = stakingCores
@@ -578,11 +589,11 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                           <div className="w-full">
                             <label
                               htmlFor="stakeAmount"
-                              className="block text-xxs font-medium text-invarchCream mb-1 truncate"
+                              className="block text-xxs font-medium text-invarchCream mb-1 flex flex-row gap-2 truncate"
                             >
                               <span>Stake Amount</span>
                               {altBalance ?
-                                <span className="float-right">
+                                <span className="float-right truncate">
                                   Balance: <span className="font-bold">{coreStakedBalance}</span>
                                 </span> : null}
                             </label>
@@ -632,7 +643,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         <div>
                           <label
                             htmlFor="unstakeAmount"
-                            className="block text-xxs font-medium text-invarchCream mb-1 truncate"
+                            className="block text-xxs font-medium text-invarchCream mb-1 flex flex-row gap-2 truncate"
                           >Unstake Amount</label>
                           <div className="relative flex flex-row items-center">
                             <Input {...unstakeForm.register("amount", {
