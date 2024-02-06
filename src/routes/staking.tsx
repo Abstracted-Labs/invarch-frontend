@@ -20,6 +20,7 @@ import { restakeClaim } from "../utils/restakeClaim";
 import { Balance } from "@polkadot/types/interfaces";
 import { INVARCH_SS58 } from "../hooks/useConnect";
 import { TOKEN_SYMBOL } from "../utils/consts";
+import { useBalance } from "../providers/balance";
 
 export type UnsubFunction = () => Promise<void>;
 
@@ -161,6 +162,7 @@ export function getCoreInfo(coreEraStakeInfo: (CoreEraStakeInfoType)[], core: St
 const Staking = () => {
   const initialUnclaimed = useRef<BigNumber | null>(null);
   const api = useApi();
+  const { reloadAccountInfo } = useBalance();
   const setOpenModal = useModal((state) => state.setOpenModal);
   const selectedAccount = useAccount((state) => state.selectedAccount);
   const [isLoading, setLoading] = useState(true);
@@ -465,7 +467,6 @@ const Staking = () => {
         }
 
         if (initialUnclaimed.current !== null && initialUnclaimed.current > BigNumber(0)) {
-          console.log('got here:', initialUnclaimed.current.toString());
           setTotalClaimed(prevTotalClaimed => prevTotalClaimed.plus(initialUnclaimed.current || new BigNumber(0)));
         }
 
@@ -473,9 +474,10 @@ const Staking = () => {
         setUnclaimedEras({ cores: [], total: 0 });
         setClaimAllSuccess(true);
         refreshQuery();
+        reloadAccountInfo();
       }
     });
-  }, [api, currentStakingEra, enableAutoRestake, selectedAccount, unclaimedEras, userStakedInfoMap, handleRestakingLogic, disableClaiming, refreshQuery]);
+  }, [api, currentStakingEra, enableAutoRestake, selectedAccount, unclaimedEras, userStakedInfoMap, handleRestakingLogic, disableClaiming, refreshQuery, reloadAccountInfo]);
 
   useEffect(() => {
     // Load auto-restake value from local storage
@@ -510,13 +512,6 @@ const Staking = () => {
 
   useEffect(() => {
     if (rewardsUserClaimedQuery.fetching || !selectedAccount) return;
-
-    if (!rewardsUserClaimedQuery.data?.stakers?.length) {
-      setTotalClaimed(new BigNumber(0));
-      setTotalUnclaimed(new BigNumber(0));
-      //setUnclaimedEras({ cores: [], total: 0 });
-      return;
-    }
 
     const rewardsClaimed = new BigNumber(
       rewardsUserClaimedQuery.data.stakers[0].totalRewards
