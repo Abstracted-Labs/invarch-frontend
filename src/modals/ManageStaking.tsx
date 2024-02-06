@@ -523,7 +523,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
             <div className="flex flex-col justify-between gap-4">
               <div className="flex flex-row justify-around gap-4 sm:flex-auto mb-4">
                 <div className="text-sm text-invarchCream text-center">
-                  <div className="font-bold">
+                  <div className="font-bold truncate">
                     {formatBalanceSafely(
                       metadata?.availableBalance
                         ? metadata.availableBalance.toString()
@@ -535,7 +535,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                 {metadata?.totalUserStaked &&
                   metadata?.totalUserStaked.toString() !== "0" ? (
                   <div className="text-sm text-invarchCream text-center">
-                    <div className="font-bold">
+                    <div className="font-bold truncate">
                       {formatBalanceSafely(metadata?.totalUserStaked?.toString())}
                     </div>
                     <div className="text-xxs/none">Currently Staked</div>
