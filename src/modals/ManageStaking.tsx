@@ -589,7 +589,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                           <div className="w-full">
                             <label
                               htmlFor="stakeAmount"
-                              className="block text-xxs font-medium text-invarchCream mb-1 flex flex-row gap-2 truncate"
+                              className="block text-xxs font-medium text-invarchCream mb-1 flex flex-row justify-between gap-2 truncate"
                             >
                               <span>Stake Amount</span>
                               {altBalance ?
@@ -598,7 +598,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                                 </span> : null}
                             </label>
                             <div className="relative flex flex-row items-center">
-                              <div className="w-full ">
+                              <div className="w-full">
                                 <Input {...stakeForm.register("amount", {
                                   required: true,
                                 })} type="text" id="stakeAmount" />
@@ -643,7 +643,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         <div>
                           <label
                             htmlFor="unstakeAmount"
-                            className="block text-xxs font-medium text-invarchCream mb-1 flex flex-row gap-2 truncate"
+                            className="block text-xxs font-medium text-invarchCream mb-1 flex flex-row justify-between gap-2 truncate"
                           >Unstake Amount</label>
                           <div className="relative flex flex-row items-center">
                             <Input {...unstakeForm.register("amount", {
