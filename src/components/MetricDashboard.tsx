@@ -61,7 +61,7 @@ const MetricDashboard = (props: MetricDashboardProps) => {
 
   return (
     <div
-      className="min-h-40 max-w-[1068px] relative overflow-x-auto rounded-xl shadow flex lg:flex-wrap flex-grow flex-row gap-4 justify-between backdrop-blur-sm bg-invarchCream bg-opacity-5 tinker-scrollbar scrollbar scrollbar-thin overflow-x-auto p-4 mb-4">
+      className="min-h-40 max-w-[1068px] relative overflow-x-auto rounded-xl shadow flex lg:flex-wrap flex-grow flex-row gap-4 justify-between backdrop-blur-sm bg-invarchCream bg-opacity-5 tinker-scrollbar scrollbar overflow-x-auto p-4 mb-4">
 
       {totalUnclaimed !== undefined && <DashboardCard cardTitle="Unclaimed Rewards" iconSrc={AggregateStakedIcon}>
         {totalUnclaimed ? `${ formatBalanceToTwoDecimals(totalUnclaimed) } ${ TOKEN_SYMBOL }` : `0 ${ TOKEN_SYMBOL }`}
