@@ -379,6 +379,8 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
 
   useEffect(() => {
     initialSelectedCore.current = metadata;
+    const balance = formatBalanceSafely(availableBalance);
+    setCoreStakedBalance(balance);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
