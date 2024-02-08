@@ -61,7 +61,7 @@ const Dropdown = memo(function Dropdown<T extends { name: string; }>(props: Drop
 
   return (
     <div className='flex-grow'>
-      <Listbox value={optionSelected} onChange={debouncedHandleSelect}>
+      <Listbox value={optionSelected} onChange={debouncedHandleSelect} disabled={list && list.length === 0}>
         <Listbox.Button className={`relative rounded-md w-full h-[45px] py-2 px-3 text-invarchCream text-sm leading-tight bg-invarchPink bg-opacity-20 border border-px border-invarchCream/20 focus:outline-none focus:ring-0 hover:bg-invarchPink hover:bg-opacity-30`}>
           {({ value, open }) => {
             let displayValue;

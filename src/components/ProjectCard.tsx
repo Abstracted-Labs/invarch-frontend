@@ -17,6 +17,7 @@ import useApi from '../hooks/useApi';
 import { formatNumberShorthand } from '../utils/formatNumber';
 import Button from './Button';
 import { HOVER_GRADIENT, TOKEN_SYMBOL } from '../utils/consts';
+import { StakingMetadata } from '../modals/ManageStaking';
 
 export interface ProjectCardProps {
   core: StakingCore;
@@ -24,12 +25,7 @@ export interface ProjectCardProps {
   coreInfo: Partial<CoreEraStakeInfoType> | undefined;
   coreRewards: Partial<CoreIndexedRewardsType> | undefined;
   chainProperties: ChainPropertiesType | undefined;
-  availableBalance: BigNumber | undefined;
-  handleManageStaking: (args: {
-    core: StakingCore;
-    totalUserStaked: BigNumber;
-    availableBalance: BigNumber;
-  }) => void;
+  handleManageStaking: (args: StakingMetadata) => void;
   handleViewDetails?: (mini: boolean) => void;
   descriptionRef: RefObject<HTMLDivElement>;
   toggleExpanded: (core: StakingCore) => void;
@@ -38,6 +34,7 @@ export interface ProjectCardProps {
   members: AnyJson[];
   mini: boolean;
   totalStakedInSystem: BigNumber;
+  allCores: StakingCore[];
 }
 
 const STAT_UNDERLINE = `border-b border-b-invarchCream border-opacity-20`;
@@ -49,7 +46,7 @@ const ProjectCard = (props: ProjectCardProps) => {
     coreInfo,
     coreRewards,
     chainProperties,
-    availableBalance,
+    // availableBalance,
     handleManageStaking,
     handleViewDetails,
     descriptionRef,
@@ -58,7 +55,8 @@ const ProjectCard = (props: ProjectCardProps) => {
     selectedAccount,
     members,
     mini,
-    totalStakedInSystem
+    totalStakedInSystem,
+    allCores
   } = props;
   const api = useApi();
   const scrollPositionRef = useRef(0);
@@ -105,10 +103,6 @@ const ProjectCard = (props: ProjectCardProps) => {
 
     const parsedTotalStaked = totalUserStaked || new BigNumber(0);
 
-    const parsedAvailableBalance = availableBalance && availableBalance.isNegative()
-      ? new BigNumber(0)
-      : availableBalance || new BigNumber(0);
-
     if (handleViewDetails && mini) {
       handleViewDetails(mini);
       return;
@@ -117,7 +111,7 @@ const ProjectCard = (props: ProjectCardProps) => {
     handleManageStaking({
       core,
       totalUserStaked: parsedTotalStaked,
-      availableBalance: parsedAvailableBalance,
+      allCores
     });
   };
 
