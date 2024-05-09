@@ -38,7 +38,7 @@ export interface StakingMetadata {
   allCores: StakingCore[];
 };
 
-const MIN_STAKE_AMOUNT = 50;
+const MIN_STAKE_AMOUNT = 5;
 
 const NO_METADATA_ERROR = "Metadata not available";
 
