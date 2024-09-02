@@ -8,7 +8,7 @@ import useAccount from "../stores/account";
 import { Codec } from "@polkadot/types/types";
 import { StakesInfo } from "./claim";
 import MetricDashboard from "../components/MetricDashboard";
-import { loadProjectCores } from '../utils/stakingServices';
+import { loadProjectDaos } from '../utils/stakingServices';
 import DaoList from "../components/DaoList";
 import Button from "../components/Button";
 import useModal, { modalName } from "../stores/modals";
@@ -46,29 +46,29 @@ export const TotalRewardsClaimedSubscription = `
   }
 `;
 
-export const TotalRewardsCoreClaimedQuery = `
-  query totalRewardsCoreClaimed($coreId: Int) {
-    cores(where: {coreId_eq: $coreId}) {
+export const TotalRewardsDaoClaimedQuery = `
+  query totalRewardsCoreClaimed($daoId: Int) {
+    daos(where: {daoId_eq: $daoId}) {
       latestClaimBlock
       totalRewards
       totalUnclaimed
-      coreId
+      daoId
     }
   }
 `;
 
 export const TotalRewardsCoreClaimedSubscription = `
-  subscription totalRewardsCoreClaimed($coreId: Int) {
-    cores(where: {coreId_eq: $coreId}) {
+  subscription totalRewardsCoreClaimed($daoId: Int) {
+    daos(where: {daoId_eq: $daoId}) {
       latestClaimBlock
       totalRewards
       totalUnclaimed
-      coreId
+      daoId
     }
   }
 `;
 
-export type StakingCore = {
+export type StakingDao = {
   key: number;
   account: string;
   metadata: {
@@ -92,35 +92,35 @@ export type BalanceType = {
   };
 };
 
-export type CoreEraStakeInfoType = {
-  coreId: number;
+export type DaoEraStakeInfoType = {
+  daoId: number;
   totalStaked: string;
   numberOfStakers: number;
   rewardClaimed: boolean;
   active: boolean;
 };
 
-export type CoreIndexedRewardsType = {
-  coreId: number;
+export type DaoIndexedRewardsType = {
+  daoId: number;
   totalRewards: string;
   totalUnclaimed: string;
 };
 
-export type CoreEraType = { coreId: number; earliestEra: number; };
+export type CoreEraType = { daoId: number; earliestEra: number; };
 
 export type UnclaimedErasType = {
-  cores: CoreEraType[];
+  daos: CoreEraType[];
   total: number;
 };
 
 export type UserStakedInfoType = {
-  coreId: number;
+  daoId: number;
   era: number;
   staked: BigNumber;
 };
 
 export type ChainPropertiesType = {
-  maxStakersPerCore: number;
+  maxStakersPerDao: number;
   inflationErasPerYear: number;
 };
 
@@ -138,7 +138,7 @@ export type LockedType = { locked: string; };
 
 export type StakedType = { staked: string; };
 
-export type CorePrimitiveType = {
+export type DaoPrimitiveType = {
   account: string;
   metadata: {
     name: string;
@@ -147,15 +147,15 @@ export type CorePrimitiveType = {
   };
 };
 
-export function getTotalUserStaked(userStakedInfo: UserStakedInfoType[], core: StakingCore) {
+export function getTotalUserStaked(userStakedInfo: UserStakedInfoType[], dao: StakingDao) {
   return !!userStakedInfo && userStakedInfo.find(
-    (info) => info.coreId === core.key
+    (info) => info.daoId === dao.key
   )?.staked;
 }
 
-export function getCoreInfo(coreEraStakeInfo: (CoreEraStakeInfoType)[], core: StakingCore) {
-  return !!coreEraStakeInfo && coreEraStakeInfo.find(
-    (info) => info.coreId === core.key
+export function getDaoInfo(daoEraStakeInfo: (DaoEraStakeInfoType)[], dao: StakingDao) {
+  return !!daoEraStakeInfo && daoEraStakeInfo.find(
+    (info) => info.daoId === dao.key
   );
 }
 
@@ -170,7 +170,7 @@ const Staking = () => {
   const [isDataLoaded, setDataLoaded] = useState(false);
   const [enableAutoRestake, setEnableAutoRestake] = useState<boolean>(false);
   const [claimAllSuccess, setClaimAllSuccess] = useState(false);
-  const [stakingCores, setStakingCores] = useState<StakingCore[]>([]);
+  const [stakingDaos, setStakingDaos] = useState<StakingDao[]>([]);
   const [currentStakingEra, setCurrentStakingEra] = useState<number>(0);
   const [totalUserStaked, setTotalUserStaked] = useState<BigNumber>();
   const [totalStaked, setTotalStaked] = useState<BigNumber>();
@@ -178,8 +178,8 @@ const Staking = () => {
   const [aggregateStaked, setAggregateStaked] = useState<BigNumber>();
   const [totalUnclaimed, setTotalUnclaimed] = useState<BigNumber>(new BigNumber(0));
   const [totalClaimed, setTotalClaimed] = useState<BigNumber>(new BigNumber(0));
-  const [coreEraStakeInfo, setCoreEraStakeInfo] = useState<CoreEraStakeInfoType[]>([]);
-  const [unclaimedEras, setUnclaimedEras] = useState<UnclaimedErasType>({ cores: [], total: 0 });
+  const [daoEraStakeInfo, setDaoEraStakeInfo] = useState<DaoEraStakeInfoType[]>([]);
+  const [unclaimedEras, setUnclaimedEras] = useState<UnclaimedErasType>({ daos: [], total: 0 });
   const [currentBlock, setCurrentBlock] = useState<number>(0);
   const [nextEraBlock, setNextEraBlock] = useState<number>(0);
   const [blocksPerEra, setBlocksPerEra] = useState<number>(0);
@@ -205,10 +205,10 @@ const Staking = () => {
       throw new Error("selectedAccount is null");
     };
 
-    if (coreEraStakeInfo && coreEraStakeInfo.length > 0) {
-      const promises = stakingCores.map((stakingCore) =>
+    if (daoEraStakeInfo && daoEraStakeInfo.length > 0) {
+      const promises = stakingDaos.map((stakingDao) =>
         api.query.ocifStaking.generalStakerInfo(
-          stakingCore.key,
+          stakingDao.key,
           selectedAccount.address,
           async (generalStakerInfo: Codec) => {
             const info = generalStakerInfo.toPrimitive() as StakesInfo;
@@ -222,13 +222,13 @@ const Staking = () => {
 
               if (parseInt(unclaimedEarliest) <= currentStakingEra) {
                 setUnclaimedEras(prevState => {
-                  const unclaimedCore = prevState.cores.find(value => value.coreId === stakingCore.key);
+                  const unclaimedCore = prevState.daos.find(value => value.daoId === stakingDao.key);
 
                   if (unclaimedCore) {
                     unclaimedCore.earliestEra = parseInt(unclaimedEarliest);
                   } else {
-                    prevState.cores.push({
-                      coreId: stakingCore.key,
+                    prevState.daos.push({
+                      daoId: stakingDao.key,
                       earliestEra: parseInt(unclaimedEarliest),
                     });
                   }
@@ -237,7 +237,7 @@ const Staking = () => {
                   total = currentStakingEra - parseInt(unclaimedEarliest);
 
                   return {
-                    cores: prevState.cores,
+                    daos: prevState.daos,
                     total,
                   };
                 });
@@ -259,8 +259,8 @@ const Staking = () => {
               const updatedMap = new Map(currentMap);
 
               // Update the cloned map with new data
-              updatedMap.set(stakingCore.key, {
-                coreId: stakingCore.key,
+              updatedMap.set(stakingDao.key, {
+                daoId: stakingDao.key,
                 era: era,
                 staked: staked,
               });
@@ -281,7 +281,7 @@ const Staking = () => {
       await Promise.all(promises);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, stakingCores, selectedAccount, coreEraStakeInfo, currentStakingEra]);
+  }, [api, stakingDaos, selectedAccount, daoEraStakeInfo, currentStakingEra]);
 
   const loadCurrentEraAndStake = useCallback(async () => {
     const currentStakingEra = (await api.query.ocifStaking.currentEra()).toPrimitive() as number;
@@ -329,18 +329,18 @@ const Staking = () => {
   }, [api]);
 
   const loadCores = useCallback(async () => {
-    const cores = await loadProjectCores(api);
+    const daos = await loadProjectDaos(api);
 
-    if (cores) {
-      setStakingCores(cores);
+    if (daos) {
+      setStakingDaos(daos);
 
-      const coreEraStakeInfoMap: Map<
-        number, CoreEraStakeInfoType> = new Map();
+      const daoEraStakeInfoMap: Map<
+        number, DaoEraStakeInfoType> = new Map();
 
       const currentEra = await api.query.ocifStaking.currentEra();
 
-      for (const stakingCore of cores) {
-        const inf = await api.query.ocifStaking.coreEraStake(stakingCore.key, currentEra);
+      for (const stakingDao of daos) {
+        const inf = await api.query.ocifStaking.coreEraStake(stakingDao.key, currentEra);
 
         const info: {
           total: string;
@@ -354,23 +354,23 @@ const Staking = () => {
           active: boolean;
         };
 
-        coreEraStakeInfoMap.set(stakingCore.key, {
+        daoEraStakeInfoMap.set(stakingDao.key, {
           totalStaked: info.total,
           active: info.active,
           rewardClaimed: info.rewardClaimed,
           numberOfStakers: info.numberOfStakers,
-          coreId: stakingCore.key
+          daoId: stakingDao.key
         });
 
-        const coreEraStake = Array.from(coreEraStakeInfoMap.values());
-        setCoreEraStakeInfo(coreEraStake);
+        const coreEraStake = Array.from(daoEraStakeInfoMap.values());
+        setDaoEraStakeInfo(coreEraStake);
       }
     }
   }, [api]);
 
   const initializeData = useCallback(async (selectedAccount: InjectedAccountWithMeta | null) => {
     try {
-      toast.loading("Loading staking cores...");
+      toast.loading("Loading staking daos...");
 
       if (selectedAccount) {
         await Promise.all([
@@ -383,7 +383,7 @@ const Staking = () => {
       }
     } catch (error) {
       toast.dismiss();
-      toast.error(`${ error }`);
+      toast.error(`${error}`);
     } finally {
       toast.dismiss();
       toast.success('Loaded');
@@ -471,7 +471,7 @@ const Staking = () => {
         }
 
         setTotalUnclaimed(new BigNumber(0));
-        setUnclaimedEras({ cores: [], total: 0 });
+        setUnclaimedEras({ daos: [], total: 0 });
         setClaimAllSuccess(true);
         refreshQuery();
         reloadAccountInfo();
@@ -557,7 +557,7 @@ const Staking = () => {
               onClick={handleUnbondTokens}
               disabled={isWaiting}
               variant="secondary">
-              Claim Unbonded {`${ TOKEN_SYMBOL }`}
+              Claim Unbonded {`${TOKEN_SYMBOL}`}
             </Button>
           </div>
           <div className="flex flex-row items-center gap-1">
@@ -566,7 +566,7 @@ const Staking = () => {
               onClick={handleClaimRewards}
               disabled={disableClaiming}
               variant="primary">
-              Claim {`${ TOKEN_SYMBOL }`} Rewards
+              Claim {`${TOKEN_SYMBOL}`} Rewards
             </Button>
             <div className="flex flex-col items-center justify-around relative border-2 border-invarchGradientLightPurple text-invarchCream border-opacity-80 bg-invarchOffBlack bg-opacity-40 rounded-lg scale-70 lg:scale-90">
               <div className="flex-grow">

@@ -2,7 +2,7 @@ import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { BigNumber } from 'bignumber.js';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
-import { StakingCore, CoreEraStakeInfoType, ChainPropertiesType, CoreIndexedRewardsType } from '../routes/staking';
+import { StakingDao, DaoEraStakeInfoType, ChainPropertiesType, DaoIndexedRewardsType } from '../routes/staking';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import TotalStakersIcon from '../assets/invarch/total-stakers-icon-light.svg';
 import TotalStakedIcon from '../assets/invarch/total-staked-icon-light.svg';
@@ -20,30 +20,30 @@ import { HOVER_GRADIENT, TOKEN_SYMBOL } from '../utils/consts';
 import { StakingMetadata } from '../modals/ManageStaking';
 
 export interface ProjectCardProps {
-  core: StakingCore;
+  dao: StakingDao;
   totalUserStaked: BigNumber | undefined;
-  coreInfo: Partial<CoreEraStakeInfoType> | undefined;
-  coreRewards: Partial<CoreIndexedRewardsType> | undefined;
+  daoInfo: Partial<DaoEraStakeInfoType> | undefined;
+  coreRewards: Partial<DaoIndexedRewardsType> | undefined;
   chainProperties: ChainPropertiesType | undefined;
   handleManageStaking: (args: StakingMetadata) => void;
   handleViewDetails?: (mini: boolean) => void;
   descriptionRef: RefObject<HTMLDivElement>;
-  toggleExpanded: (core: StakingCore) => void;
-  toggleViewMembers: (core: StakingCore, members: AnyJson[]) => void;
+  toggleExpanded: (dao: StakingDao) => void;
+  toggleViewMembers: (dao: StakingDao, members: AnyJson[]) => void;
   selectedAccount: InjectedAccountWithMeta | null;
   members: AnyJson[];
   mini: boolean;
   totalStakedInSystem: BigNumber;
-  allCores: StakingCore[];
+  allDaos: StakingDao[];
 }
 
 const STAT_UNDERLINE = `border-b border-b-invarchCream border-opacity-20`;
 
 const ProjectCard = (props: ProjectCardProps) => {
   const {
-    core,
+    dao: core,
     totalUserStaked: totalStaked,
-    coreInfo,
+    daoInfo,
     coreRewards,
     chainProperties,
     // availableBalance,
@@ -56,7 +56,7 @@ const ProjectCard = (props: ProjectCardProps) => {
     members,
     mini,
     totalStakedInSystem,
-    allCores
+    allDaos
   } = props;
   const api = useApi();
   const scrollPositionRef = useRef(0);
@@ -86,17 +86,17 @@ const ProjectCard = (props: ProjectCardProps) => {
   // }, [api]);
 
   const loadStakeRewardMinimum = useCallback(() => {
-    const minStakeReward = api.consts.ocifStaking.stakeThresholdForActiveCore.toPrimitive() as string;
+    const minStakeReward = api.consts.ocifStaking.stakeThresholdForActiveDao.toPrimitive() as string;
     setMinStakeReward(new BigNumber(minStakeReward));
   }, [api]);
 
   const calcMinSupportMet = useCallback(() => {
-    if (minStakeReward.isLessThan(coreInfo?.totalStaked || new BigNumber(0))) {
+    if (minStakeReward.isLessThan(daoInfo?.totalStaked || new BigNumber(0))) {
       setMinSupportMet(true);
     } else {
       setMinSupportMet(false);
     }
-  }, [minStakeReward, coreInfo]);
+  }, [minStakeReward, daoInfo]);
 
   const handleClick = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -109,9 +109,9 @@ const ProjectCard = (props: ProjectCardProps) => {
     }
 
     handleManageStaking({
-      core,
+      dao: core,
       totalUserStaked: parsedTotalStaked,
-      allCores
+      allDaos
     });
   };
 
@@ -121,7 +121,7 @@ const ProjectCard = (props: ProjectCardProps) => {
 
     if (mini) return;
 
-    const elements = document.querySelectorAll(`.${ statClass }`);
+    const elements = document.querySelectorAll(`.${statClass}`);
     elements.forEach(element => {
       const htmlElement = element as HTMLElement;
       if (isHovering) {
@@ -142,7 +142,7 @@ const ProjectCard = (props: ProjectCardProps) => {
   useEffect(() => {
     calcMinSupportMet();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [minStakeReward, coreInfo?.totalStaked]);
+  }, [minStakeReward, daoInfo?.totalStaked]);
 
   useEffect(() => {
     if (totalStaked !== undefined) {
@@ -154,7 +154,7 @@ const ProjectCard = (props: ProjectCardProps) => {
 
     {/* Total Stakers */}
     {!mini ? <div
-      className={`p-2 stats-1 flex justify-between items-center ${ STAT_UNDERLINE }`}
+      className={`p-2 stats-1 flex justify-between items-center ${STAT_UNDERLINE}`}
       onMouseEnter={(e) => handleStatsHover(true, 'stats-1', e)}
       onMouseLeave={(e) => handleStatsHover(false, 'stats-1', e)}
       onTouchStart={(e) => handleStatsHover(true, 'stats-1', e)}
@@ -169,8 +169,8 @@ const ProjectCard = (props: ProjectCardProps) => {
         </div>
       </div>
       <div className="font-normal text-invarchCream text-[12px] text-right tracking-[0] leading-[normal] flex flex-row items-center gap-1">
-        {(coreInfo?.numberOfStakers || 0) >=
-          (chainProperties?.maxStakersPerCore || 0) ? (
+        {(daoInfo?.numberOfStakers || 0) >=
+          (chainProperties?.maxStakersPerDao || 0) ? (
           <LockClosedIcon
             className="h-3 w-3 cursor-pointer text-invarchCream"
             onClick={() => {
@@ -180,13 +180,13 @@ const ProjectCard = (props: ProjectCardProps) => {
             }}
           />
         ) : null}
-        <span>{coreInfo?.numberOfStakers}</span>
+        <span>{daoInfo?.numberOfStakers}</span>
       </div>
     </div> : null}
 
     {/* Total Staked */}
     {!mini ? <div
-      className={`p-2 stats-2 flex justify-between items-center ${ STAT_UNDERLINE }`}
+      className={`p-2 stats-2 flex justify-between items-center ${STAT_UNDERLINE}`}
       onMouseEnter={(e) => handleStatsHover(true, 'stats-2', e)}
       onMouseLeave={(e) => handleStatsHover(false, 'stats-2', e)}
       onTouchStart={(e) => handleStatsHover(true, 'stats-2', e)}
@@ -201,15 +201,15 @@ const ProjectCard = (props: ProjectCardProps) => {
         </div>
       </div>
       <div className="font-normal text-invarchCream text-[12px] text-right tracking-[0] leading-[normal] truncate">
-        {coreInfo?.totalStaked
-          ? `${ formatNumberShorthand(parseFloat(coreInfo?.totalStaked.toString()) / Math.pow(10, 12)) } ${ TOKEN_SYMBOL }`
+        {daoInfo?.totalStaked
+          ? `${formatNumberShorthand(parseFloat(daoInfo?.totalStaked.toString()) / Math.pow(10, 12))} ${TOKEN_SYMBOL}`
           : '--'}
       </div>
     </div> : null}
 
     {/* My Stake */}
     <div
-      className={`p-2 stats-3 flex justify-between items-center ${ !mini ? STAT_UNDERLINE : '' }`}
+      className={`p-2 stats-3 flex justify-between items-center ${!mini ? STAT_UNDERLINE : ''}`}
       onMouseEnter={(e) => handleStatsHover(true, 'stats-3', e)}
       onMouseLeave={(e) => handleStatsHover(false, 'stats-3', e)}
       onTouchStart={(e) => handleStatsHover(true, 'stats-3', e)}
@@ -225,14 +225,14 @@ const ProjectCard = (props: ProjectCardProps) => {
       </div>
       <div className="font-normal text-invarchCream text-[12px] text-right tracking-[0] leading-[normal] truncate">
         {totalUserStaked
-          ? `${ formatNumberShorthand(parseFloat(totalUserStaked.toString()) / Math.pow(10, 12)) } ${ TOKEN_SYMBOL }`
+          ? `${formatNumberShorthand(parseFloat(totalUserStaked.toString()) / Math.pow(10, 12))} ${TOKEN_SYMBOL}`
           : '--'}
       </div>
     </div>
 
     {/* Total Rewards */}
     {!mini ? <div
-      className={`p-2 stats-4 flex justify-between items-center ${ STAT_UNDERLINE }`}
+      className={`p-2 stats-4 flex justify-between items-center ${STAT_UNDERLINE}`}
       onMouseEnter={(e) => handleStatsHover(true, 'stats-4', e)}
       onMouseLeave={(e) => handleStatsHover(false, 'stats-4', e)}
       onTouchStart={(e) => handleStatsHover(true, 'stats-4', e)}
@@ -248,14 +248,14 @@ const ProjectCard = (props: ProjectCardProps) => {
       </div>
       <div className="font-normal text-invarchCream text-[12px] text-right tracking-[0] leading-[normal] truncate">
         {coreRewards?.totalRewards
-          ? `${ formatNumberShorthand(parseFloat(coreRewards?.totalRewards.toString()) / Math.pow(10, 12)) } ${ TOKEN_SYMBOL }`
+          ? `${formatNumberShorthand(parseFloat(coreRewards?.totalRewards.toString()) / Math.pow(10, 12))} ${TOKEN_SYMBOL}`
           : '--'}
       </div>
     </div> : null}
 
     {/* Unclaimed Rewards */}
     {!mini ? <div
-      className={`p-2 stats-5 flex justify-between items-center ${ STAT_UNDERLINE }`}
+      className={`p-2 stats-5 flex justify-between items-center ${STAT_UNDERLINE}`}
       onMouseEnter={(e) => handleStatsHover(true, 'stats-5', e)}
       onMouseLeave={(e) => handleStatsHover(false, 'stats-5', e)}
       onTouchStart={(e) => handleStatsHover(true, 'stats-5', e)}
@@ -271,14 +271,14 @@ const ProjectCard = (props: ProjectCardProps) => {
       </div>
       <div className="font-normal text-invarchCream text-[12px] text-right tracking-[0] leading-[normal] truncate">
         {coreRewards?.totalUnclaimed
-          ? `${ formatNumberShorthand(parseFloat(coreRewards?.totalUnclaimed.toString()) / Math.pow(10, 12)) } ${ TOKEN_SYMBOL }`
+          ? `${formatNumberShorthand(parseFloat(coreRewards?.totalUnclaimed.toString()) / Math.pow(10, 12))} ${TOKEN_SYMBOL}`
           : '--'}
       </div>
     </div> : null}
 
     {/* Support Share */}
     {!mini ? <div
-      className={`p-2 stats-6 flex justify-between items-center ${ STAT_UNDERLINE }`}
+      className={`p-2 stats-6 flex justify-between items-center ${STAT_UNDERLINE}`}
       onMouseEnter={(e) => handleStatsHover(true, 'stats-6', e)}
       onMouseLeave={(e) => handleStatsHover(false, 'stats-6', e)}
       onTouchStart={(e) => handleStatsHover(true, 'stats-6', e)}
@@ -293,8 +293,8 @@ const ProjectCard = (props: ProjectCardProps) => {
         </div>
       </div>
       <div className="font-normal text-invarchCream text-[12px] text-right tracking-[0] leading-[normal] truncate">
-        {coreInfo?.totalStaked
-          ? `${ new BigNumber(coreInfo?.totalStaked).times(100).div(totalStakedInSystem).toFixed(2) }%`
+        {daoInfo?.totalStaked
+          ? `${new BigNumber(daoInfo?.totalStaked).times(100).div(totalStakedInSystem).toFixed(2)}%`
           : '--'}
       </div>
     </div> : null}
@@ -316,11 +316,11 @@ const ProjectCard = (props: ProjectCardProps) => {
         </div>
       </div>
       <div className="text-invarchCream font-normal text-[12px] text-right tracking-[0] leading-[normal] truncate">
-        <span className={`${ minSupportMet ? 'text-green-400' : 'text-red-400' }`}>
-          {coreInfo?.totalStaked && minStakeReward
-            ? `${ minSupportMet ? formatNumberShorthand(parseFloat(minStakeReward.toString()) / Math.pow(10, 12)) : formatNumberShorthand(parseFloat(coreInfo?.totalStaked.toString()) / Math.pow(10, 12)) }/${ formatNumberShorthand(parseFloat(minStakeReward.toString()) / Math.pow(10, 12)) }`
+        <span className={`${minSupportMet ? 'text-green-400' : 'text-red-400'}`}>
+          {daoInfo?.totalStaked && minStakeReward
+            ? `${minSupportMet ? formatNumberShorthand(parseFloat(minStakeReward.toString()) / Math.pow(10, 12)) : formatNumberShorthand(parseFloat(daoInfo?.totalStaked.toString()) / Math.pow(10, 12))}/${formatNumberShorthand(parseFloat(minStakeReward.toString()) / Math.pow(10, 12))}`
             : '--'}
-        </span> {`${ TOKEN_SYMBOL }`}
+        </span> {`${TOKEN_SYMBOL}`}
       </div>
     </div> : null}
   </div>;
@@ -347,7 +347,7 @@ const ProjectCard = (props: ProjectCardProps) => {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={handleReadMore}>
-          <div className={`absolute inset-0 flex justify-center items-center font-normal text-invarchGradientYellow text-[12px] tracking-[0] leading-[normal] ${ isHovered ? 'opacity-100 underline underline-offset-2' : 'md:opacity-0 opacity-100 underline underline-offset-2' } z-10 pointer-events-none`}>
+          <div className={`absolute inset-0 flex justify-center items-center font-normal text-invarchGradientYellow text-[12px] tracking-[0] leading-[normal] ${isHovered ? 'opacity-100 underline underline-offset-2' : 'md:opacity-0 opacity-100 underline underline-offset-2'} z-10 pointer-events-none`}>
             Show More
           </div>
           <p className={`font-normal text-invarchCream text-[14px] tracking-[0] leading-[18px] line-clamp-4 gradient-bottom hover:text-opacity-20 text-opacity-20 md:text-opacity-100`}>
@@ -356,7 +356,7 @@ const ProjectCard = (props: ProjectCardProps) => {
         </div> : null}
 
         <div
-          className={`relative stats-section grid grid-cols-1 gap-2 ${ mini ? '' : 'h-28' } overflow-y-scroll tinker-scrollbar scrollbar-thumb-invarchPink scrollbar pr-3`}
+          className={`relative stats-section grid grid-cols-1 gap-2 ${mini ? '' : 'h-28'} overflow-y-scroll tinker-scrollbar scrollbar-thumb-invarchPink scrollbar pr-3`}
           onScroll={(e) => {
             // Update the stored scroll position
             scrollPositionRef.current = (e.target as HTMLElement).scrollTop;
@@ -374,8 +374,8 @@ const ProjectCard = (props: ProjectCardProps) => {
 
         {selectedAccount ? <Button variant='primary' mini={true} onClick={handleClick}
           disabled={
-            (coreInfo?.numberOfStakers || 0) >=
-            (chainProperties?.maxStakersPerCore || 0) &&
+            (daoInfo?.numberOfStakers || 0) >=
+            (chainProperties?.maxStakersPerDao || 0) &&
             !totalUserStaked
           }>{!mini ? 'Manage Staking' : 'View Details'}</Button> : null}
       </div>

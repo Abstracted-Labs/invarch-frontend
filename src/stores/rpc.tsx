@@ -18,8 +18,8 @@ type RPCState = {
 };
 
 const useRPC = createWithEqualityFn<RPCState>()((set, get) => ({
-  host: host.REMOTE,
-  // host: host.LOCAL,
+  // host: host.REMOTE,
+  host: host.LOCAL,
   setHost: (host: Host) => set(() => ({ host })),
   error: null,
   createApi: async (options) => {
@@ -42,7 +42,7 @@ const useRPC = createWithEqualityFn<RPCState>()((set, get) => ({
 
       console.error(error);
 
-      throw new Error(`Failed to connect to ${ host }`);
+      throw new Error(`Failed to connect to ${host}`);
     }
   },
 }));
