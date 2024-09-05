@@ -15,7 +15,7 @@ import useModal, { MODAL_STYLE, Metadata, ModalState, modalName } from "../store
 import classNames from "../utils/classNames";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import { StakingCore, TotalUserStakedData } from "../routes/staking";
+import { StakingDao, TotalUserStakedData } from "../routes/staking";
 import Dropdown from "../components/Dropdown";
 import { INVARCH_WEB3_ENABLE } from "../hooks/useConnect";
 import { TOKEN_SYMBOL } from "../utils/consts";
@@ -23,19 +23,19 @@ import { formatBalanceSafely } from "../utils/formatBalanceSafely";
 import { useBalance } from "../providers/balance";
 
 interface TotaluserStakedDataRecord extends Record<number, number> { }
-export interface SelectedCoreInfo extends Metadata {
+export interface SelectedDaoInfo extends Metadata {
   id: number;
   userStaked: BigNumber | undefined;
   name: string;
   availableBalance: string | undefined;
   totalUserStakedData: TotaluserStakedDataRecord;
-  allCores: StakingCore[];
+  allDaos: StakingDao[];
 }
 
 export interface StakingMetadata {
-  core: StakingCore;
+  dao: StakingDao;
   totalUserStaked: BigNumber;
-  allCores: StakingCore[];
+  allDaos: StakingDao[];
 };
 
 const MIN_STAKE_AMOUNT = 5;
@@ -56,7 +56,7 @@ const schema = z.object({
 const ManageStaking = (props: { isOpen: boolean; }) => {
   const { isOpen } = props;
   const { availableBalance, reloadAccountInfo } = useBalance();
-  const [selectedCore, setSelectedCore] = useState<StakingCore | null>(null);
+  const [selectedCore, setSelectedCore] = useState<StakingDao | null>(null);
   const [totalUserStakedData, setTotalUserStakedData] = useState<TotalUserStakedData>({});
   const [altBalance, setAltBalance] = useState<boolean>(false);
   const [coreStakedBalance, setCoreStakedBalance] = useState<string>("0");
@@ -67,7 +67,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
   const targetModal = openModals.find(modal => modal.name === modalName.MANAGE_STAKING);
   const metadata = targetModal ? targetModal.metadata : undefined;
   const initialSelectedCore = useRef<Metadata | undefined>(metadata);
-  const allTheCores = useRef<StakingCore[]>([]);
+  const allTheCores = useRef<StakingDao[]>([]);
   const selectedAccount = useAccount((state) => state.selectedAccount);
   const stakeForm = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -86,9 +86,9 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
     return new BigNumber(cleanedValue);
   }, [coreStakedBalance]);
 
-  const selectedCoreInfo = useMemo(() => {
+  const selectedDaoInfo = useMemo(() => {
     return selectedCore
-      ? { id: selectedCore.key, userStaked: totalUserStakedData[selectedCore.key], name: selectedCore.metadata.name } as SelectedCoreInfo
+      ? { id: selectedCore.key, userStaked: totalUserStakedData[selectedCore.key], name: selectedCore.metadata.name } as SelectedDaoInfo
       : null;
   }, [selectedCore, totalUserStakedData]);
 
@@ -170,15 +170,15 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
     const isCoreSelected = initialSelectedCore.current && initialSelectedCore.current.key;
 
     if (isMetadataValid && isCoreSelected) {
-      const coreId = initialSelectedCore.current?.key as number;
+      const daoId = initialSelectedCore.current?.key as number;
       const totalUserStakedData = metadata.totalUserStakedData as TotaluserStakedDataRecord;
-      const userStakedAmount = new BigNumber(totalUserStakedData[coreId]);
+      const userStakedAmount = new BigNumber(totalUserStakedData[daoId]);
       const zeroStake = userStakedAmount.isZero();
       const minValueNotMet = parsedAmount.isLessThan(minValue);
       const isInitialStakeTooLow = zeroStake && minValueNotMet;
 
       if (isInitialStakeTooLow) {
-        const errorMessage = `Initial staking amount must be greater than or equal to ${ minValue.toString() }`;
+        const errorMessage = `Initial staking amount must be greater than or equal to ${minValue.toString()}`;
         stakeForm.setError("amount", { type: "min", message: errorMessage });
         return;
       }
@@ -187,7 +187,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
     if (parsedAmount.isGreaterThan(maxValue)) {
       stakeForm.setError("amount", {
         type: "max",
-        message: `Amount must be less than or equal to ${ altBalance ? "staked" : "available" } balance`,
+        message: `Amount must be less than or equal to ${altBalance ? "staked" : "available"} balance`,
       });
       return;
     }
@@ -202,23 +202,23 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
 
     try {
       if (!altBalance) {
-        const fromCore = metadata.key;
+        const fromDao = metadata.key;
         const amount = parsedStakeAmount.toString();
 
         await api.tx.ocifStaking
-          .stake(fromCore, amount)
+          .stake(fromDao, amount)
           .signAndSend(
             selectedAccount.address,
             { signer: injector.signer },
             getSignAndSendCallbackWithPromise(toasts, api)
           );
       } else {
-        const toCore = metadata.key;
-        const fromCore = selectedCoreInfo?.id;
+        const toDao = metadata.key;
+        const fromDao = selectedDaoInfo?.id;
         const amount = parsedStakeAmount.toString();
 
         await api.tx.ocifStaking
-          .moveStake(fromCore, amount, toCore)
+          .moveStake(fromDao, amount, toDao)
           .signAndSend(
             selectedAccount.address,
             { signer: injector.signer },
@@ -227,7 +227,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
       }
     } catch (error) {
       toast.dismiss();
-      toast.error(`${ error }`);
+      toast.error(`${error}`);
     } finally {
       closeCurrentModal();
     }
@@ -379,8 +379,8 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
       return;
     }
 
-    if ('allCores' in metadata) {
-      allTheCores.current = metadata.allCores as StakingCore[];
+    if ('allDaos' in metadata) {
+      allTheCores.current = metadata.allDaos as StakingDao[];
     }
 
     if ('totalUserStakedData' in metadata) {
@@ -409,12 +409,12 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
       setCoreStakedBalance(balance);
     } else {
       setAltBalance(true);
-      if (selectedCoreInfo?.userStaked) {
-        const stakedBalance = formatBalanceSafely(selectedCoreInfo?.userStaked?.toString());
+      if (selectedDaoInfo?.userStaked) {
+        const stakedBalance = formatBalanceSafely(selectedDaoInfo?.userStaked?.toString());
         setCoreStakedBalance(stakedBalance);
       }
     }
-  }, [selectedCoreInfo, selectedCore, availableBalance]);
+  }, [selectedDaoInfo, selectedCore, availableBalance]);
 
   useEffect(() => {
     let balanceBN;
@@ -453,14 +453,14 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
   useEffect(() => {
     stakeForm.clearErrors();
     unstakeForm.clearErrors();
-  }, [selectedCoreInfo, stakeForm, unstakeForm]);
+  }, [selectedDaoInfo, stakeForm, unstakeForm]);
 
   const RestakingDropdown = memo(() => {
     const list = allTheCores.current
-      .map(core => ({ id: core.key, userStaked: totalUserStakedData[core.key], name: core.metadata.name }) as SelectedCoreInfo)
+      .map(core => ({ id: core.key, userStaked: totalUserStakedData[core.key], name: core.metadata.name }) as SelectedDaoInfo)
       .filter(core => core.userStaked && core.userStaked.gt(0));
 
-    return <Dropdown initialValue={(initialSelectedCore.current?.metadata as SelectedCoreInfo)?.name as string} currentValue={selectedCoreInfo} list={list} onSelect={handleSelect} />;
+    return <Dropdown initialValue={(initialSelectedCore.current?.metadata as SelectedDaoInfo)?.name as string} currentValue={selectedDaoInfo} list={list} onSelect={handleSelect} />;
   });
 
   return isOpen ? (
@@ -579,7 +579,7 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         </div>
 
                         <Button mini variant="primary" type="submit" disabled={!stakeForm.formState.isValid}>
-                          {altBalance ? 'Restake' : 'Stake'} {watchedStakeAmount} {`${ TOKEN_SYMBOL }`}
+                          {altBalance ? 'Restake' : 'Stake'} {watchedStakeAmount} {`${TOKEN_SYMBOL}`}
                         </Button>
                       </form>
                     </Tab.Panel>
@@ -620,9 +620,9 @@ const ManageStaking = (props: { isOpen: boolean; }) => {
                         </div>
 
                         <Button mini variant="primary" type="submit" disabled={!unstakeForm.formState.isValid}>
-                          Unstake {watchedUnstakeAmount} {`${ TOKEN_SYMBOL }`}
+                          Unstake {watchedUnstakeAmount} {`${TOKEN_SYMBOL}`}
                         </Button>
-                        <p className="text-xxs text-center text-invarchPink">NOTE: Unstaking {`${ TOKEN_SYMBOL }`} will have an unbonding period of 28 days.</p>
+                        <p className="text-xxs text-center text-invarchPink">NOTE: Unstaking {`${TOKEN_SYMBOL}`} will have an unbonding period of 28 days.</p>
                       </form>
                     </Tab.Panel>
                   </Tab.Panels>

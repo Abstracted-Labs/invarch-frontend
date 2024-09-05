@@ -16,7 +16,7 @@ import { INVARCH_WEB3_ENABLE } from "../hooks/useConnect";
 
 const schema = z
   .object({
-    core: z.string(),
+    dao: z.string(),
     name: z.string().max(20),
     description: z.string().max(300),
     image: z.string().url().max(100),
@@ -46,7 +46,7 @@ const RegisterProject = ({ isOpen }: { isOpen: boolean; }) => {
   };
 
   const handleRegister = registerProjectForm.handleSubmit(
-    async ({ core, name, description, image }) => {
+    async ({ dao: core, name, description, image }) => {
       if (!selectedAccount) return;
 
       if (!api) return;
@@ -87,7 +87,7 @@ const RegisterProject = ({ isOpen }: { isOpen: boolean; }) => {
 
       const injector = await web3FromAddress(selectedAccount.address);
 
-      const calls = [api.tx.ocifStaking.registerCore(name, description, image)];
+      const calls = [api.tx.ocifStaking.registerDao(name, description, image)];
 
       try {
         await api.tx.inv4
@@ -128,7 +128,7 @@ const RegisterProject = ({ isOpen }: { isOpen: boolean; }) => {
       } catch (error) {
         toast.dismiss();
 
-        toast.error(`${ error }`);
+        toast.error(`${error}`);
       }
     }
   );
