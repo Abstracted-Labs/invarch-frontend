@@ -21,12 +21,12 @@ import Overview from "./routes/overview";
 import { BalanceProvider } from "./providers/balance";
 
 const wsClient = createWSClient({
-  url: "wss://squid.subsquid.io/ocif-squid-invarch/graphql",
+  url: "wss://invarch.squids.live/ocif-squid-invarch/graphql",
   // url: "ws://localhost:4350/graphql",
 });
 
 const client = new Client({
-  url: "https://squid.subsquid.io/ocif-squid-invarch/graphql",
+  url: "https://invarch.squids.live/ocif-squid-invarch/graphql",
   // url: "http://localhost:4350/graphql",
   exchanges: [
     cacheExchange,
